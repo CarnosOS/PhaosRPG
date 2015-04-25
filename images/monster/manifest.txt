@@ -1,0 +1,7 @@
+Gryphon - Sir John Tenniel - Alice in Wonderland - public domain - Wikipedia
+
+source .xcf files for Gimp have been uploaded to the download section of www.armyofanubis.net
+
+I modified the original image which was in the public domain. 
+My changes are licensed under the GPL, LGPL, GNU documentation license or for restricted use.
+-- peter.schaefer@gmail.com, 2005

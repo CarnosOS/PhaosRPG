@@ -1,0 +1,277 @@
+VERSION 0.9.82-UPDATED-6 (01-NOVEMBER-2012)
+==============================
+Security Patch
+------------------------------
+config.php
+-> Added code to loop through and sanitize GET and POST vars to help prevent SQL injection and cross site scripting
+
+
+
+VERSION 0.9.82-UPDATED-4 (16-SEPTEMBER-2011)
+==============================
+Minor Feature Enhancements
+------------------------------
+
+Stables Added
+-> added "Stables" to language files
+-> modified town.php and ship.php
+-> added stable buildings to database
+
+
+VERSION 0.9.82-UPDATED-3 (22-JULY-2011)
+==============================
+Minor bug fixes & Enhancements
+------------------------------
+
+de.php
+-> New/Changed Translation (Unfortunately I can not remember where exactly I made the translation)
+
+combat.php
+-> Temporary Bugfix: If userlevel over 9, user looses every battle
+-> Temporary Bugfix: If userlevel over 9, user doesn't hit opponets
+
+side_bar.php
+-> Change order
+-> Changes for better look
+
+pfres.php
+-> Added possebility to change password
+
+all_users.php
+-> Added foother.php
+
+game_1.php
+-> Added drew
+
+items.php
+-> Bugfix required skills (example: required skills: -1)
+
+
+VERSION 0.9.82-UPDATED-2 (21-MAY-2011)
+==============================
+Minor bug fixes & Enhancements
+------------------------------
+index.php
+
+-> Last-login date update to database (users)
+-------------------
+
+de.php
+
+-> New words
+
+-------------------
+
+message.php
+
+-> Line 60 added
+-> Line 173 translation-var added
+-> Line 266 status-image-not-found-error solved
+-------------------
+
+player_info.php
+
+-> Send message to displayed user
+-> display last-login
+-------------------
+
+combat.php
+
+flee changed to <50
+receive gold changed
+receive experience changed
+-------------------
+
+side_bar.php
+
+Line 96 changed to link
+Description of statusimages
+-------------------
+
+game_2.php
+
+Universal translation
+-------------------
+
+header.php
+
+Bug fix stamina sometimes below 0 while combat
+
+-------------------
+
+all_users.php added
+added database "users" field "login_dat"
+
+
+
+VERSION 0.9.82 (02-JAN-2011)
+==============================
+Minor bug fixes & Enhancements
+------------------------------
+o PHP short tags have been removed to make it compatible with newer versions of PHP
+
+o The combat script has also been modified to make it easier for new users to win battles.
+
+
+VERSION 0.9.81 (04-AUG-2008)
+==============================
+Minor bug fixes & Enhancements
+------------------------------
+o Fixed css path issue in help system and admin files
+
+o Added indexes to tables in database to help speed up queries
+
+o Created music player to fix the problem of music changing whenever you clicked on something
+
+
+VERSION 0.9.8 (21-OCT-2007)
+===========================
+Minor bugfixes & Enhancements
+-----------------------------
+o Included and updated a 'Help System' which works via topics stored in WoPs MySQL database
+  and displays help topics depending on the current screen. Help system can be managed in
+  the 'Admin Panel'. Make sure you import the 'help.sql' file from the includes folder in to
+  your WoP MySQL database. You will see the word 'HELP' with a pic of a brain on the top, left
+  hand side of the screen.
+  (header.php, menu.php, admin/index.php, styles/phaos.css, images/help.gif, admin_help_*.php & help_*.php files).
+  
+o Deleted some redundant files that were floating about.
+  (ims[renamed], race-specials.txt[renamed], home.php, header.phpOLD, HELP[folder],
+  admin\admin_specials_Check_Specials.php, admin\images\admin_specials_Check_Specials.gif, admin\phaos.css,
+  admin\images\admin_edit_Opps.gif)
+  
+o Created new Admin Panel option to Edit the Characters that are currently in the game world.
+  Makes things easier if you want to place a newly created Monster/Opponent into the game or
+  just edit the stats of one all ready in the game. This will also display all player characters
+  in the game world too. Still needs some fine tuning though to edit some in game characters details.
+  (admin\admin_edit_World_Characters.php, admin\change_wrldchr.php).
+  
+o Updated:
+	- all Admin Panel files <title> changed, changed layout to the main phaos.css file (Old admin one deleted)
+	- Admin Panel now displays option to Optimize your WoP SQL Database
+	  ('admin_sql_Optimize_Database.php' renamed to 'admin_options_Optimize_Database.php', .GIF image also changed)
+	- Arena and Character screens layout with buttons to show links. (arena.php, character.php)
+	- text that shows your item counts in shops(darksmith.php, shop.php, magic_shop.php, lang\en.php)
+	- layout of Item Shop, so it looks more like Magic Shop layout (shop.php)
+	- available points now only increase a stat by 1 instead of 5(class_character.php)
+	
+o FIXED:
+	- Admin Panel now correctly shows who is currently online (admin/admin_options_Whos_Online.php)
+	
+
+VERSION 0.9.7 (09-OCT-2007)
+===========================
+Minor bugfixes
+--------------
+o Some (minor) code cleaned up to make it more readable to developers (still on-going).
+
+o FIXED:
+	- admin/change_character.php: Saving changes to a users character in the Admin Panel
+	- side_bar.php: Error no longer receved when leveling up a characters stat(s)
+	- global.php: who_is_online/offline functions now work correctly to show ONLY player characters
+
+
+VERSION 0.9.6 (21-Sep-2007)
+===========================
+Minor bugfixes
+--------------
+This release fixes multiple bugs in the arena and character screens.
+
+
+VERSION 0.9.5 (31-Aug-2007)
+===========================
+Major bugfixes
+--------------
+Changes include
+o Multiple bugfixes to version 0.9.4.
+o Automatic combat encounter is fixed while traveling on the map.
+o The chat window on the right has been rewritten using some simple AJAX.
+
+
+VERSION 0.9.4 (20-Aug-2007)
+===========================
+Minor feature enhancements
+--------------------------
+This release makes Phaos frameless, which should improve the appearance and make new modifications easier.
+
+
+VERSION 0.9.3 (18-Aug-2005)
+===========================
+Minor bugfixes
+--------------
+This release adds
+o A couple of bugfixes
+o More map layout.
+
+
+VERSION 0.9.2 (29-Jul-2005)
+===========================
+Minor feature enhancements
+--------------------------
+Changes include
+o A new race special ability for elves
+o Multiple bugfixes
+o More landscape layout in Jher.
+
+
+VERSION 0.9.1 (10-Jul-2005)
+===========================
+Major bugfixes
+--------------
+o Multiple bugfixes
+o Race dependent special abilities
+o A new huge dungeon.
+
+
+VERSION 0.9 (04-Jul-2005)
+=========================
+Minor feature enhancements
+--------------------------
+o New features include
+	- Modified combat,
+	- Code cleanup,
+	- New shop handling, and some other little things.
+
+
+VERSION 0.89 (12-Jun-2005)
+==========================
+Major feature enhancements
+--------------------------
+Changes include code cleanup, modified combat, security fixes, and other bugfixes.
+
+o Modified combat to display different monster images (combat.php)
+o Modified guild sig code to allow for a small guild logo to be displayed next to a character's name
+o Sortable inventory on character screen (character.php)
+o Modified move_npc in functions.php to try and get monsters to move around more
+o Pah-Loran now explorable
+o Sconsh now explorable
+o Isia now explorable
+o Nihil now explorable
+o Doonmoor now explorable
+o Modified travel.php to fix explorable town building problem
+
+
+VERSION 0.88 update 2 (31-May-2005)
+===================================
+Minor feature enhancements
+--------------------------
+New sortable inventory and minor modifications to the guild signature.
+It now allows a small guild logo to be displayed in front of your character's name.
+
+
+VERSION 0.88 update 1 (24-Apr-2005)
+===================================
+Minor feature enhancements
+--------------------------
+New features include 4 new explorable towns and other minor modifications.
+
+o All dungeon/special areas removed (new dungeons and other areas will be added soon)
+	- travel_dungeon.php/area_dungeon.php/phaos_dungeon_locations
+	
+o New explorable towns (and dungeons/temples/etc in the future)
+	- Added explore field to phaos_locations table
+	
+o Modified phaos_buildings table to allow for higher location numbers
+o Modified phaos_buildings records to spread out buildings within a town
+o Unpassable areas on map added
+	- Uses pass field in phaos_locations table (n for not passable/y for passable)

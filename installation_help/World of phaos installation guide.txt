@@ -1,0 +1,29 @@
+Hello ppl.
+Here i will write some reference on how to install a World of Phaos server on your computer.
+
+For this you will need 
+1)php server and 
+2)my sql server
+
+I will skip installation guides of both - there is a lot of guides in the web so just search for them.
+i will just include files to test if installation of those is OK.
+(its test.php and testmysql.php(change pass to your mysql password where it says in it))
+
+So now i will suppose you have installed php and mysql server to your computer.
+Now you will need to unzip all World of Phaos files in some directory in main directory (lets say it is "mainphpdirectory/phaos")
+then you will need to use command prompt(cmd.exe) to add phaos data to your database.
+
+But first create the database using mysql command line client(in startup menu). Enter your password and type "CREATE DATABASE Phaos;"
+Now exit mysql - you have database to add data to.
+
+To add data to your database use cmd.exe.
+Go to mainphpdirectory/phaos/import(you may have to use "cd .." command to go one directory up or "cd directoryname" to go to specified folder. If your folder have spaces in its name use quatation marks "folder name"
+So if you are in "/import" folder and your mysql.exe are in Windows Path(that should be but if not this is may be why adding data doesnt work). So in command line type following "mysql.exe -u nameofdatabaseuserofmysql -p passtomysqldatabase phaos(name of WoFdatabase) < data_1.sql;"
+this will add data from file to database.
+if you have any error with this try asking on mysql forums for where is the error might be.
+if everithing is ok - no output will be given by mysql.exe press "up" arrow - this will bring your command ready to edit again - so you can just edit data_1 to be data_2 and not enter whole command.
+This way you should add all .sql files to database.
+
+Now your world of phaos server should be ready to work.
+
+Try it by typing localhost/phaos/index.php in your browser.

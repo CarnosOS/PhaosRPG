@@ -1,0 +1,12 @@
+This file lists race special effects.
+
+The version of this file is 20050709.
+
+Vampires:
+    - recover stamina when hurting opponents.
+Dwarfs:
+    - increased heal rate when drinking beer.
+Humans:
+    - increased stamina when drinking beer.
+
+

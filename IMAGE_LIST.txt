@@ -1,0 +1,17 @@
+INN - 202.png
+ITEM SHOP - 197.png
+TOWN HALL - 204.png
+BLACKSMITH - 199.png
+ARENA - 205.png
+MAGIC SHOP - 200.png
+WALL - 196.png
+BORDER WALL - 194.png
+GROUND - 195.png
+TOWN EXIT - 203.png
+
+inn = 90417 
+town hall = 90794 
+blacksmith = 90323 
+arena = 90330 
+magic = 90706
+item = 90638

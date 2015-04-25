@@ -1,0 +1,77 @@
+body{
+  background-color: #000000;
+  margin: 0;
+}
+.phaos-pass-cell{
+  color: black;
+}
+textarea {
+	font-family: verdana,helvetica;
+	color: #FFFFFF;
+	background-color: #000000;
+	border-left: solid 1px #006600;
+	border-right: solid 1px #006600;
+	border-top: solid 1px #006600;
+	border-bottom: solid 1px #006600;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+input {
+	background: url(../images/input_bg.jpg);
+	font-family: Segoe UI,verdana,helvetica;
+	color: #FFFFFF;
+	background-color: #000000;
+	border: solid 1px #003300;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+select {
+	font-family: verdana,helvetica;
+	color: #FFFFFF;
+	background-color: #000000;
+	border-left: solid 1px #006600;
+	border-right: solid 1px #006600;
+	border-top: solid 1px #006600;
+	border-bottom: solid 1px #006600;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+body {
+	font-family: verdana,helvetica;
+	color: #FFFFFF;
+	background-color: #000000;
+	font-size: 12px;
+}
+
+td {
+	font-family: verdana,helvetica;
+	color: #FFFFFF;
+	font-size: 12px;
+}
+
+button {
+	text-align: left;
+	background: url(../images/input_bg.jpg);
+	font-family: verdana,helvetica;
+	color: #FFFFFF;
+	background-color: #000000;
+	border: solid 1px #003300;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+hr {
+	color: #006600;
+}
+
+a:link 		{ color: #FFFFFF; font-weight:normal; text-decoration:none;font-size: 10pt;}
+a:visited 	{ color: #FFFFFF; font-weight:normal; text-decoration:none;font-size: 10pt;}
+a:active 	{ color: #FFFFFF; font-weight:normal; text-decoration:none;font-size: 10pt;}
+a:hover 		{ color: #006600; font-weight:normal; text-decoration:none;font-size: 10pt;}
+A.ssmItems:link		{color:white;text-decoration:none;}
+A.ssmItems:hover		{color:white;text-decoration:none;}
+A.ssmItems:active		{color:white;text-decoration:none;}
+A.ssmItems:visited	{color:white;text-decoration:none;}

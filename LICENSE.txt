@@ -1,0 +1,12 @@
+YOU MUST READ, UNDERSTAND & AGREE TO THIS LICENSE BEFORE USING Phaos. THIS 
+INFORMATION EXPLAINS THE EXTENT TO THE USAGE PERMITTED AND/OR RESTRICTIONS FOR
+THE USAGE OF Phaos.
+<p>
+All code for the Phaos Browser Based RPG is released under the GPL.
+See <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">http://www.gnu.org/copyleft/gpl.html</a> for more details.
+<p>
+Zeke Walker owns the rights to the World of Phaos name and world (i.e. names, characters,
+story, locations, etc.).  Therefore this information may not be used in another
+game or any other type of media without written permission from Zeke Walker.
+<p>
+Modifed: 03/30/2005
