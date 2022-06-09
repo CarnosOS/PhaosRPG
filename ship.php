@@ -43,7 +43,12 @@ if(@$_POST['travel']) {
 <tr>
 <td><table><tr><td>Destination</td><td>&nbsp;&nbsp;</td><td>Cost</td><td>&nbsp;&nbsp;</td></tr>
 <?php
-$self1=mysql_query("SELECT location FROM phaos_buildings WHERE name='Stable' OR name='Ship Travel'");
+
+// travel within current region only
+$location_min = intval(floor($character->location / 10000) * 10000);
+$location_max = $location_min + 10000;
+
+$self1=mysql_query("SELECT location FROM phaos_buildings WHERE (name='Stable' OR name='Ship Travel') AND location > $location_min AND location < $location_max");
 while ($row1 = mysql_fetch_array($self1)) {
 	$loc = $row1["location"];
 	$self=mysql_query("SELECT id,name FROM `phaos_locations` WHERE `id`=$loc");

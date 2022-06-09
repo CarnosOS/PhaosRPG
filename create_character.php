@@ -89,14 +89,14 @@ $hit_points = $constitution*6;
 // else				{$startloc = rand(1,225);}
 $startloc = rand(1,225);	// incase no race is given??  How does that happen?
 // These specific locations are the best starting cities for each race
-$race == "Orc"		AND $startloc = 1037;
-$race == "Vampire"	AND $startloc = 2067;
-$race == "Lizardfolk"	AND $startloc = 3001;
-$race == "Undead"	AND $startloc = 4072;
-$race == "Gnome"	AND $startloc =	5170;
-$race == "Elf"		AND $startloc = 6173;
-$race == "Dwarf"	AND $startloc = 7179;
-$race == "Human"	AND $startloc = 8052;
+$race == "Orc"		AND $startloc = 94; // City of Nising
+$race == "Vampire"	AND $startloc = 382; // City of Malom
+$race == "Lizardfolk"	AND $startloc = 88; // Town of Solan
+$race == "Undead"	AND $startloc = 726; // City of Gornath
+$race == "Gnome"	AND $startloc =	757; // Town of Kjal
+$race == "Elf"		AND $startloc = 1354; // City of Allysian
+$race == "Dwarf"	AND $startloc = 1455; // City of Pah-Loran
+$race == "Human"	AND $startloc = 1704; // City of Doonmoor
 
 $query = "INSERT INTO phaos_characters
 (location,image_path,username,name,age,strength,dexterity,wisdom,constitution,hit_points,race,class,sex,gold,fight,defence,weaponless,lockpick,traps) 

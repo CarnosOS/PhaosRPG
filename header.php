@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <?php
 session_start();
 include "aup.php";
@@ -63,6 +62,7 @@ sajax_init();
 sajax_export("add_chat_line", "refresh");
 sajax_handle_client_request();
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 

@@ -548,7 +548,7 @@ if($skip_actions) {
                 unset($_SESSION['opponent_id']);
 
         		// when dead, go to Gornath (easy city of undead) to start over
-        		if (! mysql_query("UPDATE phaos_characters SET location = 4072 WHERE id = '$PHP_PHAOS_CHARID'") ) {  showError(__FILE__,__LINE__,__FUNCTION__); die; }
+        		if (! mysql_query("UPDATE phaos_characters SET location = 726 WHERE id = '$PHP_PHAOS_CHARID'") ) {  showError(__FILE__,__LINE__,__FUNCTION__); die; }
 
                 $break_loop= true;
             }

@@ -50,6 +50,7 @@ td {
 	font-family: verdana,helvetica;
 	color: #FFFFFF;
 	font-size: 12px;
+	background-size: cover !important;
 }
 
 button {

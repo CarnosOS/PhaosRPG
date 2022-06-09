@@ -110,8 +110,9 @@ if($destination != "")
 $info_eol= "\r";
 $js_info_eol= "\\r";
 
-if($character->name == "") {
+if(!$character->id) {
      $message =  ("<font size=4><b>".$lang_area["must_create_a_char"]."</b></font><p>".$lang_area["create_a_char"]);
+     print($message);
 } else {
     $message= '';
 

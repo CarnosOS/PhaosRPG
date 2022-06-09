@@ -639,30 +639,18 @@ class character {
 	* @param (string)$item_type - choose the item type as string
 	* @return Returns 0 on failure and 1 on all done successfully. (mainly SQL-errors!!)
 	*/
-	function unequipt($item_type){
-		switch($item_type){
-            case "armor":
-                $this->armor='';
-                break;
-            case "weapon":
-                $this->weapon='';
-                break;
-            case "gloves":
-                $this->gloves='';
-                break;
-            case "helm":
-                $this->helm='';
-                break;
-            case "shield":
-                $this->shield='';
-                break;
-            case "boots":
-                $this->boots='';
-                break;
-            default:
-                return 0;
-        }
+	function unequipt($item_type, $item_id = 0){
+		// Invalid item type
+		if (!in_array($item_type, array("armor", "weapon", "gloves", "helm", "shield", "boots"))) {
+			return 0;
+		}
 
+		// Character is not wearing this item id
+		if ($item_id !== 0 && $this->{$item_type} !== $item_id) {
+			return 0;
+		}
+
+		$this->{$item_type} = '';
 		$query = ("UPDATE phaos_characters SET $item_type = '' WHERE id = '".$this->id."'");
 		$req = mysql_query($query);
 		if (!$req)  {showError(__FILE__,__LINE__,__FUNCTION__); return 0; exit;}

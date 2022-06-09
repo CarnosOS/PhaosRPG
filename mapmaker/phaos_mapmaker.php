@@ -3,64 +3,117 @@ session_start();
 
 include "folder_func.php";
 
-/*$_GET*/
-if(!isset($sess_id)) {
-// echo "wird gemacht OK.<br>";
-$sess_id = session_id();
-session_register("map_name");
-session_register("map_mapx");
-session_register("map_mapy");
-session_register("map_fill");
-session_register("map");
-session_register("map_locname");
-session_register("map_x");
-session_register("map_mapxx");
-session_register("map_mapyy");
-session_register("tile_name");
-session_register("menu");
-session_register("in_phaos");
-session_register("map_mapvolder");
-session_register("map_ext");
-session_register("image_volder");
-session_register("maxtile");
-session_register("tilesize");
-session_register("tileformat");
-session_register("tile_id_start");
-session_register("tile_id_start_n");
-session_register("tile_id_start_a");
-session_register("buildings");
-session_register("pass");
-session_register("sqlall");
-session_register("tileborder");
-/*$_SESSION['map_name'];
-$_SESSION['map_mapx'];
-$_SESSION['map_mapy'];
-$_SESSION['map_fill'];
-$_SESSION['map'];
-$_SESSION['map_x'];
-$_SESSION['map_mapxx'];
-$_SESSION['map_mapyy'];
-$_SESSION['tile_name'];
-$_SESSION['menu'];
-$_SESSION['in_phaos'];
-$_SESSION['map_mapvolder'];
-$_SESSION['map_ext'];
-$_SESSION['image_volder'];
-$_SESSION['maxtile'];
-$_SESSION['tilesize'];
-$_SESSION['tileformat'];
-$_SESSION['tile_id_start'];
-$_SESSION['tile_id_start_n'];
-$_SESSION['tile_id_start_a'];
-$_SESSION['buildings'];*/
-$_SESSION['newtilepicn'];
-$_SESSION['tilex'];
-$_SESSION['tiley'];
-$_SESSION['newtilepic'];
-$_SESSION['newtilepic_n'];
+// Fix for removed Session functions
+function fix_session_register(){
+    function session_register(){
+        $args = func_get_args();
+        foreach ($args as $key){
+            $_SESSION[$key]=$GLOBALS[$key];
+        }
+    }
+    function session_is_registered($key){
+        return isset($_SESSION[$key]);
+    }
+    function session_unregister($key){
+        unset($_SESSION[$key]);
+    }
+}
+if (!function_exists('session_register')) fix_session_register();
+
+const POST_VARIABLES = array(
+    "map_name_s",
+    "map_width_s",
+    "map_height_s",
+    "tile_id_start_s",
+    "map_fill_s",
+    "B1"
+);
+
+const GET_VARIABLES = array(
+    "menue",
+    "tilex",
+    "tiley",
+    "newtilepic",
+    "null",
+    "x",
+    "y"
+);
+
+const SESSION_VARIABLES = array(
+    "map_name",
+    "map_mapx",
+    "map_mapy",
+    "map_fill",
+    "map",
+    "map_locname",
+    "map_x",
+    "map_mapxx",
+    "map_mapyy",
+    "tile_name",
+    "menu",
+    "in_phaos",
+    "map_mapvolder",
+    "map_ext",
+    "image_volder",
+    "maxtile",
+    "tilesize",
+    "tileformat",
+    "tile_id_start",
+    "tile_id_start_n",
+    "tile_id_start_a",
+    "buildings",
+    "pass",
+    "sqlall",
+    "tileborder",
+);
+
+
+
+function to_session() {
+    foreach (SESSION_VARIABLES as $key){
+        if (isset($GLOBALS[$key])) {
+            $_SESSION[$key]=$GLOBALS[$key];
+        }
+    }
 }
 
-// echo strip_tags(SID);
+function from_session() {
+    foreach (SESSION_VARIABLES as $key){
+        if (isset($_SESSION[$key])) {
+            $GLOBALS[$key] = $_SESSION[$key];
+        }
+    }
+}
+
+
+function from_post() {
+    foreach (POST_VARIABLES as $key){
+        if (isset($_POST[$key])) {
+            $GLOBALS[$key] = $_POST[$key];
+        } else {
+            $GLOBALS[$key] = "";
+        }
+    }
+}
+
+function from_get() {
+    foreach (GET_VARIABLES as $key){
+        if (isset($_GET[$key])) {
+            $GLOBALS[$key] = $_GET[$key];
+        } else {
+            $GLOBALS[$key] = "";
+        }
+    }
+}
+
+function get_map_value($a, $b) {
+  global $map;
+  return isset($map[$a][$b]) ? $map[$a][$b] : '';
+}
+
+from_session();
+from_post();
+from_get();
 
 if($menue == ""){
 
@@ -82,7 +135,7 @@ $tileformat = ".png";
 $map_tile = "";
 $tile_id_start = $tile_id_start_s;
 $tile_id_start_n = $tile_id_start;
-// $tile_id_start_a = $tile_id_start_s;
+$tile_id_start_a = $tile_id_start_s;
 // echo $tile_id_start_a;
 $map = "";
 $map_x = "";
@@ -91,7 +144,7 @@ $map_mapyy = "";
 $tilex = "0";
 $tiley = "0";
 $tileborder = "0";
-// <Start Tile für Fülung für leere Map ------
+// <Start Tile fÃ¼r FÃ¼lung fÃ¼r leere Map ------
 
 // if($menue == "1"){
 if($map_fill == "1") {$map_tile = "2" ;$tile_name = "2" ;$newtilepic = "2" ;}
@@ -102,7 +155,7 @@ if($map_fill == "5") {$map_tile = "empty" ;$tile_name = "empty" ;$newtilepic = "
 if($map_fill == "6") {$map_tile = "forrest_g" ;$tile_name = "forrest_g" ;$newtilepic = "forrest_g" ;}
 if($map_fill == "99"){$map_tile = "0" ;$tile_name = "0" ;$newtilepic = "0" ;}
 // }
-// <End Fülung für leere Map ------
+// <End FÃ¼lung fÃ¼r leere Map ------
 }
 
 if($null == "Y"){$tile_id_start = $tile_id_start_n;}
@@ -113,16 +166,16 @@ if($menue == "1" and $map_mapx+1 == ""){echo "Map Breite mus angegeben werden";$
 
 if($menue == "1" and $map_mapx+1 < "10"){echo "Map Breite zu klein (min = 10 Max = 100)";$menue = "";}
 
-if($menue == "1" and $map_mapx+1 > "100"){echo "Map Breite zu groß (min = 10 Max = 100)";$menue = "";}
+if($menue == "1" and $map_mapx+1 > "100"){echo "Map Breite zu groÃŸ (min = 10 Max = 100)";$menue = "";}
 
-if($menue == "1" and $map_mapy+1 == ""){echo "Map Höhe mus angegeben werden";$menue = "";}
+if($menue == "1" and $map_mapy+1 == ""){echo "Map HÃ¶he mus angegeben werden";$menue = "";}
 
-if($menue == "1" and $map_mapy+1 < "10"){echo "Map Höhe zu klein (min = 10 Max = 100)";$menue = "";}
+if($menue == "1" and $map_mapy+1 < "10"){echo "Map HÃ¶he zu klein (min = 10 Max = 100)";$menue = "";}
 
-if($menue == "1" and $map_mapy+1 > "100"){echo "Map Höhe zu groß (min = 10 Max = 100)";$menue = "";}
+if($menue == "1" and $map_mapy+1 > "100"){echo "Map HÃ¶he zu groÃŸ (min = 10 Max = 100)";$menue = "";}
 
 if($menue == "1" and file_exists($map_mapvolder.$map_name.$map_ext)){
-echo "Eine Map mit dem Namen '$map_name' existiert bereitz Wähle einen anderen Namen.
+echo "Eine Map mit dem Namen '$map_name' existiert bereitz WÃ¤hle einen anderen Namen.
 		<a href='index.php'>[ Back ]</a> :";$menue = "";}
 
 // if($null == "Y"){$tile_id_start = "10";}
@@ -144,7 +197,7 @@ if($menue == "4"){
 	<tr>
 		<td>
 		<form method='POST' action='phaos_mapmaker.php'>
-			Wie soll dieser Ort Heißen ? :
+			Wie soll dieser Ort HeiÃŸen ? :
 			<input type='text' name='T1' size='20'>
 			<input type='submit' value='OK' name='B1'>
 		</form>
@@ -181,12 +234,14 @@ if($menue == "1"){
 if($menue == "2"){
 /*echo "Menue 2:<br>";*/
     /*$map_x = 100/$map_mapx;*/
+
+
 $newtilepicn = preg_replace("/".$tileformat."/", "", $newtilepic);
 echo "
 <table border='1' cellspacing='2' width='100%' bgcolor='#FFCC00'>
     <tr>
         <td width='100%' colspan='2' bgcolor='#000000'>
-        	Menü : <font color='#B89554'><b>Map Anzeige</b></font> |
+        	MenÃ¼ : <font color='#B89554'><b>Map Anzeige</b></font> |
          	Mapname : <font color='#B89554'><b>".$map_name."</b></font> |
             Map Width : <font color='#B89554'><b>".($map_mapx+1)."</b></font> |
             Map Height : <font color='#B89554'><b>".($map_mapy+1)."</b></font> |
@@ -244,12 +299,12 @@ echo "</table>
 // <1 END> --------------------
 
 
-// <3 START> Hier Werden alle zurverfügung stehenden Tiles in 32x32 angezeit ----------
+// <3 START> Hier Werden alle zurverfÃ¼gung stehenden Tiles in 32x32 angezeit ----------
 if($menue == "3"){
 
 echo "<table border='1' cellspacing='2' width='100%' bgcolor='#FFCC00'>
     <tr>
-        <td width='100%' colspan='2' bgcolor='#000000'>Menü : <font color='#B89554'><b>Tile</b></font> | Info : <font color='#B89554'><b>Suche dir Das Tile aus Das du setzen Möchtest.</b></font></td>
+        <td width='100%' colspan='2' bgcolor='#000000'>MenÃ¼ : <font color='#B89554'><b>Tile</b></font> | Info : <font color='#B89554'><b>Suche dir Das Tile aus Das du setzen MÃ¶chtest.</b></font></td>
         <td rowspan='2' bgcolor='#000000'>
              <table border='1' cellspacing='1' id='AutoNumber1'>
                 <tr>
@@ -300,9 +355,9 @@ while ($file = readdir($handle)) {
 if ($file == "." || $file == "..") { } else {
 
   $all_tile_pics[$i] = $file;
-  //}
+  $i++;
 
-  }$i++;
+  };
 }
 
 closedir($handle);
@@ -311,8 +366,8 @@ $maxtile = $i-1;
 
 $map_mapxx = 32;
 $map_mapyy = 17;
-
 $i = 1;
+$br = 0;
 echo "<table border='".$tileborder."' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#FFCC00'>
 <tr><td>";
 for ($yy = 0; $yy <= $map_mapyy; $yy++) {
@@ -332,7 +387,7 @@ if($menue == "5"){
 echo "
 <table border='1' cellspacing='2' width='100%' bgcolor='#FFCC00'>
     <tr>
-        <td width='100%' colspan='2' bgcolor='#000000'>Menü : <font color='#B89554'><b>Map Save</b></font> | Info : <font color='#B89554'><b>Map Speichern.</b></font></td>
+        <td width='100%' colspan='2' bgcolor='#000000'>MenÃ¼: <font color='#B89554'><b>Map Save</b></font> | Info : <font color='#B89554'><b>Map Speichern.</b></font></td>
         <td rowspan='2' bgcolor='#000000'>
              <table border='1' cellspacing='1' id='AutoNumber1'>
                 <tr>
@@ -371,8 +426,9 @@ echo "
       INSERT INTO `phaos_locations` VALUES (id, name, above_left, above, above_right, left, right, below_left, below, below_right, image_path, special, buildings, pass);
       <textarea style='font-size: 8pt; color: #FFFF00; background-color: #550000' rows='30' name='S1' cols='150'>";
 
-	for ($y = 0; $y <= $map_mapy; $y++) {
-    	for ($x = 0; $x <= $map_mapx; $x++) {
+
+	for ($y = 0; $y < $map_mapy; $y++) {
+    	for ($x = 0; $x < $map_mapx; $x++) {
         	// echo $map[$y-1][$x-1]."\n";
             // echo $map[$y-1][$x]."\n";
             // echo $map[$y-1][$x+1]."\n";
@@ -386,15 +442,16 @@ echo "
             // echo $map[($y-1)-$map_mapx][($x-1)-$map_mapx]."\n";
 	        // echo "X=".$x." Y=".$y." tile_id_start_n=".$tile_id_start_n." tile_id_start=".$tile_id_start."\n";
 
-            $al = $map[$y-1][$x-1]; if($al == ""){$al = 0;}else{$al = $tile_id_start-($map_mapx+2);}
-            $ab = $map[$y-1][$x]  ; if($ab == ""){$ab = 0;}else{$ab = $tile_id_start-($map_mapx+1);}
-            $ar = $map[$y-1][$x+1]; if($ar == ""){$ar = 0;}else{$ar = $tile_id_start-($map_mapx);}
-            $ls = $map[$y][$x-1]  ; if($ls == ""){$ls = 0;}else{$ls = $tile_id_start-1;}
-            $mi = $map[$y][$x]    ; if($mi == ""){$mi = 0;}else{$mi = $tile_id_start;}
-            $rs = $map[$y][$x+1]  ; if($rs == ""){$rs = 0;}else{$rs = $tile_id_start+1;}
-            $bl = $map[$y+1][$x-1]; if($bl == ""){$bl = 0;}else{$bl = $tile_id_start+($map_mapx);}
-            $be = $map[$y+1][$x]  ; if($be == ""){$be = 0;}else{$be = $tile_id_start+($map_mapx+1);}
-            $br = $map[$y+1][$x+1]; if($br == ""){$br = 0;}else{$br = $tile_id_start+($map_mapx+2);}
+
+            $al = get_map_value($y-1, $x-1); if($al == ""){$al = 0;}else{$al = $tile_id_start-($map_mapx+2);}
+            $ab = get_map_value($y-1, $x)  ; if($ab == ""){$ab = 0;}else{$ab = $tile_id_start-($map_mapx+1);}
+            $ar = get_map_value($y-1, $x+1); if($ar == ""){$ar = 0;}else{$ar = $tile_id_start-($map_mapx);}
+            $ls = get_map_value($y, $x-1)  ; if($ls == ""){$ls = 0;}else{$ls = $tile_id_start-1;}
+            $mi = get_map_value($y, $x)    ; if($mi == ""){$mi = 0;}else{$mi = $tile_id_start;}
+            $rs = get_map_value($y, $x+1)  ; if($rs == ""){$rs = 0;}else{$rs = $tile_id_start+1;}
+            $bl = get_map_value($y+1, $x-1); if($bl == ""){$bl = 0;}else{$bl = $tile_id_start+($map_mapx);}
+            $be = get_map_value($y+1, $x)  ; if($be == ""){$be = 0;}else{$be = $tile_id_start+($map_mapx+1);}
+            $br = get_map_value($y+1, $x+1); if($br == ""){$br = 0;}else{$br = $tile_id_start+($map_mapx+2);}
 
 			$pass = "y";
             $buildings = "n";
@@ -460,7 +517,7 @@ if($menue == "10"){
 echo "
 <table border='1' cellspacing='2' width='100%' bgcolor='#FFCC00'>
     <tr>
-        <td width='100%' colspan='2' bgcolor='#000000'>Menü : <font color='#B89554'><b>Map Save</b></font> | Info : <font color='#B89554'><b>Map Saved.</b></font></td>
+        <td width='100%' colspan='2' bgcolor='#000000'>MenÃ¼ : <font color='#B89554'><b>Map Save</b></font> | Info : <font color='#B89554'><b>Map Saved.</b></font></td>
         <td rowspan='2' bgcolor='#000000'>
              <table border='1' cellspacing='1' id='AutoNumber1'>
                 <tr>
@@ -498,10 +555,10 @@ echo "
       INSERT INTO `phaos_locations` VALUES (id, name, above_left, above, above_right, left, right, below_left, below, below_right, image_path, special, buildings, pass);
       <textarea style='font-size: 8pt; color: #FFFF00; background-color: #550000' rows='30' name='S1' cols='150'>";
 
-    $fpw = fopen($map_mapvolder.$map_name.$map_ext,"a");
+//    $fpw = fopen($map_mapvolder.$map_name.$map_ext,"a");
 
-	for ($y = 0; $y <= $map_mapy; $y++) {
-    	for ($x = 0; $x <= $map_mapx; $x++) {
+	for ($y = 0; $y < $map_mapy; $y++) {
+    	for ($x = 0; $x < $map_mapx; $x++) {
         	// echo $map[$y-1][$x-1]."\n";
             // echo $map[$y-1][$x]."\n";
             // echo $map[$y-1][$x+1]."\n";
@@ -515,15 +572,16 @@ echo "
             // echo $map[($y-1)-$map_mapx][($x-1)-$map_mapx]."\n";
 	        // echo "X=".$x." Y=".$y." tile_id_start_n=".$tile_id_start_n." tile_id_start=".$tile_id_start."\n";
 
-            $al = $map[$y-1][$x-1]; if($al == ""){$al = 0;}else{$al = $tile_id_start-($map_mapx+2);}
-            $ab = $map[$y-1][$x]  ; if($ab == ""){$ab = 0;}else{$ab = $tile_id_start-($map_mapx+1);}
-            $ar = $map[$y-1][$x+1]; if($ar == ""){$ar = 0;}else{$ar = $tile_id_start-($map_mapx);}
-            $ls = $map[$y][$x-1]  ; if($ls == ""){$ls = 0;}else{$ls = $tile_id_start-1;}
-            $mi = $map[$y][$x]    ; if($mi == ""){$mi = 0;}else{$mi = $tile_id_start;}
-            $rs = $map[$y][$x+1]  ; if($rs == ""){$rs = 0;}else{$rs = $tile_id_start+1;}
-            $bl = $map[$y+1][$x-1]; if($bl == ""){$bl = 0;}else{$bl = $tile_id_start+($map_mapx);}
-            $be = $map[$y+1][$x]  ; if($be == ""){$be = 0;}else{$be = $tile_id_start+($map_mapx+1);}
-            $br = $map[$y+1][$x+1]; if($br == ""){$br = 0;}else{$br = $tile_id_start+($map_mapx+2);}
+
+            $al = get_map_value($y-1, $x-1); if($al == ""){$al = 0;}else{$al = $tile_id_start-($map_mapx+2);}
+            $ab = get_map_value($y-1, $x)  ; if($ab == ""){$ab = 0;}else{$ab = $tile_id_start-($map_mapx+1);}
+            $ar = get_map_value($y-1, $x+1); if($ar == ""){$ar = 0;}else{$ar = $tile_id_start-($map_mapx);}
+            $ls = get_map_value($y, $x-1)  ; if($ls == ""){$ls = 0;}else{$ls = $tile_id_start-1;}
+            $mi = get_map_value($y, $x)    ; if($mi == ""){$mi = 0;}else{$mi = $tile_id_start;}
+            $rs = get_map_value($y, $x+1)  ; if($rs == ""){$rs = 0;}else{$rs = $tile_id_start+1;}
+            $bl = get_map_value($y+1, $x-1); if($bl == ""){$bl = 0;}else{$bl = $tile_id_start+($map_mapx);}
+            $be = get_map_value($y+1, $x)  ; if($be == ""){$be = 0;}else{$be = $tile_id_start+($map_mapx+1);}
+            $br = get_map_value($y+1, $x+1); if($br == ""){$br = 0;}else{$br = $tile_id_start+($map_mapx+2);}
 
 			$pass = "y";
             $buildings = "n";
@@ -582,4 +640,5 @@ echo "
 
 echo "</body></html>";
 
+to_session();
 ?>

@@ -9,6 +9,9 @@ if(@$_COOKIE['lang']) {
 
 // Enter your MySQL settings and $SITETITLE in this file
 @include 'config_settings.php';
+@include 'shim.php';
+
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 //removing 1st class security risk
 if(file_exists('phaos.cfg')){
@@ -18,26 +21,25 @@ if(file_exists('phaos.cfg')){
 $connection = mysql_connect("$mysql_server","$mysql_user","$mysql_password") or die ("Unable to connect to MySQL server.");
 $db = mysql_select_db("$mysql_database") or die ("Unable to select requested database.");
 
-foreach($_POST as $key=>$value) {
-	// IF POST VARIABLE NOT BLANK
-	if (isset($_POST[$key])) {
-		if(get_magic_quotes_gpc()) {
-			$_POST[$key] = stripslashes($_POST[$key]);
-		}
-		// ESCAPE CHARACTERS
-		$_POST[$key] = trim(htmlspecialchars(htmlentities(mysql_real_escape_string($_POST[$key]), ENT_QUOTES)));
-	}
+function smartQuotes($value) {
+  if( is_array($value) ) {
+    return array_map("smartQuotes", $value);
+  } else {
+    if( $value == '' ) {
+      $value = NULL;
+    } if( !is_numeric($value)) {
+      $value = trim(htmlspecialchars(htmlentities(mysql_real_escape_string($value), ENT_QUOTES)));
+    }
+    return $value;
+  }
 }
 
-foreach($_GET as $key=>$value) {
-	// IF GET VARIABLE NOT BLANK
-	if (isset($_GET[$key])) {
-		if(get_magic_quotes_gpc()) {
-			$_GET[$key] = stripslashes($_GET[$key]);
-		}
-		// ESCAPE CHARACTERS
-		$_GET[$key] = trim(htmlspecialchars(htmlentities(mysql_real_escape_string($_GET[$key]), ENT_QUOTES)));
-	}
+if (!get_magic_quotes_gpc()) {
+  foreach (array('_GET', '_POST') as $array_name) {
+    foreach (${$array_name} as $key => $value) {
+      ${$array_name}[$key] = smartQuotes($value);
+    }
+  }
 }
 
 //Sanity check
@@ -51,8 +53,6 @@ if (!mysql_fetch_array($result)) {
 define('DEBUG',intval(@$_COOKIE['_debug']));
 if(DEBUG){
 	error_reporting(E_ALL);
-} else {
-	error_reporting(E_ERROR | E_PARSE);
 }
 
 $PHP_PHAOS_USER = @$_COOKIE["PHP_PHAOS_USER"];

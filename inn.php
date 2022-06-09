@@ -102,7 +102,7 @@ $quests_yn = @$_POST['quests'];
 
 if(!$npc_id) {
 	// SELECT NPC TO TALK TO
-	$result = mysql_query ("SELECT * FROM phaos_npcs WHERE location = '$$character->location'");
+	$result = mysql_query ("SELECT * FROM phaos_npcs WHERE location = '".$character->location."'");
 	if ($row = mysql_fetch_array($result)) {
 		do {
 			$npc_name = $row["name"];

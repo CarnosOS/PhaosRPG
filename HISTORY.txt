@@ -1,3 +1,16 @@
+VERSION 0.9.90 (06-JUNE-2022)
+==============================
+Maps update & Minor bug fixes
+------------------------------
+o All maps redesigned and filled with meaningful content (villages, towns, cities)
+o Added shim for mysql calls, so the script will work with php 7.0
+o Fixed bug that caused "unequip" after selling an item
+
+config.php
+-> Minor corrections to make game work with newer PHP versions
+
+
+
 VERSION 0.9.82-UPDATED-6 (01-NOVEMBER-2012)
 ==============================
 Security Patch

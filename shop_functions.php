@@ -26,7 +26,7 @@ function do_buy(&$character, $shop_basics){
                 $number=1;
             }
             $item = array('id'=>$id,'type'=>$types[$key],'number'=>$number);
-            $info= fetch_item_additional_info($item,&$character);
+            $info= fetch_item_additional_info($item,$character);
         	if($info['buy_price']>0 && $character->pay($info['buy_price'])) {
                 $item['number']= item_pickup($shop_basics['item_location_id'],$item);
                 $bought+= $character->pickup_item($item);

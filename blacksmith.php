@@ -1,5 +1,5 @@
 <?php
-inlcude "header.php";
+include "header.php";
 include_once "items.php";
 include_once "class_character.php";
 ?>
