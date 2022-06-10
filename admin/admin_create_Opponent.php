@@ -64,7 +64,6 @@ else
       <td width="50%"><b><font color="#FFFFFF">Class</font></b></td>
       <td width="50%"><b><font color="#FFFFFF">
          <input type="text" name="class">
-        </select>
         </font></b></td>
     </tr>
     <tr> 

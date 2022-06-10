@@ -38,6 +38,7 @@ if (!get_magic_quotes_gpc()) {
   foreach (array('_GET', '_POST') as $array_name) {
     foreach (${$array_name} as $key => $value) {
       ${$array_name}[$key] = smartQuotes($value);
+      $$key = ${$array_name}[$key];
     }
   }
 }
@@ -62,14 +63,6 @@ $PHP_PHAOS_MD5PW = @$_COOKIE["PHP_PHAOS_MD5PW"];
 $PHP_ADMIN_USER = @$_COOKIE["PHP_ADMIN_USER"];
 $PHP_ADMIN_PW = @$_COOKIE["PHP_ADMIN_PW"];// for compatibility with old accounts
 $PHP_ADMIN_MD5PW = @$_COOKIE["PHP_ADMIN_MD5PW"];
-
-// FIXME: security hole
-foreach($_GET as $key=>$value) {
-	$$key = get_magic_quotes_gpc() ? $value : addslashes($value);
-}
-foreach($_POST as $key=>$value) {
-	$$key = get_magic_quotes_gpc() ? $value : addslashes($value);
-}
 
 // Additional Security Check
 unset($PHP_PHAOS_CHARID);

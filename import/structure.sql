@@ -140,14 +140,21 @@ CREATE TABLE `phaos_characters` (
   `rep_generious` int(11) NOT NULL default '0',
   `rep_combat` int(11) NOT NULL default '0',
   `bankgold` int(11) unsigned NOT NULL default '0',
+  `flee_location` int(11) NOT NULL default '0',
+  `region` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `location` (`location`),
   KEY `username` (`username`),
   KEY `name` (`name`),
   KEY `stamina` (`stamina`),
   KEY `stamina_time` (`stamina_time`),
-  KEY `regen_time` (`regen_time`)
+  KEY `regen_time` (`regen_time`),
+  KEY `flee_location` (`flee_location`),
+  KEY `region` (`region`)
 )  ;
+
+
+CREATE INDEX phaos_characters_region_index ON phaos_characters (`region`) USING BTREE;
 
 -- --------------------------------------------------------
 
@@ -824,3 +831,41 @@ CREATE TABLE `phaos_weapons` (
   KEY `buy_price` (`buy_price`),
   KEY `sell_price` (`sell_price`)
 )  ;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_regions`
+--
+
+CREATE TABLE `phaos_regions` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `location` int(11) NOT NULL default '0',
+  `map_width` int(11) NOT NULL default '0',
+  `map_height` int(11) NOT NULL default '0',
+  `home_page` tinyint(1) NOT NULL default '0',
+  `space` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `location` (`location`)
+);
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_region_opponents`
+--
+
+CREATE TABLE `phaos_region_opponents` (
+  `region` int(11) NOT NULL default '0',
+  `opponent` int(11) NOT NULL default '0',
+  `probability` decimal(9,2) NOT NULL default '0.50',
+  `min_level` int(11) NOT NULL default '0',
+  `max_level` int(11) NOT NULL default '0',
+  PRIMARY KEY (`region`, `opponent`),
+  KEY `region` (`region`),
+  KEY `opponent` (`opponent`)
+);

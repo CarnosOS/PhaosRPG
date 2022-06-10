@@ -7,6 +7,7 @@ if(@$_SESSION['opponent_id']) {
 include "header.php";
 include_once "functions.php";
 include_once "class_character.php";
+include_once "class_npc_generator.php";
 
 beginTiming();
 
@@ -33,12 +34,12 @@ if ($count > $upperlimit ) {
 }
 
 //@$_COOKIE['_speed'] is just a HACK to speed up testing on my PC, which is very slow
-
+$npc_generator = new npc_generator();
 if ($count < $lowerlimit ) {
-	$n = ceil(sqrt($lowerlimit-$count)*0.20*(@$_COOKIE['_speed']?0.5:1.0));
-	$n>6 and $n= 6;
-	for($i=0;$i<$n;++$i) {
-		npcgen();
+	$n = ceil(sqrt($lowerlimit-$count) * 0.20);
+	$n > 6 and $n = 6;
+	for ($i = 0; $i < $n;  ++$i) {
+        	$npc_generator->generate();
 	}
 }
 

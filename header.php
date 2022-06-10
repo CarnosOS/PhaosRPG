@@ -88,16 +88,6 @@ function add_chat_line() {
 }
 </script>
 
-<style type="text/css">
-<!--
-body {
-background-image: url(images/iso_table01.jpg);
-background-repeat: no-repeat;
-background-position: 50px 50px;
-}
-//-->
-</style>
-
 <meta name="author" content="Zeke Walker">
 <title><?php echo "$SITETITLE"; ?></title>
 <link rel=stylesheet type="text/css" href="styles/phaos.css">

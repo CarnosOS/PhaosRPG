@@ -1,5 +1,6 @@
 <?php
 include "header.php";
+include_once "class_npc_generator.php";
 
 function endfight(){
 	$disp_msg= $_SESSION['disp_msg'];
@@ -413,8 +414,9 @@ if($skip_actions) {
                    		if(DEBUG>=1) {$_SESSION['disp_msg'][] = "**DEBUG: killing oppponent";}
 
         				// add monsters to replace dead one
+                                        $npc_generator = new npc_generator();
         				for($i = 1; $i <= 2; $i++) {	//FIXME: 2 monsters for now, but this WILL over populate!
-        					npcgen()  and  DEBUG and $_SESSION['disp_msg'][] = "**DEBUG: npcgen is success";
+        					$npc_generator->generate() and DEBUG and $_SESSION['disp_msg'][] = "**DEBUG: npcgen is success";
         				}
 
         				//Receive Gold
