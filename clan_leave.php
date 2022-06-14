@@ -7,8 +7,7 @@ if ($row = mysql_fetch_array($result_3)) {
 	$clanleader = $row["clanleader"];
 	$clanleader_1 = $row["clanleader_1"];
 	$clanbanner = $row["clanbanner"];
-	#    $clansig = $row["clansig"];
-	$clan_sig = $row["clan_sig"];
+	$clansig = $row["clansig"];
 	$clanlocation = $row["clanlocation"];
 	$clanslogan = $row["clanslogan"];
 	$clancashbox = $row["clancashbox"];
@@ -40,7 +39,7 @@ if($quitting == "yes") {
 		<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
 		<tr>
 		<td width='100%'>
-		<p align='center'><b><font color='#FF0000'><img src=images/guild_sign/$clan_sig alt=$clanname>$clan_user_name ".$lang_guild4["plz_del_wa"].".</font></b></p>
+		<p align='center'><b><font color='#FF0000'>$clan_user_name ".$lang_guild4["plz_del_wa"].".</font></b></p>
 		<p align='center'><font color='#FF0000'><b>
 		<a href='town_hall.php'>".$lang_clan["town_ret"]."</a></b></font></td>
 		</tr>
@@ -54,7 +53,7 @@ if($quitting == "yes") {
 	mysql_query("UPDATE phaos_clan_admin SET clanmembers='$clanmembers' WHERE clanname='$clanname'");
 
 	$array_2 = "";
-	$oldname = str_replace($array_2,$clan_user_name);
+	$oldname = str_replace($clansig,$array_2,$clan_user_name);
 
 	mysql_query("UPDATE phaos_characters SET name='$oldname' WHERE name='$clan_user_name'");
 
@@ -77,7 +76,7 @@ if($v_error == "") {
 		<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' width='95%' id='AutoNumber3'>
 		<tr>
 		<td width='100%' bgcolor='#003300' align='center'>
-		<img src=images/guild_sign/$clan_sig alt=$clanname><b><font color='#FF0000'>$clan_user_name</font> ".$lang_guild4["sure2le"]."</b>
+		<b><font color='#FF0000'>$clan_user_name</font> ".$lang_guild4["sure2le"]."</b>
 		</td>
 		</tr>
 		<tr>

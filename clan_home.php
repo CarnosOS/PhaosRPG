@@ -66,7 +66,7 @@ if ($row = mysql_fetch_array($result_3)) {
 	$clanleader = $row["clanleader"];
 	$clanleader_1 = $row["clanleader_1"];
 	$clanbanner = $row["clanbanner"];
-	#    $clansig = $row["clansig"];
+	$clansig = $row["clansig"];
 	$clan_sig = $row["clan_sig"]; # select clan_sig
 	$clanlocation = $row["clanlocation"];
 	$clanslogan = $row["clanslogan"];
@@ -389,7 +389,7 @@ if($newnames == "Change") {
 				$clanleader = $row["clanleader"];
 				$clanleader_1 = $row["clanleader_1"];
 				$clanbanner = $row["clanbanner"];
-				#            $clansig = $row["clansig"];
+				$clansig = $row["clansig"];
 				$clanlocation = $row["clanlocation"];
 				$clanslogan = $row["clanslogan"];
 				$clancashbox = $row["clancashbox"];
@@ -561,7 +561,7 @@ if($newnames == "Change") {
 			</tr>
 			<tr>
 			<td width='20%' height='19' bgcolor='#282828'>".$lang_guild["sig"]." :</td>
-			<td width='80%' height='19' bgcolor='#282828'><img src=images/guild_sign/$clan_sig alt=$clanname></td>
+			<td width='80%' height='19' bgcolor='#282828'>$clansig</td>
 			</tr>
 			<tr>
 			<td width='20%' height='19' bgcolor='#141414'>".$lang_guild["banner"]." :</td>";

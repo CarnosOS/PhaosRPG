@@ -34,15 +34,6 @@ function smartQuotes($value) {
   }
 }
 
-if (!get_magic_quotes_gpc()) {
-  foreach (array('_GET', '_POST') as $array_name) {
-    foreach (${$array_name} as $key => $value) {
-      ${$array_name}[$key] = smartQuotes($value);
-      $$key = ${$array_name}[$key];
-    }
-  }
-}
-
 //Sanity check
 $query = "SELECT 1 FROM phaos_characters LIMIT 1";
 $result = mysql_query($query);
@@ -63,6 +54,15 @@ $PHP_PHAOS_MD5PW = @$_COOKIE["PHP_PHAOS_MD5PW"];
 $PHP_ADMIN_USER = @$_COOKIE["PHP_ADMIN_USER"];
 $PHP_ADMIN_PW = @$_COOKIE["PHP_ADMIN_PW"];// for compatibility with old accounts
 $PHP_ADMIN_MD5PW = @$_COOKIE["PHP_ADMIN_MD5PW"];
+
+if (!get_magic_quotes_gpc()) {
+  foreach (array('_GET', '_POST') as $array_name) {
+    foreach (${$array_name} as $key => $value) {
+      ${$array_name}[$key] = smartQuotes($value);
+      $$key = ${$array_name}[$key];
+    }
+  }
+}
 
 // Additional Security Check
 unset($PHP_PHAOS_CHARID);

@@ -54,8 +54,7 @@ $result_0 = mysql_query ("SELECT * FROM phaos_clan_admin ORDER BY clanname");
 while ($row = mysql_fetch_array($result_0)) {
 	$clanname = $row["clanname"];
 	$clanleader = $row["clanleader"];
-	#    $clansig = $row["clansig"];
-	$clan_sig = $row["clan_sig"];
+	$clansig = $row["clansig"];
 	$clanslogan = $row["clanslogan"];
 	$clanmembers = $row["clanmembers"];
 	$clancreatedate = $row["clancreatedate"];
@@ -68,9 +67,9 @@ while ($row = mysql_fetch_array($result_0)) {
 
 	echo "<tr>
 		<td width='20%' >$clanname</td>
-		<td width='20%' ><img src=images/guild_sign/$clan_sig alt=$clanname><font color='#666699'><b>$clanleader</b></font></td>
-		<td width='20%' >$clanmembers</td>
-		<td width='20%' ><img src=images/guild_sign/$clan_sig alt=$clanname></td>";
+                <td width='20%' ><font color='#666699'><b>$clanleader</b></font></td>
+                <td width='20%' >$clanmembers</td>
+                <td width='20%' >$clansig</td>";
 	if($inclan == "yes"):
 		if(file_exists($clanbanner)):
 			echo "<td width='20%' ><p align='center'>$clanname</td>";

@@ -2,11 +2,10 @@
 include "header.php";
 
 if (@$_REQUEST['saved']) {
-  setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
+  // At this point header is already send, setcookie always fails
+  // setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
 //Added by dragzone---
   if($pw != "") {
-  $pw=$HTTP_POST_VARS['pw'];
-  $pw2=$HTTP_POST_VARS['pw2'];
   if ($pw != $pw2) { echo "<meta http-equiv=\"refresh\" content=\"3; URL=index.php\"><p>&nbsp;</p><p>&nbsp;</p><p align=\"center\"><b>Your password doesn't match!</b></p>"; exit;}
   $vpw=md5($pw);
   mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status', password='$vpw' WHERE username='$username'") or die("nope");

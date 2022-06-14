@@ -20,7 +20,7 @@ if($delclan == "yes") {
 		$clanname = $row["clanname"];
 		$clanleader = $row["clanleader"];
 		$clanmembers = $row["clanmembers"];
-		#        $clansig = $row["clansig"];
+		$clansig = $row["clansig"];
 		$clan_sig = $row["clan_sig"];
 	}
 	$error = "yes";
@@ -45,7 +45,7 @@ if($delclan == "yes") {
 		/*echo "BEFORE : oldname >$oldname : clansig>$clansig : clanoberhaupt>$clanoberhaupt<br>";*/
 		# $oldname delete later
 		$array_2 = "";
-		$oldname = $clanleader; # delete $clansig
+                $oldname = str_replace($clansig,$array_2,$clanleader);
 
 		/*echo "AFTER : oldname >$oldname : clansig>$clansig : clanoberhaupt>$clanoberhaupt<br>";*/
 		mysql_query("UPDATE phaos_characters SET name='$oldname' WHERE name='$clanleader'");
@@ -56,7 +56,7 @@ if($delclan == "yes") {
 		$query_2 = "DELETE FROM phaos_clan_in WHERE clanmember LIKE '$clanleader'";
 		$result = mysql_query($query_2) or die ("Error in query: $query_2. " . mysql_error());
 
-		echo "<a target='content' href='town_hall.php'>".$lan_clan["town_ret"]."</a></b></font></center>
+		echo "<a target='content' href='town_hall.php'>".$lang_clan["town_ret"]."</a></b></font></center>
 			</td>
 			</tr>
 			</table><br><br>";

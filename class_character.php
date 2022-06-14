@@ -1068,6 +1068,7 @@ class np_character_from_blueprint extends character {
 		$this->age=$this->level*$this->level;
 		$this->location = 0;
                 $this->flee_location = 0;
+                $this->region = 0;
 		//define attribute vars
 		$this->strength = (int)($blueprint["min_damage"]+3*($this->level-1));
     	$this->dexterity = (int)($blueprint["max_damage"]-$blueprint["min_damage"]+2*$this->level+2);
@@ -1209,7 +1210,7 @@ function getclan_sig($plname){
     }
     if ($clan_sig !== "no" and $clan_sig !== ""){
     ?>
-    <img src="images/guild_sign/<?php echo $clan_sig; ?>" alt="<?php echo $clan_name; ?>">
+    <img src="<?php echo $clan_sig; ?>" alt="<?php echo $clan_name; ?>">
     <?php
     }
 }// end function getclan_sig
