@@ -71,6 +71,7 @@ if ($row = mysql_fetch_array($result)) {
 $result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$player_name' OR name = '$char_name'");
 if ($row = mysql_fetch_array($result)) {
 	$player_name = $row["username"];
+        $char_id = $row['id'];
 	$char_name = $row["name"];
 	$char_age = $row["age"];
 	$char_race = $row["race"];
@@ -92,6 +93,7 @@ if ($row = mysql_fetch_array($result)) {
 		$rep_points = $row["rep_points"];
 	}
 } else {
+        $char_id = 0;
 	$char_name = $lang_na;
 	$char_age = $lang_na;
 	$char_race = $lang_na;
@@ -133,7 +135,7 @@ if ($row = mysql_fetch_array($result)) {
 <b><?php echo $lang_name; ?>: &nbsp</b>
 </td>
 <td>
-<?php /* ### getclan_sig ### */ getclan_sig($char_name);?> <b><?php print $char_name; ?> &nbsp</b>
+<b><?php /* ### getclan_sig ### */ echo get_clan_sig($char_name) . $char_name; ?> &nbsp</b>
 </td>
 </tr>
 <tr>

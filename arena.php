@@ -106,7 +106,7 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 		
 			//FIXME: leader_level should not be part of the GET request
 			print ("<tr style=\"background:$rbgc;\"><td align=left>");
-			/* ### getclan_sig ### */ getclan_sig($leader_name);
+			/* ### getclan_sig ### */print get_clan_sig($leader_name);
 			print ("<a href=\"player_info.php?player_name=$player_name\" target=\"_blank\"><font color=#FFFFFF><b>$leader_name</b></font></a>
 				</td>
 				<td align=center>

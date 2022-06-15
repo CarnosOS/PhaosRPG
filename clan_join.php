@@ -27,61 +27,56 @@ echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: 
 	<td width='20%' bgcolor='#003300'><p align='center'>".$lang_guild4["gu_res"]." :</td>
 	</tr>";
 
-$result_b = mysql_query("SELECT name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
+$result_b = mysql_query("SELECT id, name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
 if ($row = mysql_fetch_array($result_b)) {
-	$name = $row["name"];
+        $clanmemberid = $row['id'];
+	$clanmember = $row["name"];
 }
 
-$result = mysql_query ("SELECT clanmember FROM phaos_clan_in ORDER BY clanmember");
-while ($row = mysql_fetch_array($result)) {
-	$clanmember = $row["clanmember"];
-
-	if($name == $clanmember) {
-		$inclan = "yes";
-	}
+$result = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'");
+if (($row = mysql_fetch_array($result))) {
+    $inclan = "yes";
 }
 
-$result_a = mysql_query ("SELECT charname FROM phaos_clan_search ORDER BY charname");
-while ($row = mysql_fetch_array($result_a)) {
-	$charname = $row["charname"];
-
-	if($name == $charname) {
-		$inclan = "yes";
-	}
-}
-
-$result_0 = mysql_query ("SELECT * FROM phaos_clan_admin ORDER BY clanname");
+$query = "SELECT c.clanname, c.clanleader, c.clanleaderid, c.clansig, c.clanslogan, count(i.clanmemberid) as clanmembers, c.clancreatedate, c.clanbanner, s.description "
+        . "FROM phaos_clan_admin c "
+        . "LEFT OUTER JOIN phaos_clan_in i ON c.clanname = i.clanname "
+        . "LEFT OUTER JOIN phaos_clan_search s ON c.clanname = s.clanname AND s.clanmemberid = '$clanmemberid' "
+        . "GROUP BY c.clanname, c.clanleader, c.clanleaderid, c.clansig, c.clanslogan, c.clancreatedate, c.clanbanner, s.description "
+        . "ORDER BY clanmembers DESC, clanname ASC";
+$result_0 = mysql_query ($query);
 while ($row = mysql_fetch_array($result_0)) {
 	$clanname = $row["clanname"];
 	$clanleader = $row["clanleader"];
+        $clanleaderid = $row["clanleaderid"];
 	$clansig = $row["clansig"];
 	$clanslogan = $row["clanslogan"];
 	$clanmembers = $row["clanmembers"];
 	$clancreatedate = $row["clancreatedate"];
 	$clanbanner = $row["clanbanner"];
-
-	$result_1 = mysql_query("SELECT * FROM phaos_users WHERE username = '$clanleader'");
-	if ($row = mysql_fetch_array($result_1)) {
-		$usermail = $row["email_address"];
-	}
+        $description = $row["description"];
 
 	echo "<tr>
 		<td width='20%' >$clanname</td>
-                <td width='20%' ><font color='#666699'><b>$clanleader</b></font></td>
+                <td width='20%' ><font color='#666699'><b>$clansig$clanleader</b></font></td>
                 <td width='20%' >$clanmembers</td>
                 <td width='20%' >$clansig</td>";
 	if($inclan == "yes"):
 		if(file_exists($clanbanner)):
-			echo "<td width='20%' ><p align='center'>$clanname</td>";
+			echo "<td width='20%' ><p align='center'><img border='0' src=\"$clanbanner\" width='81' height='77'></td>";
 		else:
 			echo "<td width='20%' ><p align='center'>$clanname</td>";
 		endif;
 	else:
-		if(file_exists($clanbanner)):
-			echo "<td width='20%' ><p align='center'><a href='clan_send.php?clanname_ask=".$clanname."'><img border='0' src='$clanbanner' width='81' height='77'></a></td>";
-		else:
-			echo "<td width='20%' ><p align='center'><a href='clan_send.php?clanname_ask=".$clanname."'>$clanname</a></td>";
-		endif;
+                if ($description !== null) {
+                      echo "<td width='20%'><p align='center'>Request pending<br /><a href=\"clan_send.php?clanname_cancel=".urlencode($clanname)."\">Cancel</a></p></td>";
+                } else {
+                    if(file_exists($clanbanner)):
+                            echo "<td width='20%' ><p align='center'><a href=\"clan_send.php?clanname_ask=".urlencode($clanname)."\"><img border='0' src=\"$clanbanner\" width='81' height='77'></a></td>";
+                    else:
+                            echo "<td width='20%' ><p align='center'><a href=\"clan_send.php?clanname_ask=".urlencode($clanname)."\">$clanname</a></td>";
+                    endif;
+                }
 	endif;
 	echo "</tr>
 		<tr>

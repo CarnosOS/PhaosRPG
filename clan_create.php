@@ -29,12 +29,13 @@ if($level <= 9) {
 
 $result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
 if ($row = mysql_fetch_array($result)) {
-	$char_name = $row["name"];
-	$char_location = $row["location"];
+        $clanmemberid = $row['id'];
+        $clanmember = $row['name'];
+	$clanlocation = $row["location"];
 }
 
-$result_1 = mysql_query ("SELECT * FROM phaos_clan_admin WHERE clanleader = '$char_name'");
-if ($row = mysql_fetch_array($result_1)) {
+$result_1 = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmember = '$clanmember'");
+if ($totalerror !== "yes" && $row = mysql_fetch_array($result_1)) {
 	echo "<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1'>
 		<tr>
 		<td width='100%'>
@@ -49,8 +50,9 @@ if ($row = mysql_fetch_array($result_1)) {
 if($totalerror == "") {
 	$result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
 	if ($row = mysql_fetch_array($result)) {
-		$char_name = $row["name"];
-		$char_location = $row["location"];}
+                $clanleaderid = $row["id"];
+                $clanleader = $row['name'];
+		$clanlocation = $row["location"];}
 		$clanrank_1 = $lang_clan["rank_1"];
 		$clanrank_2 = $lang_clan["rank_2"];
 		$clanrank_3 = $lang_clan["rank_3"];
@@ -89,6 +91,7 @@ if($totalerror == "") {
 			$date_h = date('m.d.Y - H:i:s');
 			$clangold = "0";
 			$creategilde = "no";
+                        $assistent_id = 'NULL';
 
 			$result = mysql_query ("SELECT * FROM phaos_clan_admin WHERE clanname = '$clanname'");
 			if ($row = mysql_fetch_array($result)) {
@@ -96,32 +99,40 @@ if($totalerror == "") {
 			}
 
 			if($duplicate != "YES" AND $clanname != "") {
+
+                                // Validate clan assistant
+                                if ($assistent != "") {
+                                  $result = mysql_query ("SELECT * FROM phaos_characters WHERE name='$assistent'");
+                                  if (($row = mysql_fetch_array($result))) {
+                                          $assistent_id = $row['id'];
+                                          $result = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmember = '$assistent'");
+                                          if (($row = mysql_fetch_array($result))) {
+                                                  $assistent_id = 'NULL'; // clan assistant already in a clan
+                                          }
+                                  }
+                                }
+
 				$query = "INSERT INTO phaos_clan_admin
-				(clanname,clanleader,clanleader_1,clanbanner,clansig,clanlocation,clanslogan,clancashbox,clanmembers,clancreatedate,clanrank_1,clanrank_2,clanrank_3,clanrank_4,clanrank_5,clanrank_6,clanrank_7,clanrank_8,clanrank_9,clanrank_10)
+				(clanname,clanleader,clanleaderid,clanbanner,clansig,clanlocation,clanslogan,clancashbox,clancreatedate,clanrank_1,clanrank_2,clanrank_3,clanrank_4,clanrank_5,clanrank_6,clanrank_7,clanrank_8,clanrank_9,clanrank_10)
 				VALUES
-				('$clanname','$clansig$clanleader','$clanleader_1','$clanbanner','$clansig','$char_location','$clanslogan','$clangold','1','$clanindate','$clanrank_1','$clanrank_2','$clanrank_3','$clanrank_4','$clanrank_5','$clanrank_6','$clanrank_7','$clanrank_8','$clanrank_9','$clanrank_10')";
+				('$clanname','$clanleader',$clanleaderid,'$clanbanner','$clansig','$clanlocation','$clanslogan','$clangold','$clanindate','$clanrank_1','$clanrank_2','$clanrank_3','$clanrank_4','$clanrank_5','$clanrank_6','$clanrank_7','$clanrank_8','$clanrank_9','$clanrank_10')";
 				$req = mysql_query($query);
 				if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
+
+                                $req1 = mysql_query("INSERT INTO phaos_clan_in (`clanname`,`clanmember`,`clanmemberid`,`clanindate`,`givegold`,`clanrank`)
+                                VALUES ('$clanname','$clanleader','$clanleaderid','$date_h','0','99')");
+                                if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
+
+                                if ($assistent_id !== 'NULL') {
+                                    $req2 = mysql_query("INSERT INTO phaos_clan_in (`clanname`,`clanmember`,`clanmemberid`,`clanindate`,`givegold`,`clanrank`)
+                                    VALUES ('$clanname','$assistent','$assistent_id','$date_h','0','98')");
+                                    if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
+                                }
 
 				print ("<font color='#FF0000'>".$lang_clan["g_ok"]." ...</font><p><a href='town_hall.php'>".$lang_clan["town_ret"]."</a>");
 			} else {
 				print ("<font color='#FF0000'><big>".$lang_clan["err1"]."...</font></big><a href='town_hall.php'>".$lang_clan["town_ret"]."</a><p><a href=\"clan_create.php\">".$lang_clan["again"]."</a>");
 			}
-
-			$query = "INSERT INTO phaos_clan_in
-			(clanname,clanmember,clanindate,givegold,clanrank)
-			VALUES
-			('$clanname','$clansig$clanleader','$date_h','0','99')";
-			$req = mysql_query($query);
-			if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
-
-			/*echo "$clansig$clanoberhaupt";*/
-			mysql_query("UPDATE phaos_characters SET name='$clansig$clanleader' WHERE name='$clanleader'");
-		}
-
-		$result_y = mysql_query ("SELECT * FROM `phaos_characters` WHERE 1 AND `username` LIKE '$PHP_PHAOS_USER'");
-		if ($row = mysql_fetch_array($result_y)) {
-			$clanmember_n = $row["name"];
 		}
 
 		if($creategilde == ""):
@@ -140,13 +151,13 @@ if($totalerror == "") {
 				$error<br>
 				<form method='post' action='clan_create.php'>
 				<font color='#FF0000'><sup>*</sup></font>".$lang_guild["gname"]."       : <input type='text' name='clanname' size='30'><br><br>
-				<font color='#FF0000'><sup>*</sup></font>".$lang_guild["master"]."    : <input type='text' name='clanleader' size='30' value='$clanmember_n'><br><br>
-				".$lang_guild["assist"]." : <input type='text' name='clanleader_1' size='30'><br><br>
+				<font color='#FF0000'><sup>*</sup></font>".$lang_guild["master"]."    : <input type='text' name='clanleader' size='30' value=\"$clanmember\" readonly><br><br>
+				".$lang_guild["assist"]." : <input type='text' name='assistent' size='30'><br><br>
 				".$lang_guild["banner"]."    : <input type='text' name='clanbanner' size='40'><br><br>
 				<font color='#FF0000'><sup>*</sup></font>".$lang_guild["sig"]."       : <input type='text' name='clansig' size='6'><br><br>
 				<font color='#FF0000'><sup>*</sup></font>".$lang_guild["slogan"]."    : <input type='text' name='clanslogan' size='40' maxlength='100'><br><br>
-				<input class='buttont' type='submit' value='".$lang_clan["create"]."' name='createguild'>
-				<input class='buttont' type='reset' value='".$lang_clan["reset"]."' name='B2'><br><br>
+				<input class='buttont' type='submit' value=\"".$lang_clan["create"]."\" name='createguild'>
+				<input class='buttont' type='reset' value=\"".$lang_clan["reset"]."\" name='B2'><br><br>
 				</form>
 				</td>
 				</tr>

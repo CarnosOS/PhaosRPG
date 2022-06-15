@@ -14,57 +14,42 @@ echo "<html><head>
 	</td>
 	</tr>";
 
-if($delclan == "yes") {
-	$result_3 = mysql_query("SELECT * FROM phaos_clan_admin WHERE clanname = '$clanname'");
-	if ($row = mysql_fetch_array($result_3)) {
-		$clanname = $row["clanname"];
-		$clanleader = $row["clanleader"];
-		$clanmembers = $row["clanmembers"];
-		$clansig = $row["clansig"];
-		$clan_sig = $row["clan_sig"];
-	}
-	$error = "yes";
-
-	/*echo "<font color='#FF0000'>$clanname - $clanmembers</font>";*/
-	if($clanmembers > "1") {
-		echo "<br><br>
-			<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
-			<tr>
-			<td width='100%'>
-			<center><b><font color='#FF0000'>".$lang_guild2["error_1"]."...</font></b><br>
-			<a target='content' href='clan_home.php'>".$lang_clan["back"]."</a></b></font></center>
-			</td>
-			</tr>
-			</table><br><br>";
-	} else {
-		echo "<br><br>
-			<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
-			<tr>
-			<td width='100%'>
-			<center><b><font color='#FF0000'>".$lang_guild2["del_gu"]."...</font></b><br>";
-		/*echo "BEFORE : oldname >$oldname : clansig>$clansig : clanoberhaupt>$clanoberhaupt<br>";*/
-		# $oldname delete later
-		$array_2 = "";
-                $oldname = str_replace($clansig,$array_2,$clanleader);
-
-		/*echo "AFTER : oldname >$oldname : clansig>$clansig : clanoberhaupt>$clanoberhaupt<br>";*/
-		mysql_query("UPDATE phaos_characters SET name='$oldname' WHERE name='$clanleader'");
-
-		$query_3 = "DELETE FROM phaos_clan_admin WHERE clanname LIKE '$clanname'";
-		$result = mysql_query($query_3) or die ("Error in query: $query_3. " . mysql_error());
-
-		$query_2 = "DELETE FROM phaos_clan_in WHERE clanmember LIKE '$clanleader'";
-		$result = mysql_query($query_2) or die ("Error in query: $query_2. " . mysql_error());
-
-		echo "<a target='content' href='town_hall.php'>".$lang_clan["town_ret"]."</a></b></font></center>
-			</td>
-			</tr>
-			</table><br><br>";
-	}
-	# else end
+$clanmemberid = 0;
+$clanrank = 0;
+$clanname = '';
+$result_b = mysql_query("SELECT id, name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
+if ($row = mysql_fetch_array($result_b)) {
+        $clanmemberid = $row['id'];
+	$clanmember = $row["name"];
 }
 
-if($error == "") {
+$result = mysql_query ("SELECT clanname, clanrank FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'");
+if (($row = mysql_fetch_array($result))) {
+    $clanname = $row["clanname"];
+    $clanrank = intval($row["clanrank"]);
+}
+
+if($clanname === '' || $clanrank !== 99) {
+  echo "<p align='center'><font color='#FF0000'><b>
+          <a href=\"town_hall.php\">".$lang_guild3["not_in"]."</a></b></font></td>
+          </tr>
+          </table><br><br>";
+}
+else if($delclan == "yes") {
+          echo "<br><br>
+                  <table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
+                  <tr>
+                  <td width='100%'>
+                  <center><b><font color='#FF0000'>".$lang_guild2["del_gu"]."...</font></b><br>";
+
+          $query_3 = "DELETE FROM phaos_clan_admin WHERE clanname = '$clanname'";
+          $result = mysql_query($query_3) or die ("Error in query: $query_3. " . mysql_error());
+
+          echo "<a target='content' href='town_hall.php'>".$lang_clan["town_ret"]."</a></b></font></center>
+                  </td>
+                  </tr>
+                  </table><br><br>";
+} else {
 	echo "<tr>
 		<td align='center' valign='top' height='63'>
 		<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber2'>
@@ -73,7 +58,7 @@ if($error == "") {
 		</tr>
 		<tr>
 		<td width='100%' align='center' valign='top'>
-		<form method='post' action='clan_delete.php?clanname=$clanname'>
+		<form method='post' action='clan_delete.php'>
 		".$lang_guild2["del_msg"]." $clanname<br>
 		<br><hr color='#FFFFFF' width='98%'><br>
 		<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' width='95%' id='AutoNumber3'>
@@ -108,4 +93,3 @@ if($error == "") {
 		</tr>";
 }
 echo "</table></body></html>";
-?>

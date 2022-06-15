@@ -215,7 +215,7 @@ if($character->name != "" AND $character->image != "") {
 	<b><?php echo $lang_name; ?>: &nbsp</b>
 	</td>
 	<td>
-	<?php /* ### getclan_sig ### */ getclan_sig($character->name); ?> <b><?php print $character->name; ?> &nbsp</b>
+	<b><?php /* ### getclan_sig ### */ echo get_clan_sig($character->name) . $character->name; ?> &nbsp</b>
 	</td>
 	</tr>
 	<tr>

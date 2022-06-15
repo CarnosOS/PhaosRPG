@@ -33,29 +33,60 @@ if($Text1 > "" and $questionsend == $lang_guild4["send_me"]) {
 
 	$result_1 = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
 	if ($row = mysql_fetch_array($result_1)) {
+                $characterid = $row['id'];
 		$chname = $row["name"];
 	}
 
-	$result_2 = mysql_query ("SELECT * FROM phaos_clan_search WHERE charname = '$chname'");
+        // check if application is not pending
+	$result_2 = mysql_query ("SELECT * FROM phaos_clan_search WHERE clanmemberid = '$characterid' AND clanname = '$nclanname'");
 	if ($row = mysql_fetch_array($result_2)) {
 		$duplicate = "YES";
 	}
 
+        // check if clan exists
+        $result_3 = mysql_query("SELECT * FROM phaos_clan_admin WHERE clanname = '$nclanname'");
+        if (mysql_fetch_array($result_3) === false) {
+                $duplicate = "YES";
+        }
+
+        $send = false;
 	if($duplicate != "YES" AND $chname != "") {
 		echo $clan_name;
-		$query = "INSERT INTO phaos_clan_search
-		(clanname,charname,description)
-		VALUES
-		('$nclanname','$chname','$Text1')";
-		$req = mysql_query($query);
-		if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
-
-		print ("<center><font color='#FF0000'>".$lang_guild4["has_sent"]."...</font><p><br><a href='town_hall.php'>".$lang_clan["town_ret"]."</a></center>");
+                $query = "INSERT INTO phaos_clan_search
+                (clanname,clanmember,clanmemberid,description)
+                VALUES
+                ('$nclanname','$chname','$characterid','$Text1')";
+                $req = mysql_query($query);
+                if ($req) { $send = true; } // echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
+        }
+        
+        if ($send === true) {
+                print ("<center><font color='#FF0000'>".$lang_guild4["has_sent"]."...</font><p><br><a href='town_hall.php'>".$lang_clan["town_ret"]."</a></center>");
 	} else {
 		print ("<center><font color='#FF0000'><big>".$lang_guild4["not_sent"]."</font></big><br><a href='town_hall.php'>".$lang_clan["town_ret"]."</a><br><a href=\"clan_join.php\">".$lang_guild4["tr_agi"]."</a><br>");
 	}
 	$error = "no";
 }
+
+if(isset($clanname_cancel) && $clanname_cancel !== "") {
+	echo "<br><table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' width='95%' id='AutoNumber3'>
+		<tr>
+		<td width='100%'>
+		<center><font color='#FF0000'>".$lang_guild4["plz_send"].".</font></center><br>
+		<!-- <p align='center'><a href='town_hall.php'>to Town Hall</a> -->";
+
+	$result_1 = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
+	if ($row = mysql_fetch_array($result_1)) {
+                $characterid = $row['id'];
+		$chname = $row["name"];
+	}
+
+        $nclanname = $clanname_cancel;
+	mysql_query ("DELETE FROM phaos_clan_search WHERE clanmemberid = '$characterid' AND clanname = '$nclanname'");
+        print ("<center><font color='#FF0000'>".$lang_guild4["has_sent"]."...</font><p><br><a href='town_hall.php'>".$lang_clan["town_ret"]."</a></center>");
+	$error = "no";
+}
+
 echo "</td>
 	</tr>
 	</table>";

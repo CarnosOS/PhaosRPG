@@ -1197,22 +1197,14 @@ function fairInt($f){
     return (int)($f+rand(0,99)*0.01);
 }
 
-function getclan_sig($plname){
-    $result = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmember = '$plname'");
+function get_clan_sig($plname){
+    $result = mysql_query ("SELECT clansig FROM phaos_clan_admin ca "
+            ."INNER JOIN phaos_clan_in ci ON ca.clanname = ci.clanname "
+            ."WHERE ci.clanmember = '$plname'");
     if ($row = mysql_fetch_array($result)) {
-    	$mem_clan = $row["clanname"];
-    } else {return false;}
-
-    $result = mysql_query ("SELECT * FROM phaos_clan_admin WHERE clanname = '$mem_clan'");
-    if ($row = mysql_fetch_array($result)) {
-    	$clan_name = $row["clanname"];
-    	$clan_sig = $row["clan_sig"];
+    	return $row['clansig'];
     }
-    if ($clan_sig !== "no" and $clan_sig !== ""){
-    ?>
-    <img src="<?php echo $clan_sig; ?>" alt="<?php echo $clan_name; ?>">
-    <?php
-    }
+    return '';
 }// end function getclan_sig
 
 ?>

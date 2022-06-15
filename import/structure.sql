@@ -163,16 +163,14 @@ CREATE INDEX phaos_characters_region_index ON phaos_characters (`region`) USING 
 --
 
 CREATE TABLE `phaos_clan_admin` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
   `clanleader` varchar(30) NOT NULL default '',
-  `clanleader_1` varchar(30) NOT NULL default '',
+  `clanleaderid` int(11),
   `clanbanner` varchar(100) NOT NULL default '',
   `clansig` varchar(6) NOT NULL default '',
   `clanlocation` varchar(11) NOT NULL default '',
   `clanslogan` varchar(100) NOT NULL default '',
   `clancashbox` int(11) NOT NULL default '0',
-  `clanmembers` int(10) NOT NULL default '0',
   `clancreatedate` varchar(11) NOT NULL default '',
   `clanrank_1` varchar(20) NOT NULL default '',
   `clanrank_2` varchar(20) NOT NULL default '',
@@ -184,9 +182,8 @@ CREATE TABLE `phaos_clan_admin` (
   `clanrank_8` varchar(20) NOT NULL default '',
   `clanrank_9` varchar(20) NOT NULL default '',
   `clanrank_10` varchar(20) NOT NULL default '',
-  `clan_sig` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`)
+  PRIMARY KEY  (`clanname`),
+  FOREIGN KEY(`clanleaderid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------
@@ -196,14 +193,15 @@ CREATE TABLE `phaos_clan_admin` (
 --
 
 CREATE TABLE `phaos_clan_in` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
   `clanmember` varchar(30) NOT NULL default '',
+  `clanmemberid` int(11) NOT NULL,
   `clanindate` varchar(30) NOT NULL default '',
   `givegold` varchar(30) NOT NULL default '',
   `clanrank` int(3) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`)
+  PRIMARY KEY  (`clanname`, `clanmemberid`),
+  FOREIGN KEY(`clanname`) REFERENCES phaos_clan_admin(`clanname`) ON DELETE CASCADE,
+  FOREIGN KEY(`clanmemberid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------
@@ -213,13 +211,13 @@ CREATE TABLE `phaos_clan_in` (
 --
 
 CREATE TABLE `phaos_clan_search` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
-  `charname` varchar(30) NOT NULL default '',
+  `clanmember` varchar(30) NOT NULL default '',
+  `clanmemberid` int(11) NOT NULL,
   `description` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`),
-  KEY `charname` (`charname`)
+  PRIMARY KEY  (`clanname`, `clanmemberid`),
+  FOREIGN KEY(`clanname`) REFERENCES phaos_clan_admin(`clanname`) ON DELETE CASCADE,
+  FOREIGN KEY(`clanmemberid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 ) ;
 
 -- --------------------------------------------------------

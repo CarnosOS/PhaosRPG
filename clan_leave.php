@@ -1,28 +1,31 @@
 <?php
 include "header.php";
 
-$result_3 = mysql_query("SELECT * FROM phaos_clan_admin WHERE clanname = '$clanname'");
-if ($row = mysql_fetch_array($result_3)) {
-	$clanname = $row["clanname"];
-	$clanleader = $row["clanleader"];
-	$clanleader_1 = $row["clanleader_1"];
-	$clanbanner = $row["clanbanner"];
-	$clansig = $row["clansig"];
-	$clanlocation = $row["clanlocation"];
-	$clanslogan = $row["clanslogan"];
-	$clancashbox = $row["clancashbox"];
-	$clanmembers = $row["clanmembers"];
-	$clancreatedate = $row["clancreatedate"];
-	$clanrank_1 = $row["clanrank_1"];
-	$clanrank_2 = $row["clanrank_2"];
-	$clanrank_3 = $row["clanrank_3"];
-	$clanrank_4 = $row["clanrank_4"];
-	$clanrank_5 = $row["clanrank_5"];
-	$clanrank_6 = $row["clanrank_6"];
-	$clanrank_7 = $row["clanrank_7"];
-	$clanrank_8 = $row["clanrank_8"];
-	$clanrank_9 = $row["clanrank_9"];
-	$clanrank_10 = $row["clanrank_10"];
+$clanmemberid = 0;
+$clanrank = 0;
+$clanname = '';
+$result_b = mysql_query("SELECT id, name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
+if ($row = mysql_fetch_array($result_b)) {
+        $clanmemberid = $row['id'];
+	$clanmember = $row["name"];
+}
+
+$result = mysql_query ("SELECT clanname, clanrank FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'");
+if (($row = mysql_fetch_array($result))) {
+    $clanname = $row["clanname"];
+    $clanrank = intval($row["clanrank"]);
+}
+
+// Deleting an another user from the same clan, only for guild leader or guild assistant.
+if ($clan_user_name !== '' && $clanrank >= 98) {
+  $result = mysql_query ("SELECT clanname, clanrank, clanmember, clanmemberid FROM phaos_clan_in WHERE clanmember = '$clan_user_name'");
+  if (($row = mysql_fetch_array($result))) {
+      $clan_user_rank = intval($row['clanrank']);
+      if ($row["clanname"] === $clanname && $clan_user_rank < 99) {
+        $clanmemberid = $row["clanmemberid"];
+        $clanmember = intval($row["clanmember"]);
+      }
+  }
 }
 
 echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
@@ -32,37 +35,26 @@ echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: 
 	</td>
 	</tr>";
 
-if($quitting == "yes") {
-	$v_error = "yes";
 
+if($clanname === '') {
+  echo "<p align='center'><font color='#FF0000'><b>
+          <a href=\"town_hall.php\">".$lang_guild3["not_in"]."</a></b></font></td>
+          </tr>
+          </table><br><br>";
+} else if($quitting == "yes") {
 	echo "<br><br>
 		<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
 		<tr>
 		<td width='100%'>
-		<p align='center'><b><font color='#FF0000'>$clan_user_name ".$lang_guild4["plz_del_wa"].".</font></b></p>
+		<p align='center'><b><font color='#FF0000'>$clanmember ".$lang_guild4["plz_del_wa"].".</font></b></p>
 		<p align='center'><font color='#FF0000'><b>
 		<a href='town_hall.php'>".$lang_clan["town_ret"]."</a></b></font></td>
 		</tr>
 		</table><br><br>";
 
-	$query_3 = "DELETE FROM phaos_clan_in WHERE clanmember LIKE '$clan_user_name'";
+	$query_3 = "DELETE FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'";
 	$result = mysql_query($query_3) or die ("Error in query: $query_3. " . mysql_error());
-
-	$clanmembers --;
-
-	mysql_query("UPDATE phaos_clan_admin SET clanmembers='$clanmembers' WHERE clanname='$clanname'");
-
-	$array_2 = "";
-	$oldname = str_replace($clansig,$array_2,$clan_user_name);
-
-	mysql_query("UPDATE phaos_characters SET name='$oldname' WHERE name='$clan_user_name'");
-
-	if($clanleader_1 == $clan_user_name) {
-		mysql_query("UPDATE phaos_clan_admin SET clanleader_1='' WHERE clanname='$clanname'");
-	}
-}
-
-if($v_error == "") {
+} else {
 	echo "<tr>
 		<td align='center' valign='top' height='63'>
 		<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%'>
@@ -72,11 +64,11 @@ if($v_error == "") {
 		<tr>
 		<td width='100%' align='center' valign='top'>
 		<br>
-		<form method='post' action='clan_leave.php?clanname=$clanname&clan_user_name=$clan_user_name&clanmembers=$clanmembers'>
+		<form method='post' action=\"clan_leave.php?clan_user_name=$clanmember\">
 		<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' width='95%' id='AutoNumber3'>
 		<tr>
 		<td width='100%' bgcolor='#003300' align='center'>
-		<b><font color='#FF0000'>$clan_user_name</font> ".$lang_guild4["sure2le"]."</b>
+		<b><font color='#FF0000'>$clanmember</font> ".$lang_guild4["sure2le"]."</b>
 		</td>
 		</tr>
 		<tr>
@@ -107,4 +99,3 @@ if($v_error == "") {
 }
 
 include "footer.php";
-?>

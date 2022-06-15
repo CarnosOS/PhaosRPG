@@ -105,7 +105,7 @@ else {
 <tr>
 <td align=center valign=middle colspan=2>
 <?php echo $lang_name; ?>:
-<?php /* ### getclan_sig ### */ getclan_sig($character->name);?> <big><b><?php echo $character->name; ?></b></big>
+<big><b><?php /* ### getclan_sig ### */ echo get_clan_sig($character->name) . $character->name; ?></b></big>
 	<p>
 	<big><b><?php echo $lang_side["stats"]; ?></b></big>
 	<br>

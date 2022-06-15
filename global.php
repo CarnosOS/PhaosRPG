@@ -62,7 +62,7 @@ function who_is_online($location = '') {
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . $row['name'] .  '</a>';
+			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . get_clan_sig($row['name']) . $row['name'] .  '</a>';
 		}
 	} else {
 		$html = "<font color=#009900>|</font>".$lang_glo["n_else"];
@@ -84,7 +84,7 @@ function who_is_offline($location = '') {
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . $row['name'] .  '</a>';
+			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . get_clan_sig($row['name']) . $row['name'] .  '</a>';
 		}
 	}
 	return $html . '<font color="#009900">|</font>';
