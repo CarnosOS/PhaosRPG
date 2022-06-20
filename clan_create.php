@@ -65,6 +65,11 @@ if($totalerror == "") {
 		$clanrank_10 = $lang_clan["rank_10"];
 
 		$noerror = "yes";
+
+                $clanname = checkHtmlEntities($clanname);
+                $clansig = checkHtmlEntities($clansig);
+                $clanslogan = checkHtmlEntities($clanslogan);
+
 		/*echo "<font color='#FF0000'>totalerror - 5 - $clanname - $creategilde</font><br>";*/
 		if($clanname == "" and $createguild == $lang_clan["create"]) {
 			$error = "<center><font color='#FF0000'><sup>*</sup></font><font color='#FF0000'><b>".$lang_clan["plz_1"]." ...</b></font></center><br>";

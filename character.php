@@ -12,17 +12,20 @@ include_once "location_actions.php";
 $dropped= drop_actions($character);
 
 // if you've clicked to put something up for market sale
-if(@$_POST['market_item'] == "yes") {
-	$res=mysql_query("SELECT * FROM phaos_char_inventory WHERE id = '$_POST[char_inv_id]' AND username = '$_COOKIE[PHP_PHAOS_USER]'");
+if($market_item == "yes") {
+        $char_inv_id = intval($char_inv_id);
+        $asking_price = intval($asking_price);
+
+	$res=mysql_query("SELECT * FROM phaos_char_inventory WHERE id = '$char_inv_id' AND username = '$PHP_PHAOS_USER'");
 	if ($row = mysql_fetch_array($res)) {
 		if(empty($sell_to)){$sell_to ="all";}
 		if($_POST['asking_price']<=0){
 			$sell_to= '';//stop selling
 		}
 
-		$sql=("UPDATE phaos_char_inventory SET asking_price = '$_POST[asking_price]',
+		$sql=("UPDATE phaos_char_inventory SET asking_price = '$asking_price',
 								   sell_to = '$sell_to'
-							     WHERE id = '$_POST[char_inv_id]'");
+							     WHERE id = '$char_inv_id'");
 		mysql_query($sql) or die("<B>Error ".mysql_errno()." :</B> ".mysql_error()."");
 	}
 }
@@ -69,6 +72,7 @@ if(@$sell_id == "Y") {
 		$ite_type = $row["type"];
 	}
 
+        $item_id = intval($item_id);
 	if($ite_type == "potion") {
 		if($item_yn) {
 			$priceresult = mysql_query("SELECT * FROM phaos_potion WHERE id = '$item_id'");
@@ -113,7 +117,7 @@ if(@$sell_id == "Y") {
 
 	if($sell_price>0) {
 		$sell_gold = $sell_price+$character->gold;
-		$query = "UPDATE phaos_characters SET gold = '$sell_gold' WHERE username = '$_COOKIE[PHP_PHAOS_USER]'";
+		$query = "UPDATE phaos_characters SET gold = '$sell_gold' WHERE username = '$PHP_PHAOS_USER'";
 		$req = mysql_query($query);
 		if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
 
@@ -131,11 +135,12 @@ if(@$sell_id == "Y") {
 
 
 // DRINK POTION
-if($_GET[drink_potion] == "Y") {
-	$result = mysql_query ("SELECT type FROM phaos_char_inventory WHERE id = '$_GET[id]'");
+if($drink_potion == "Y") {
+        $id = intval($_GET[id]);
+	$result = mysql_query ("SELECT type FROM phaos_char_inventory WHERE id = '$id'");
 	if ($row = mysql_fetch_array($result)) {
 		if ($row["type"] == "potion") {
-			$character->drink_potion2($_GET[id]);
+			$character->drink_potion2($id);
 		}
 	}
 	$refsidebar= true;
@@ -143,6 +148,7 @@ if($_GET[drink_potion] == "Y") {
 
 // EQUIP AN ITEM
 if(@$equip_id){
+        $item_id = intval($item_id);
 	if($equip_id == "Y") {
 		if ($character->equipt($item_type,$item_id)){
 			$refsidebar= true;

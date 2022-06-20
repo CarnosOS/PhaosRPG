@@ -73,6 +73,9 @@ $DEBUG and print("$lang_crt[skll_vars]: $skills[fight], $skills[defence], $skill
 // end Skill Adjustments!
 $attribute_check = $strength+$dexterity+$wisdom+$constitution;
 
+$name = checkHtmlEntities($name);
+$sex = checkHtmlEntities($sex);
+
 if($attribute_check == "24" AND $name != "") {
 
 $hit_points = $constitution*6;

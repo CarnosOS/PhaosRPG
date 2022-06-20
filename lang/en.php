@@ -405,7 +405,7 @@ $lang_post["submit"] = "Post Message";
 //Register
 $lang_reg["thx"] = "Thank you for registering.  You may now login.";
 $lang_reg["not"] = "Registration NOT completed.";
-$lang_reg["not2"] = "You already have a user name or you did not fill out the whole registration form.";
+$lang_reg["not2"] = "You already have a user name or you did not fill out the whole registration form or fields contain restricted characters.";
 $lang_reg["try"] = "Try Again";
 $lang_reg["msg1"] = "You are required to complete the following fields:";
 $lang_reg["fsnm"] = "First Name";

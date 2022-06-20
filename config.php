@@ -136,3 +136,11 @@ function please_register($badpass=false){
 	}
 }
 
+function checkHtmlEntities($value) {
+  $value = trim($value);
+  // make sure, the string does not contain any html entities
+  if (strpos(htmlentities($value), '&')) {
+    return "";
+  }
+  return $value;
+}

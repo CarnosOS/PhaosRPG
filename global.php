@@ -463,4 +463,3 @@ function makeImg($image_path){
     }
 }
 
-?>
