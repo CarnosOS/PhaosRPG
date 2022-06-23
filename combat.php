@@ -73,6 +73,8 @@ if (isset($_GET['charfrom'])) {
 	$_SESSION['charfrom'] = $_GET['charfrom'];
 }
 
+$_GET['bonus'] = 1; // Disable fight bonuses
+
 //FIXME: way to easy to hack
 $_SESSION['fightbonus']= isset($_GET['bonus'])? $_GET['bonus']: 1;
 if($_SESSION['fightbonus'] > 4){
@@ -320,15 +322,20 @@ if($skip_actions) {
     			if($comb_act == 'magic_attack'){
     				$res=mysql_query("SELECT name,min_damage,max_damage,damage_mess,req_skill FROM phaos_spells_items WHERE id = $spellid");
     				list($name,$min_damage,$max_damage,$damage_mess,$req_skill) = mysql_fetch_array($res);
-	
-    				// Remove scroll from inventory
-    				$sql = "DELETE FROM phaos_char_inventory WHERE id = '$invid'";
-    				mysql_query($sql) or die ("Error in query: $query. " . mysql_error());
 
-				if($character->wisdom + rand(1,$character->wisdom) < $req_skill) {
+    				// Remove scroll from inventory
+                                $sql = "SELECT id FROM phaos_char_inventory WHERE username='".$character->user."' AND type='spell_items' AND item_id='$spellid'";
+                                $res = mysql_query($sql);
+                                $row = mysql_fetch_array($res);
+                                list($invid) = $row !== false ? $row : array(0);
+
+				if(!$invid || $character->wisdom + rand(1,$character->wisdom) < $req_skill) {
 					$defenders = array();
 					$_SESSION['disp_msg'][] = $lang_magic["spell_fumble"];
 				} else {
+                                        $sql = "DELETE FROM phaos_char_inventory WHERE id = '$invid'";
+                                        mysql_query($sql) or die ("Error in query: $query. " . mysql_error());
+
 					// set area effect
 					$numdefenders=  $damage_mess* (1+(int)($character->wisdom/9+rand(0,99)*0.01));
 					if($numdefenders>0) {

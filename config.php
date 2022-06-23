@@ -28,7 +28,7 @@ function smartQuotes($value) {
     if( $value == '' ) {
       $value = NULL;
     } if( !is_numeric($value)) {
-      $value = trim(htmlspecialchars(htmlentities(mysql_real_escape_string($value), ENT_QUOTES)));
+      $value = trim(mysql_real_escape_string(htmlentities($value, ENT_QUOTES)));
     }
     return $value;
   }
@@ -45,6 +45,10 @@ if (!mysql_fetch_array($result)) {
 define('DEBUG',intval(@$_COOKIE['_debug']));
 if(DEBUG){
 	error_reporting(E_ALL);
+}
+
+foreach ($_COOKIE as $key => $value) {
+  $_COOKIE[$key] = smartQuotes($value);
 }
 
 $PHP_PHAOS_USER = @$_COOKIE["PHP_PHAOS_USER"];

@@ -484,7 +484,7 @@ class character {
 			$inv_id = $row["id"];
 			$result = mysql_query ("SELECT * FROM phaos_potion WHERE id = '$potion_id'");
 			if ($row = mysql_fetch_array($result)) {	// if it's a valid potion
-				list($effect,$details) = split(' ',$row["effect"]);	// determine potion effect
+				list($effect,$details) = explode(' ',$row["effect"]);	// determine potion effect
 				if ($effect == "heal") {
 					$heal_amount=$details;
 					$new_hp_amount = $this->hit_points + $heal_amount;
@@ -514,7 +514,7 @@ class character {
 			$inv_id = $pot["id"];
 			$result = mysql_query ("SELECT * FROM phaos_potion WHERE id = '$potion_id'");
 			if ($row = mysql_fetch_array($result)) {
-				list($effect,$details) = split(' ',$row["effect"]);     // determine potion effect
+				list($effect,$details) = explode(' ',$row["effect"]);     // determine potion effect
 				if ($effect == "heal" or $effect == "stamina") {
 					$current =& $this->hit_points;		// pointer to hit_points value
 					$max=$this->max_hp;
@@ -650,7 +650,7 @@ class character {
 		}
 
 		// Character is not wearing this item id
-		if ($item_id !== 0 && $this->{$item_type} !== $item_id) {
+		if ($item_id != 0 && $this->{$item_type} != $item_id) {
 			return 0;
 		}
 

@@ -5,6 +5,9 @@ if (@$_REQUEST['saved']) {
   // At this point header is already send, setcookie always fails
   // setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
 //Added by dragzone---
+  $pw = checkHtmlEntities($pw);
+  $pw2 = checkHtmlEntities($pw2);
+
   if($pw != "") {
   if ($pw != $pw2) { echo "<meta http-equiv=\"refresh\" content=\"3; URL=index.php\"><p>&nbsp;</p><p>&nbsp;</p><p align=\"center\"><b>Your password doesn't match!</b></p>"; exit;}
   $vpw=md5($pw);

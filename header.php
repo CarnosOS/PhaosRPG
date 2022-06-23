@@ -6,12 +6,13 @@ require("Sajax.php");
 
 function add_chat_line($text) {
 	global $PHP_PHAOS_USER;
-	$text = strip_tags($text);
+	$text = htmlentities($text);
 	$bb_replace =      array('[b]', '[B]', '[/b]', '[/B]', '[i]', '[I]', '[/i]', '[/I]', '[u]', '[U]', '[/u]', '[/U]');
 	$bb_replacements = array('<strong>', '<strong>', '</em>', '</em>', '<i>', '<i>', '</i>', '</i>', '<u>', '<u>', '</u>', '</u>');
 	$text = str_replace($bb_replace,$bb_replacements,$text);
 	$result = mysql_query('SELECT location, name FROM phaos_characters WHERE username = \''.$PHP_PHAOS_USER.'\'');
 	$row = mysql_fetch_assoc($result);
+        $text = mysql_real_escape_string($text);
 	mysql_query ('INSERT INTO phaos_shout (location, postname, postdate, posttext) 	VALUES (\''.$row['location'].'\', \''.$row['name'] . '\', \''.mktime().'\',\'' . $text . '\')');
 }
 

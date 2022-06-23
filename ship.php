@@ -9,8 +9,21 @@ include_once "class_character.php";
 
 $character=new character($PHP_PHAOS_CHARID);
 
-function travel ($chid, $gol, $locid) {
-	if ($gol >= 20) {
+// travel within current region only
+$location_min = intval(floor($character->location / 10000) * 10000);
+$location_max = $location_min + 10000;
+
+function travel ($chid, $gol, $chloc, $locid) {
+        global $location_min;
+        global $location_max;
+
+        // Make sure character is traveling from one stable to an another
+        $res=mysql_query("SELECT count(*) FROM phaos_buildings WHERE (name='Stable' OR name='Ship Travel') "
+                . "AND (location = '$locid' OR location = '$chloc') "
+                . "AND (location > $location_min AND location < $location_max)");
+        list($count) = mysql_fetch_array($res);
+
+	if ($count == 2 && $gol >= 20) {
 		$gol = ($gol-20);
 		$res =("UPDATE phaos_characters set location='$locid', gold='$gol' WHERE id = '$chid'");
 		$req = mysql_query($res);
@@ -26,7 +39,7 @@ function travel ($chid, $gol, $locid) {
 
 if(@$_POST['travel']) {
 	$id=$_POST['travel'];
-	travel($character->id, $character->gold, $id);
+	travel($character->id, $character->gold, $character->location, $id);
 }
 ?>
 <table width="550" border="1" cellspacing="0" cellpadding="3" align="center">
@@ -44,9 +57,7 @@ if(@$_POST['travel']) {
 <td><table><tr><td>Destination</td><td>&nbsp;&nbsp;</td><td>Cost</td><td>&nbsp;&nbsp;</td></tr>
 <?php
 
-// travel within current region only
-$location_min = intval(floor($character->location / 10000) * 10000);
-$location_max = $location_min + 10000;
+
 
 $self1=mysql_query("SELECT location FROM phaos_buildings WHERE (name='Stable' OR name='Ship Travel') AND location > $location_min AND location < $location_max");
 while ($row1 = mysql_fetch_array($self1)) {
