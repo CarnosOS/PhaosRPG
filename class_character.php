@@ -245,7 +245,7 @@ class character {
 			$this->image=$row["image_path"];
 			$this->age=$row["age"];
 			$this->location=$row["location"];
-                        $this->flee_location=$row["flee_location"];
+                        $this->flee_location=(int)$row["flee_location"];
                         $this->region=$row["region"];
 			//define attribute vars
 			$this->strength = $row["strength"];

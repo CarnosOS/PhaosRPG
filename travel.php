@@ -89,21 +89,45 @@ if($destination != "")
       if ($degrade<0) {$degrade=1;}
       //end stamina reduction update table:
 
+      // validate Rune Gate travel
+      if (isset($_POST['rune_gate']) && $_POST['rune_gate'] == 'yes') {
+        $res = mysql_query("SELECT COUNT(*) FROM phaos_locations WHERE (id='".$character->location."' OR id = '".$destination."') AND name LIKE 'Rune Gate%'");
+        list($count) = mysql_fetch_array($res);
+        if ($count != 2) {
+          $_POST['rune_gate'] = 'no';
+        }
+      }
+
+      // validate explore
+      if (isset($_POST['explorable']) && $_POST['explorable'] == 'yes') {
+        $res = mysql_query("SELECT COUNT(*) FROM phaos_locations WHERE id='".$character->location."' AND explore='$destination'");
+        list($count) = mysql_fetch_array($res);
+        if ($count != 1) {
+          $_POST['explorable'] = 'no';
+        }
+      }
+
       $character->reduce_stamina($degrade);
       $result = mysql_query('SELECT `above_left`, `above`, `above_right`, `leftside`, `rightside`, `below_left`, `below`, `below_right` FROM  phaos_locations WHERE id = \'' . $character->location . '\'');
       $row = mysql_fetch_assoc($result);
+      $direction = 8;
       foreach ($row as $item)
          {
             //FIXME: uses untrusted input by the user
             if ($item == $destination OR @$_POST['rune_gate'] == "yes" OR @$_POST['explorable'] == "yes")
                {
-                  $query = ("UPDATE phaos_characters SET location = '$destination', stamina=".$character->stamina_points." WHERE id = '$PHP_PHAOS_CHARID'");
+                  $flee_location = $direction;
+                  if (@$_POST['rune_gate'] == "yes" OR @$_POST['explorable'] == "yes") {
+                    $flee_location = 0;
+                  }
+                  $query = ("UPDATE phaos_characters SET location = '$destination', stamina=".$character->stamina_points.", flee_location='".$flee_location."' WHERE id = '$PHP_PHAOS_CHARID'");
                   $req = mysql_query($query);
                   if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
                   $result = mysql_query ("SELECT * FROM phaos_locations WHERE id = '$destination'");
                   $character->location=$destination;
                   if ($row = mysql_fetch_array($result)) {$location_name = $row["name"];}
                }
+            $direction--;
           }
    }
 

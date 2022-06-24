@@ -295,12 +295,18 @@ if($skip_actions) {
 
     // <10 changed to <50 by dragzone
     if($char_flee_roll > $opp_flee_roll  OR  rand(1,100)<50 ) {
-			//move character to random adjacent location
-			for($i=0;$i<24;++$i) {
-				if($character->relocate(rand(1,8))) {
-					break;
-				}
-			}
+                        // move to the direction where we came from
+                        $flee_location = $character->flee_location;
+                        if ($flee_location === 0 or $character->relocate($flee_location) == false) {
+                            // move failed, try random adjacent location
+                            $directions = range(1, 8);
+                            shuffle($directions);
+                            foreach($directions as $i) {
+                                    if($character->relocate($i)) {
+                                            break;
+                                    }
+                            }
+                        }
 			//Character Flees
 			$link= endfight();
 			jsChangeLocation($link);
