@@ -241,6 +241,8 @@ $lang_inn["u2weak"] = "You are too weak for my quest.";
 $lang_inn["wai_2solv"] = "I am still waiting somebody to solve my quest.";
 $lang_inn["2many_war"] = "Too many hunters are sent for my quest";
 $lang_inn["return"] = "Return to Town";
+$lang_inn['acceptq'] = "Accept";
+$lang_inn['completeq'] = "Claim";
 
 //Combat
 $lang_comb["_attt"] =		"Attack";

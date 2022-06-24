@@ -423,27 +423,6 @@ CREATE TABLE `phaos_mail` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phaos_npcs`
---
-
-CREATE TABLE `phaos_npcs` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(30) NOT NULL default '',
-  `race` varchar(20) NOT NULL default '',
-  `image_path` longtext NOT NULL,
-  `location` int(11) NOT NULL default '0',
-  `rumors` longtext NOT NULL,
-  `quest` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `name` (`name`),
-  KEY `race` (`race`),
-  KEY `location` (`location`),
-  KEY `quest` (`quest`)
-)  ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `phaos_opponents`
 --
 
@@ -505,6 +484,34 @@ CREATE TABLE `phaos_potions` (
   KEY `sell_price` (`sell_price`)
 )  ;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_quests`
+--
+
+CREATE TABLE `phaos_quests` (
+  `questid` int(11) NOT NULL auto_increment,
+  `reqexp` int(11) NOT NULL default '0',
+  `title` text NOT NULL,
+  `narrate` text NOT NULL,
+  `tracemsg` text NOT NULL,
+  `completemsg` text NOT NULL,
+  `rewarditemid` int(11) NOT NULL default '0',
+  `rewarditemtype` varchar(100) NOT NULL default 'potion',
+  `rewardgold` int(11) NOT NULL default '0',
+  `rewardexp` int(11) NOT NULL default '0',
+  `monstercollectid` int(11) NOT NULL default '0',
+  `monstercollectq` int(11) NOT NULL default '0',
+  `haveitemtype` varchar(100) NOT NULL default 'potion',
+  `haveitemid` int(11) NOT NULL default '0',
+  `visitlocationid` int(11) NOT NULL default '0',
+  `maxtime` bigint(20) NOT NULL default '0',
+  `endtime` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`questid`)
+)  ;
+
 -- --------------------------------------------------------
 
 --
@@ -515,51 +522,30 @@ CREATE TABLE `phaos_questhunters` (
   `charid` int(11) NOT NULL default '0',
   `questid` int(11) NOT NULL default '0',
   `starttime` bigint(20) NOT NULL default '0',
-  `startexp` int(11) NOT NULL default '0',
-  `startgold` int(11) NOT NULL default '0',
   `monstkill` int(11) NOT NULL default '0',
-  `battles` int(11) NOT NULL default '0',
-  `expearned` int(11) NOT NULL default '0',
-  `goldearned` int(11) NOT NULL default '0',
-  `complete` int(11) NOT NULL default '0'
+  `visitdone` tinyint(4) NOT NULL default '0',
+  `complete` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`charid`, `questid`),
+  FOREIGN KEY(`charid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE,
+  FOREIGN KEY(`questid`) REFERENCES phaos_quests(`questid`) ON DELETE CASCADE
 ) ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phaos_quests`
+-- Table structure for table `phaos_npcs`
 --
 
-CREATE TABLE `phaos_quests` (
-  `questid` int(11) NOT NULL auto_increment,
-  `npc` int(11) NOT NULL default '0',
-  `reqexp` int(11) NOT NULL default '0',
-  `narrate` text NOT NULL,
-  `tracemsg` text NOT NULL,
-  `waitmsg` text NOT NULL,
-  `completemsg` text NOT NULL,
-  `rewarditemid` int(11) NOT NULL default '0',
-  `rewarditemtype` int(11) NOT NULL default '0',
-  `rewardgold` int(11) NOT NULL default '0',
-  `rewardwexp` int(11) NOT NULL default '0',
-  `monsterkillid` int(11) NOT NULL default '0',
-  `monstercollectid` int(11) NOT NULL default '0',
-  `monstercollectq` int(11) NOT NULL default '0',
-  `battles` int(11) NOT NULL default '0',
-  `tr_ar` int(11) NOT NULL default '0',
-  `haveitemtype` int(11) NOT NULL default '0',
-  `haveitemid` int(11) NOT NULL default '0',
-  `paygold` int(11) NOT NULL default '0',
-  `havegold` int(11) NOT NULL default '0',
-  `earngold` int(11) NOT NULL default '0',
-  `payexp` int(11) NOT NULL default '0',
-  `haveexp` int(11) NOT NULL default '0',
-  `earnexp` int(11) NOT NULL default '0',
-  `complete` tinyint(4) NOT NULL default '0',
-  `hunters` int(11) NOT NULL default '0',
-  `maxtime` bigint(20) NOT NULL default '0',
-  `restnum` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`questid`)
+CREATE TABLE `phaos_npcs` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(30) NOT NULL default '',
+  `race` varchar(20) NOT NULL default '',
+  `image_path` longtext NOT NULL,
+  `location` int(11) NOT NULL default '0',
+  `rumors` longtext NOT NULL,
+  `quest` int(11),
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY(`quest`) REFERENCES phaos_quests(`questid`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------

@@ -7,10 +7,10 @@
 -- Dumping data for table `phaos_npcs`
 -- 
 
-INSERT INTO `phaos_npcs` VALUES(1, 'Narrith', 'Human', 'images/icons/npcs/npc_5.gif', 81632, 'There is a blacksmith who lives alone in the mountains of Gilanthia who crafts weapons out of dragon bones.', 0);
-INSERT INTO `phaos_npcs` VALUES(2, 'Morin', 'Elf', 'images/icons/npcs/npc_4.gif', 1354, 'The priests of the Qu-Nai captured a balor in Wath and brought it back here.\r\n<p>Visit the arena and you may be chosen to fight the demon.', 0);
-INSERT INTO `phaos_npcs` VALUES(3, 'Valdor', 'Vampire', 'images/icons/npcs/npc_6.gif', 382, 'Dragons live in the mountains of Gilanthia.  Some of the beasts are taken from their caves while they''re still young and raised in captivity to fight in the arena at Kelvy.', 0);
-INSERT INTO `phaos_npcs` VALUES(4, 'Daenos', 'Human', 'images/icons/npcs/npc_3.gif', 88, 'The blacksmith in Gornath only carries leather goods.  So if you''re running low on gold it is a good place for armor.', 0);
+INSERT INTO `phaos_npcs` VALUES(1, 'Narrith', 'Human', 'images/icons/npcs/npc_5.gif', 81632, 'There is a blacksmith who lives alone in the mountains of Gilanthia who crafts weapons out of dragon bones.', NULL);
+INSERT INTO `phaos_npcs` VALUES(2, 'Morin', 'Elf', 'images/icons/npcs/npc_4.gif', 1354, 'The priests of the Qu-Nai captured a balor in Wath and brought it back here.\r\n<p>Visit the arena and you may be chosen to fight the demon.', NULL);
+INSERT INTO `phaos_npcs` VALUES(3, 'Valdor', 'Vampire', 'images/icons/npcs/npc_6.gif', 382, 'Dragons live in the mountains of Gilanthia.  Some of the beasts are taken from their caves while they''re still young and raised in captivity to fight in the arena at Kelvy.', NULL);
+INSERT INTO `phaos_npcs` VALUES(4, 'Daenos', 'Human', 'images/icons/npcs/npc_3.gif', 88, 'The blacksmith in Gornath only carries leather goods.  So if you''re running low on gold it is a good place for armor.', NULL);
 
 -- 
 -- Dumping data for table `phaos_opponents`

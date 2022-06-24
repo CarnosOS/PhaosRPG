@@ -262,6 +262,8 @@ $lang_inn["u2weak"] = "Sei troppo debole per questo lavoro.";
 $lang_inn["wai_2solv"] = "Sto ancora aspettando qualcuno per il mio incarico.";
 $lang_inn["2many_war"] = "Troppi mercenari sono stati inviati in questa missione";
 $lang_inn["return"] = "Torna in città";
+$lang_inn['acceptq'] = "Accept";
+$lang_inn['completeq'] = "Claim";
 
 //Combat
 $lang_comb["_attt"] =		"Attacca";

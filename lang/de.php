@@ -262,6 +262,8 @@ $lang_inn["u2weak"] = "Du bist zu müde für meine Quest.";
 $lang_inn["wai_2solv"] = "Ich warte immernoch, dass jemand meine Quest löst.";
 $lang_inn["2many_war"] = "Zu viele versuchen meine Quest zu lösen.";
 $lang_inn["return"] = "Zurück zu Stadt";
+$lang_inn['acceptq'] = "Accept";
+$lang_inn['completeq'] = "Claim";
 
 //Combat
 $lang_comb["_attt"] =		"Angriff";
