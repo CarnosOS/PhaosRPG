@@ -56,13 +56,16 @@ function who_is_online($location = '') {
 	
 	$active_min = $current_time-300;
 	$active_max = $current_time+300;
-	
-	$result = mysql_query("SELECT * FROM phaos_characters WHERE $loc regen_time >= '$active_min' AND regen_time <= '$active_max' AND username != 'phaos_npc' AND username != 'phaos_npc_arena' ORDER by name ASC");
-	
+
+	$result = mysql_query("SELECT c.username, c.name, ca.clansig FROM phaos_characters c"
+                . " LEFT OUTER JOIN phaos_clan_in ci ON ci.clanmemberid = c.id"
+                . " LEFT OUTER JOIN phaos_clan_admin ca ON ca.clanname = ci.clanname"
+                . " WHERE $loc regen_time >= '$active_min' AND regen_time <= '$active_max' AND username != 'phaos_npc' AND username != 'phaos_npc_arena' ORDER by name ASC");
+
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . get_clan_sig($row['name']) . $row['name'] .  '</a>';
+			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . $row['clansig'] . $row['name'] .  '</a>';
 		}
 	} else {
 		$html = "<font color=#009900>|</font>".$lang_glo["n_else"];
@@ -78,13 +81,16 @@ function who_is_offline($location = '') {
 	$active_min = $current_time-300;
 	$active_max = $current_time+300;
 	
-	$result = mysql_query("SELECT * FROM phaos_characters WHERE $loc regen_time < '$active_min' AND username != 'phaos_npc%' AND username != 'phaos_npc_arena' ORDER by name ASC");
+	$result = mysql_query("SELECT c.username, c.name, ca.clansig FROM phaos_characters c"
+                . " LEFT OUTER JOIN phaos_clan_in ci ON ci.clanmemberid = c.id"
+                . " LEFT OUTER JOIN phaos_clan_admin ca ON ca.clanname = ci.clanname"
+                . " WHERE $loc regen_time < '$active_min' AND username != 'phaos_npc%' AND username != 'phaos_npc_arena' ORDER by name ASC");
 	echo mysql_error();
 	
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . get_clan_sig($row['name']) . $row['name'] .  '</a>';
+			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . $row['clansig'] . $row['name'] .  '</a>';
 		}
 	}
 	return $html . '<font color="#009900">|</font>';

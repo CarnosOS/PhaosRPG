@@ -4,7 +4,11 @@ include_once 'class_character.php';
 
 $character=new character($PHP_PHAOS_CHARID);
 
-shop_valid($character->location, $shop_id); // make sure the requested shop is where the player is
+// make sure the requested shop is where the player is
+if (!shop_valid($character->location, $shop_id)){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 $reload= false;
 

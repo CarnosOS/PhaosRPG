@@ -52,6 +52,11 @@ if ($row = mysql_fetch_array($result)) {
 $duplicate = "yes";
 }
 
+$result = mysql_query ("SELECT * FROM phaos_characters WHERE name = '$name'");
+if ($row = mysql_fetch_array($result)) {
+$duplicate = "yes";
+}
+
 if($create_char == "yes") {
 if($duplicate != "yes") {
 

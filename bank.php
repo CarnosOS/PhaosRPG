@@ -6,7 +6,11 @@ if ($row = mysql_fetch_array($result)) { $char_loc = $row["location"]; }
 $result = mysql_query ("SELECT * FROM phaos_buildings WHERE location = '$char_loc'");
 if ($row = mysql_fetch_array($result)) { $shop_id = $row["shop_id"]; }
 
-shop_valid($char_loc, $shop_id); // make sure this requested shop is at the players location
+// make sure this requested shop is at the players location
+if (!shop_valid($char_loc, $shop_id)){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 $sql = mysql_query("SELECT gold,bankgold FROM phaos_characters WHERE id='$PHP_PHAOS_CHARID'");
 $row = mysql_fetch_assoc($sql);

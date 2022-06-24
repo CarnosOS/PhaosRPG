@@ -9,6 +9,12 @@ include_once "class_character.php";
 
 $character=new character($PHP_PHAOS_CHARID);
 
+// make sure requested shop is at same location as character
+if (!shop_valid($character->location, $shop_id)){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+
 // travel within current region only
 $location_min = intval(floor($character->location / 10000) * 10000);
 $location_max = $location_min + 10000;

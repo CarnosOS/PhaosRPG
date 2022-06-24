@@ -15,8 +15,12 @@ include_once "class_character.php";
 $refresh = 0; //determine if the SideBar has to be refreshed
 
 $character = new character($PHP_PHAOS_CHARID);
-// shop_valid($character->location, 'blacksmith');
-shop_valid($character->location, $shop_id);
+
+// make sure this requested shop is at the players location
+if (!shop_valid($character->location, $shop_id)){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 // auto-generate refills if the shop does not exist yet
 $refills = fetch_value("SELECT count(*) FROM phaos_shop_refill WHERE shop_id='$shop_id'",__FILE__,__LINE__);
