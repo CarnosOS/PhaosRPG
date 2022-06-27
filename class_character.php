@@ -619,6 +619,51 @@ class character {
 		return false;
 	}
 
+	function can_equipt($item_type, $item_id) {
+          // check if the item is in the inventory
+          if ($this->checkequipped($item_type, $item_id)) {
+            return false;
+          }
+
+          $id = intval($item_id);
+          $item_type_to_table = array(
+              'boots' => 'phaos_boots',
+              'gloves' => 'phaos_gloves',
+              'shield' => 'phaos_shields',
+              'helm' => 'phaos_helmets'
+          );
+
+          switch ($item_type) {
+            case 'weapon':
+              $result = mysql_query ("SELECT * FROM phaos_weapons WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $weapon_min = intval($row["min_damage"]);
+                $weapon_max = intval($row["max_damage"]);
+                $wstr = $weapon_min + $weapon_max;
+                return $wstr <= ($this->fight * 3) + 10;
+              }
+              break;
+            case 'armor':
+              mysql_query ("SELECT * FROM phaos_armor WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $armor_class = intval($row["armor_class"]);
+                return $armor_class <= ($this->defence * 3) + 10;
+              }
+              break;
+            case 'boots':
+            case 'gloves':
+            case 'shield':
+            case 'helm':
+              $table_name = $item_type_to_table[$item_type];
+              $result = mysql_query ("SELECT * FROM `$table_name` WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $armor_class = intval($row["armor_class"]);
+                return $armor_class <= $this->defence;
+              }
+          }
+          return false;
+	}
+
 	/**
     * equip an item
 	* @param (string)$item_type - choose the item type as string
@@ -675,9 +720,9 @@ class character {
 		if ($row = mysql_fetch_array($res)) {
 			return 0;
 		} else {
-            $this->unequipt($item_type);
 			return 1;
 		}
+                return 0;
 	}
 
 	/**
@@ -685,13 +730,14 @@ class character {
 	* Purpose: Usercalled function to check the equipped items
 	*/
 	function checkequipment(){
-		$c1=$this->checkequipped("armor",$this->armor);
-		$c1+=$this->checkequipped("weapon",$this->weapon);
-
-		$c1+=$this->checkequipped("boots",$this->boots);
-		$c1+=$this->checkequipped("shield",$this->shield);
-		$c1+=$this->checkequipped("helm",$this->helm);
-		$c1+=$this->checkequipped("gloves",$this->gloves);
+                $c1 = 0;
+                $item_types = array("armor", "weapon", "gloves", "helm", "shield", "boots");
+                foreach($item_types as $item_type) {
+                  if ($this->checkequipped($item_type, $this->{$item_type})) {
+                    $c1 += 1;
+                    $this->unequipt($item_type);
+                  }
+                }
 		return $c1;
 	}
 

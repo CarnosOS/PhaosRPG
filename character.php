@@ -62,6 +62,7 @@ setShopForItemtype( array( "spell_items"), $magicshop_yn);
 // did you click to delete your character?
 if(@$_POST['delete'] == "yes") {
 	$character->kill_character();
+        $character = new character(0); // clear character data
 	$refsidebar= true;
 }
 
@@ -150,7 +151,8 @@ if($_GET['drink_potion'] == "Y") {
 if(@$equip_id){
         $item_id = intval($item_id);
 	if($equip_id == "Y") {
-		if ($character->equipt($item_type,$item_id)){
+		if ($character->can_equipt($item_type, $item_id)) {
+                        $character->equipt($item_type,$item_id);
 			$refsidebar= true;
 			//echo "equipping successfull";
 		} else {
@@ -503,7 +505,7 @@ foreach($items as $row) {
 			print "<td valign=top>&nbsp;</td>";
 		} else {
 			print "<td align=center valign=top>&nbsp;";
-			if(!$character->equipped($item_type,$item_id)){
+			if(!$character->equipped($item_type,$item_id) && $character->can_equipt($item_type, $item_id)) {
 				print ("<input type='button' onClick=\"parent.location='character.php?item_id=$item_id&item_type=$item_type&id=$id&equip_id=Y'\" value='$lang_char[eq]'>");
 			}
 			if($character->equipped($item_type,$item_id)) {
