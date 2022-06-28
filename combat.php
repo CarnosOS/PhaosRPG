@@ -616,6 +616,7 @@ if($skip_actions) {
 ?>
 
 <table width=400 border=1 cellspacing=0 cellpadding=5 align=center>
+<?php if ($oppcharacter !== null) : ?>
 <tr style=background:#006600;>
 <td align=center><big><?php echo sayOpponents(); ?></big></td>
 </tr>
@@ -753,7 +754,7 @@ if($skip_actions) {
    </table>
 </td>
 </tr>
-
+<?php endif; ?>
 <?php
 //
 // wandering mobs always check for new opponents, the arena does not.

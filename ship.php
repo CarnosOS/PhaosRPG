@@ -34,7 +34,6 @@ function travel ($chid, $gol, $chloc, $locid) {
 		$res =("UPDATE phaos_characters set location='$locid', gold='$gol' WHERE id = '$chid'");
 		$req = mysql_query($res);
 		if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
-		header ('Location: travel.php');
 		?>
 		<script language=javascript>
 		self.location="town.php"
@@ -75,6 +74,7 @@ while ($row1 = mysql_fetch_array($self1)) {
 		if ($id != $character->location) {
 			echo "<tr><td><form action=\"ship.php\" method=\"post\">
 				<input type=\"hidden\" name=\"travel\" value=\"$id\">
+                                <input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">
 				<input type=\"submit\" style=\"border:none;text-align:left;\" value=\"".$name."\">
 				</form></td><td>&nbsp;&nbsp;</td><td>";
 			// to do: different prices
