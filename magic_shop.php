@@ -7,7 +7,7 @@ $refresh=0; //determine if the SideBar has to be refreshed
 $character=new character($PHP_PHAOS_CHARID);
 
 // make sure requested shop is at same location as character
-if (!shop_valid($character->location, $shop_id)){
+if (!shop_valid($character->location, $shop_id, 'magic_shop.php')){
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }

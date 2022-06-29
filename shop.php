@@ -5,7 +5,12 @@ include_once "class_character.php";
 $refresh = 0; //determine if the SideBar has to be refreshed
 
 $character = new character($PHP_PHAOS_CHARID);
-shop_valid($character->location, $shop_id);
+
+// make sure this requested shop is at the players location
+if (!shop_valid($character->location, $shop_id, 'shop.php')){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 $current_time = time();
 

@@ -10,7 +10,7 @@ $result = mysql_query ("SELECT * FROM phaos_buildings WHERE location = '$char_lo
 if ($row = mysql_fetch_array($result)) { $shop_id = $row["shop_id"]; }
 
 // make sure this requested shop is at the players location
-if (!shop_valid($char_loc, $shop_id)){
+if (!shop_valid($char_loc, $shop_id, 'arena.php')){
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }

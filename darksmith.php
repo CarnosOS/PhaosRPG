@@ -17,7 +17,7 @@ $refresh = 0; //determine if the SideBar has to be refreshed
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location
-if (!shop_valid($character->location, $shop_id)){
+if (!shop_valid($character->location, $shop_id, 'darksmith.php')){
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }

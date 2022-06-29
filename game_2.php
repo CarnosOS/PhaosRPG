@@ -4,6 +4,12 @@ include_once "class_character.php";
 
 $character = new character($PHP_PHAOS_CHARID);
 
+// make sure the requested shop is where the player is
+if (!shop_valid($character->location, $shop_id, 'inn.php')){
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+
 $npc_score = $_GET['npcscore'];
 $guess = $_GET['guess'];
 $gold_o = $character->gold;
@@ -17,7 +23,7 @@ if($gold_o <= "0")
         <td width='100%'>
         <p align='center'><b><font color='#FF0000'>".$lang_game1["not_en__go"].".</font></b></p>
         <p align='center'><font color='#FF0000'><b>
-        <a href='inn.php'>".$lang_clan["back"]."</a></b></font></td>
+        <a href='inn.php?shop_id=$shop_id'>".$lang_clan["back"]."</a></b></font></td>
       </tr>
     </table><br><br>";
    exit;
@@ -30,7 +36,7 @@ if($stamina_o <= "0")
         <td width='100%'>
         <p align='center'><b><font color='#FF0000'>".$lang_game1["2_tired"].".</font></b></p>
         <p align='center'><font color='#FF0000'><b>
-        <a href='inn.php'>".$lang_clan["back"]."</a></b></font></td>
+        <a href='inn.php?shop_id=$shop_id'>".$lang_clan["back"]."</a></b></font></td>
       </tr>
     </table><br><br>";
    exit;
@@ -136,11 +142,11 @@ if ($guess == 3)
 }
 
 echo "</p>
-<p align='center'>".$lang_added["ad_please-select"].": <a href='".$_SERVER[PHP_SELF]."?guess=1&npcscore=$npc_score'>".$lang_added["ad_scroll"]."</a>, <a href='".$_SERVER[PHP_SELF]."?guess=2&npcscore=$npc_score'>".$lang_added["ad_dagger"]."</a> or <a href='".$_SERVER[PHP_SELF]."?guess=3&npcscore=$npc_score'>".$lang_added["ad_stone"]."</a>?
+<p align='center'>".$lang_added["ad_please-select"].": <a href='".$_SERVER[PHP_SELF]."?shop_id=$shop_id&guess=1&npcscore=$npc_score'>".$lang_added["ad_scroll"]."</a>, <a href='".$_SERVER[PHP_SELF]."?shop_id=$shop_id&guess=2&npcscore=$npc_score'>".$lang_added["ad_dagger"]."</a> or <a href='".$_SERVER[PHP_SELF]."?shop_id=$shop_id&guess=3&npcscore=$npc_score'>".$lang_added["ad_stone"]."</a>?
 <br>
 </p>";
 
-echo "<br><div align=center><a href='inn.php'> ".$lang_clan["back"]." </a></td></div>";
+echo "<br><div align=center><a href='inn.php?shop_id=$shop_id'> ".$lang_clan["back"]." </a></td></div>";
 
 echo '</body>
 </html>';

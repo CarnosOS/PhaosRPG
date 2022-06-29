@@ -5,7 +5,7 @@ include_once 'class_character.php';
 $character=new character($PHP_PHAOS_CHARID);
 
 // make sure the requested shop is where the player is
-if (!shop_valid($character->location, $shop_id)){
+if (!shop_valid($character->location, $shop_id, 'inn.php')){
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -82,6 +82,7 @@ if($reload) {
 <tr>
 <form action='game_1.php' method='post'>
 <td align=left>
+<input type='hidden' name='shop_id' value='<?php echo $shop_id; ?>'>
 <button type='submit' style="width:250px;"><?php echo $lang_inn["ply_dic"]; ?></button>
 </td>
 </form>
@@ -89,6 +90,7 @@ if($reload) {
 <tr>
 <form action='game_2.php' method='post'>
 <td align=left>
+<input type='hidden' name='shop_id' value='<?php echo $shop_id; ?>'>
 <button type='submit' style="width:250px;"><?php echo $lang_inn["ply_rps"]; ?></button>
 </td>
 </form>
@@ -113,8 +115,9 @@ if(!$npc_id) {
 			$npc_image = $row["image_path"];
 			$id_npc = $row["id"];
 
-			print ("<div align=center><form action=\"inn.php\" method=\"post\">");
+			print ("<div style=\"display: inline-block\"><form action=\"inn.php\" method=\"post\">");
 			print ("<input type=\"hidden\" name=\"npc_id\" value=\"$id_npc\">");
+                        print ("<input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">");
 			print ("<button type=\"submit\"><div align=\"center\">");
 			if($npc_image != "") {print ("<img src=\"$npc_image\"><br>");}
 			print ("$npc_name</div>");
@@ -142,7 +145,7 @@ if(!$npc_id) {
 		print ("</button>");
 		print ("<input type=\"hidden\" name=\"rumors\" value=\"yes\">");
 		print ("<input type=\"hidden\" name=\"npc_id\" value=\"$id_npc\">");
-		print ("<input type=\"hidden\" name=\"$shop_id\" value=\"$$shop_id\">");
+		print ("<input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">");
 		print ("</form>");
 
 		print ("<form action=\"inn.php\" method=\"post\">");
@@ -150,14 +153,14 @@ if(!$npc_id) {
 		print ("</button>");
 		print ("<input type=\"hidden\" name=\"quests\" value=\"yes\">");
 		print ("<input type=\"hidden\" name=\"npc_id\" value=\"$id_npc\">");
-		print ("<input type=\"hidden\" name=\"$shop_id\" value=\"$$shop_id\">");
+		print ("<input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">");
 		print ("</form>");
 
 		print ("<form action=\"inn.php\" method=\"post\">");
 		print ("<button type=\"submit\" style=\"border:none;text-align:left;\">".$lang_inn["gdbye"]);
 		print ("</button>");
 		print ("<input type=\"hidden\" name=\"npc_id\" value=\"\">");
-		print ("<input type='hidden' name='$shop_id' value='$shop_id'>");
+		print ("<input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">");
 		print ("</form>");
 	}
 }
