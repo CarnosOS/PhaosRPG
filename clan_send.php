@@ -1,4 +1,5 @@
 <?php
+include "aup.php";
 include "header.php";
 
 $character = new character($PHP_PHAOS_CHARID);

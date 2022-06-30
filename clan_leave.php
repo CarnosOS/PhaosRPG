@@ -1,6 +1,5 @@
 <?php
-include "header.php";
-
+include "aup.php";
 
 $character = new character($PHP_PHAOS_CHARID);
 
@@ -33,6 +32,12 @@ if ($clan_user_name !== '' && $clanrank >= 98) {
   }
 }
 
+if($clanname !== '' && $quitting == "yes") {
+  $query_3 = "DELETE FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'";
+  $result = mysql_query($query_3) or die ("Error in query: $query_3. " . mysql_error());
+}
+
+include "header.php";
 echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
 	<tr>
 	<td width='100%' height='100%' align='center'>
@@ -57,8 +62,6 @@ if($clanname === '') {
 		</tr>
 		</table><br><br>";
 
-	$query_3 = "DELETE FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'";
-	$result = mysql_query($query_3) or die ("Error in query: $query_3. " . mysql_error());
 } else {
 	echo "<tr>
 		<td align='center' valign='top' height='63'>

@@ -1,10 +1,9 @@
 <?php
-session_start();
 if(@$_SESSION['opponent_id']) {
 	header ('Location: combat.php?opp_type=npc');
 	exit;
 }
-include "header.php";
+include "aup.php";
 include_once "functions.php";
 include_once "class_character.php";
 include_once "class_npc_generator.php";
@@ -134,6 +133,8 @@ if($destination != "")
 // define mob separators for php and escaped for javascript
 $info_eol= "\r";
 $js_info_eol= "\\r";
+
+include "header.php";
 
 if(!$character->id) {
      $message =  ("<font size=4><b>".$lang_area["must_create_a_char"]."</b></font><p>".$lang_area["create_a_char"]);

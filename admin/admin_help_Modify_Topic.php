@@ -1,6 +1,5 @@
 <?php
 include "aup.php";
-session_start();
 if(isset($topic)){$_SESSION['topic'] = $topic;} 
 ?>
 <html>
@@ -57,7 +56,7 @@ $db = mysql_select_db("$mysql_database") or die ("Unable to select requested dat
 <td valign=bottom>
 	<button type=submit class=search_button>Search</button>
 </td></form>
-<form action="help_delete_topic.php" onSubmit="return confirm('Are you sure you want to delete this topic?')">
+<form action="help_delete_Topic.php" onSubmit="return confirm('Are you sure you want to delete this topic?')">
 <td valign=bottom>
 	<input type=hidden name=topic value="<?php print $topic; ?>">
 	<button type=submit class=delete_button>Delete From Database</button>

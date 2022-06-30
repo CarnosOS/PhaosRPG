@@ -1,5 +1,5 @@
 <?php
-include "header.php";
+include "aup.php";
 include_once "class_npc_generator.php";
 
 function endfight(){
@@ -26,14 +26,6 @@ function sayOpponents(){
 	return "$oppcharacter->name Level $oppcharacter->level $more";
 }
 
-
-/* part Copyright 2005 peter.schaefer@gmail.com */
-
-session_start();
-
-// INITIAL SETUP
-
-include_once "class_character.php";
 
 /*
  * return the root of the damage
@@ -221,10 +213,6 @@ DEBUG AND $_SESSION['disp_msg'][] = "DEBUG: There are ".count($list)." opponents
 
 $oppcharacter= null;
 if (!count($list)) {
-	$comb_act = 'endfight';
-	DEBUG and print_msgs($_SESSION['disp_msg'],'','<br>');
-	$link= endfight();
-	jsChangeLocation($link);
 	$skip_actions = true;
 } else {
 	$skip_actions = false;
@@ -276,7 +264,6 @@ if($skip_actions) {
 			$_SESSION['disp_msg'][] = $lang_comb["not_heal_this"];
 		} else {
 			$_SESSION['disp_msg'][] = $lang_comb["drink"].$_SESSION['heal_points']."";
-			refsidebar();
 		}
 		unset($healed);
 	}
@@ -454,8 +441,6 @@ if($skip_actions) {
 
                         $character->all_skillsup($comb_act,$lang_fun);
 
-        				refsidebar();
-
         				$list=whos_here($character->location);
 
                         if($defender->id == $oppcharacter->id){
@@ -573,9 +558,6 @@ if($skip_actions) {
             $req = mysql_query($query);
             if (!$req) { showError(__FILE__,__LINE__,__FUNCTION__); exit;}
 
-            //REFRESH SIDEBAR INFO
-            $refsidebar= true;
-
            $attackingcharacter->update_stamina();
 
             if(@$break_loop){
@@ -588,15 +570,11 @@ if($skip_actions) {
    }
 
    $character->update_stamina();
-   if( $character->stamina_points<0.25*$character->stamina_points ){
-        $refsidebar= true;
-   }
 
    // DRINK POTIONS
    if($comb_act == 'drink_potion') {
          $_SESSION['heal_points'] = $character->drink_potion2($invid);
          $_SESSION['no_heal'] = 0;
-         $refsidebar= true;
 
        	// still in combat?
         if($_SESSION['endcombat'] == true) {	// "yes" means you drink and OPP attacks  --- set to true by dragzone
@@ -606,12 +584,18 @@ if($skip_actions) {
         }
    }
 
-    if(@$refsidebar){
-        refsidebar();
-    }
-
 
 }//skip actions
+
+
+include "header.php";
+
+if ($skip_actions) {
+  $comb_act = 'endfight';
+  DEBUG and print_msgs($_SESSION['disp_msg'],'','<br>');
+  $link= endfight();
+  jsChangeLocation($link);
+}
 
 ?>
 
@@ -754,7 +738,6 @@ if($skip_actions) {
    </table>
 </td>
 </tr>
-<?php endif; ?>
 <?php
 //
 // wandering mobs always check for new opponents, the arena does not.
@@ -766,6 +749,10 @@ if( defined('DEBUG') and DEBUG ){
     $GLOBALS['debugmsgs'][]= "\nend of combat detected=".@$_SESSION['endcombat'];
     $GLOBALS['debugmsgs'][]= "\n hp: me ".@$character->hit_points." vs opp ".@$oppcharacter->hit_points;
 }
+?>
+<?php endif; ?>
+<?php
+
 
 if($character->hit_points>0){
     if( !(@$_SESSION['opponent_id']&& !@$_SESSION['endcombat']) ){

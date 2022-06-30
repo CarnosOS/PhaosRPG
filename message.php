@@ -1,4 +1,7 @@
-<?php include "header.php"; ?>
+<?php
+include "aup.php";
+include "header.php";
+?>
 <html>
 <head>
 

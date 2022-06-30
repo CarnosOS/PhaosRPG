@@ -1,16 +1,16 @@
-<?php include "header.php"; ?>
-<!--
+<?php
+include "aup.php";
+
+/*
 you create a ship.php page with this code, you insert a shop called ship where you want your port so when you explore you can see the it.
 In location you should add (Port) to the end of the name so you know where other ports are
--->
-<?php
-
-include_once "class_character.php";
+*/
 
 $character=new character($PHP_PHAOS_CHARID);
 
 // make sure requested shop is at same location as character
 if (!($shop_id = shop_valid($character->location, 'ship.php'))) {
+        include "header.php";
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -34,11 +34,7 @@ function travel ($chid, $gol, $chloc, $locid) {
 		$res =("UPDATE phaos_characters set location='$locid', gold='$gol' WHERE id = '$chid'");
 		$req = mysql_query($res);
 		if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
-		?>
-		<script language=javascript>
-		self.location="town.php"
-		</script>
-		<?php
+		header ('Location: travel.php');
 	}
 }
 
@@ -46,6 +42,9 @@ if(@$_POST['travel']) {
 	$id=$_POST['travel'];
 	travel($character->id, $character->gold, $character->location, $id);
 }
+
+include "header.php";
+
 ?>
 <table width="550" border="1" cellspacing="0" cellpadding="3" align="center">
 <tr style=background:#006600;>

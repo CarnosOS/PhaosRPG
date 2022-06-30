@@ -1,9 +1,8 @@
 <?php
-include "header.php";
+include "aup.php";
 
 if (@$_REQUEST['saved']) {
-  // At this point header is already send, setcookie always fails
-  // setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
+  setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
 //Added by dragzone---
   $pw = checkHtmlEntities($pw);
   $pw2 = checkHtmlEntities($pw2);
@@ -16,6 +15,8 @@ if (@$_REQUEST['saved']) {
   mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status' WHERE username='$username'") or die("nope"); }
 //--------------------
 }
+
+include "header.php";
 
 if (@$_REQUEST['saved']) {
 	?>
@@ -147,4 +148,3 @@ if (@$_REQUEST['saved']) {
 <?php
 }
 include "footer.php";
-?>

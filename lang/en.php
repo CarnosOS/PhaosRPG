@@ -564,4 +564,3 @@ $lang_added["ad_pref_panel"] = "Settings";
 $lang_added["ad_pref_new-pw"] = "New Password:";
 $lang_added["ad_pref_conf-pw"] = "Confirm Password:";
 $lang_added["ad_pref_safe"] = "Save Changes";
-?>

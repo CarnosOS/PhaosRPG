@@ -1,6 +1,5 @@
 <?php
 include "aup.php";
-session_start();
 if(isset($topic)){$_SESSION['topic'] = $topic;}
 ?>
 <html>

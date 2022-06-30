@@ -1,8 +1,5 @@
 <?php
-include "header.php";
-include_once "class_character.php";
-
-$refsidebar= false;
+include "aup.php";
 
 $character = new character($PHP_PHAOS_CHARID);
 
@@ -11,20 +8,13 @@ $char_loc= $character->location;
 $location_name =  fetch_value ("SELECT name FROM phaos_locations WHERE id = '$char_loc'");
 
 include_once "location_actions.php";
-$pickedup= pickup_actions($character);
+$pickedup = pickup_actions($character);
 
-if($pickedup>0){
-    $refsidebar= true;
-    ?><div align="center"><?php
-    echo $pickedup." ".$lang_char['itemspickedup'];
-    ?></div><?php
+include "header.php";
+
+if($pickedup > 0){
+    echo "<div align=\"center\">$pickedup".$lang_char['itemspickedup']."</div>";
 }
-
-if($refsidebar){
-    refsidebar();
-    $refsidebar= false;
-}
-
 ?>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">

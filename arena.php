@@ -1,6 +1,6 @@
 <?php
+include "aup.php";
 include "header.php";
-include_once "class_character.php"; # add include
 
 // we use the character to determine opponent level
 $character = new character($PHP_PHAOS_CHARID);
@@ -16,6 +16,7 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 	echo $lang_comb["stam_noo"].'</body></html>' ;
 	exit;
 }
+
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">

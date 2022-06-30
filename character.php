@@ -1,10 +1,7 @@
 <?php
 //Line 390 - 397 changed by dragzone
-include "header.php";
-include_once "class_character.php";
+include "aup.php";
 include_once "items.php";
-
-$refsidebar= false;
 
 $character=new character($PHP_PHAOS_CHARID);
 
@@ -63,7 +60,6 @@ setShopForItemtype( array( "spell_items"), $magicshop_yn);
 if(@$_POST['delete'] == "yes") {
 	$character->kill_character();
         $character = new character(0); // clear character data
-	$refsidebar= true;
 }
 
 // SELL AN ITEM
@@ -131,7 +127,6 @@ if(@$sell_id == "Y") {
 	} else {
 		$sell_msg= $lang_char['noshop'];
 	}
-	$refsidebar= true;
 }
 
 
@@ -144,7 +139,6 @@ if($_GET['drink_potion'] == "Y") {
 			$character->drink_potion2($id);
 		}
 	}
-	$refsidebar= true;
 }
 
 // EQUIP AN ITEM
@@ -153,7 +147,6 @@ if(@$equip_id){
 	if($equip_id == "Y") {
 		if ($character->can_equipt($item_type, $item_id)) {
                         $character->equipt($item_type,$item_id);
-			$refsidebar= true;
 			//echo "equipping successfull";
 		} else {
 			//echo "not equipped";
@@ -163,7 +156,6 @@ if(@$equip_id){
 	// UNEQUIP AN ITEM
 	if($equip_id == "N") {
 		if ($character->unequipt($item_type,$item_id)){
-			$refsidebar = true;
 			//echo "unequipping successfull";
 		} else {
 			//echo "not unequipped";
@@ -171,17 +163,15 @@ if(@$equip_id){
 	}
 }
 
+
+include "header.php";
+
 if($dropped>0) {
-	$refsidebar= true;
 	?><div align=center><?php
 	echo $dropped." ".$lang_char['itemsdropped'];
 	?></div><?php
 }
 
-if($refsidebar){
-	refsidebar();
-	$refsidebar= false;
-}
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%">

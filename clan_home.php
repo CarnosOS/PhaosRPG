@@ -1,5 +1,5 @@
 <?php
-include "header.php";
+include "aup.php";
 
 /*OPTIMIZE TABLE 'phaos_characters'*/
 
@@ -13,14 +13,6 @@ function get_member_rank($clanname, $clanmember) {
   }
   return 0;
 }
-
-echo"<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
-	<tr>
-	<td width='100%' height='100%' align='center'>
-	<img src='lang/".$lang."_images/clan_home.png'><br></td>
-	</tr>
-	<tr>
-	<td align='center' valign='top' height='63'>";
 
 
 $character = new character($PHP_PHAOS_CHARID);
@@ -257,6 +249,16 @@ if($error === false && $clan_user_edit === "yes" && $newnames == "Update") {
 		mysql_query("DELETE FROM phaos_clan_search WHERE clanmember = '$charname_n'");
 	}
         
+        include "header.php";
+
+echo"<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
+	<tr>
+	<td width='100%' height='100%' align='center'>
+	<img src='lang/".$lang."_images/clan_home.png'><br></td>
+	</tr>
+	<tr>
+	<td align='center' valign='top' height='63'>";
+
         if (count($messages) > 0) {
           echo "<br><br>
                   <table border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>

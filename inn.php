@@ -1,11 +1,12 @@
 <?php
-include "header.php"; 
+include "aup.php"; 
 include_once 'class_character.php';
 
 $character=new character($PHP_PHAOS_CHARID);
 
 // make sure the requested shop is where the player is
 if (!($shop_id = shop_valid($character->location, 'inn.php'))) {
+        include "header.php";
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -39,8 +40,9 @@ if($reload) {
 		showError(__FILE__,__LINE__,__FUNCTION__,$query);
 		exit;
 	}
-	refsidebar();
 }
+
+include "header.php";
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">

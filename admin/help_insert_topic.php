@@ -1,6 +1,5 @@
 <?php
 include "aup.php";
-session_start();
 ?>
 <html>
 

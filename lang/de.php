@@ -566,4 +566,3 @@ $lang_added["ad_pref_conf-pw"] = "Passwort wiederholen:";
 $lang_added["ad_pref_safe"] = "Änderungen Speichern";
 //-----------------------
 
-?>

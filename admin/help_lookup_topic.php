@@ -34,7 +34,7 @@ $count_rows = mysql_num_rows($result);
 $result = mysql_query ("SELECT title,file,id FROM phaos_help WHERE $hlpfield LIKE '$hlpvalue%' ORDER BY title ASC limit $number,30");
 if ($row = mysql_fetch_array($result)) {
 	do {
-		print "<form action=\"admin_help_modify_topic.php\">";
+		print "<form action=\"admin_help_Modify_Topic.php\">";
 		print "<tr><td><b>";
 		print "<input type=\"hidden\" name=\"topic\" value=\"$row[id]\"><input type=submit class=lookup_button value=\"&nbsp $row[id] &nbsp\">";
 		print "</b>&nbsp;</td><td><b>";

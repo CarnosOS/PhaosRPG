@@ -1,5 +1,5 @@
 <?php
-include "header.php";
+include "aup.php";
 $DEBUG = 0; // show debugging messages: 0=off, 1=on
 
 
@@ -20,33 +20,6 @@ $DEBUG = 0; // show debugging messages: 0=off, 1=on
 	}
 
 
-?>
-
-<script type="text/javascript">
-function verify()
-{
-	if(document.form.name.value == "")
-	{
-		window.alert("<?php echo $lang_crt["u_must"]; ?>");
-		return false;
-	}
-	else {
-		return true;
-	}
-}
-
-
-	function LoadAppearance(sPreviewID)
-	{
-		var oAppearance = window.document.getElementById("image_path");
-		var sAppearanceImg = oAppearance.options[oAppearance.selectedIndex].value;
-
-		window.document.getElementById(sPreviewID).src = sAppearanceImg;
-	}
-
-</script>
-
-<?php
 $result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
 if ($row = mysql_fetch_array($result)) {
 $duplicate = "yes";
@@ -112,18 +85,40 @@ VALUES
 ('$startloc','$image_path','$PHP_PHAOS_USER','$name','$age','$strength','$dexterity','$wisdom','$constitution','$hit_points','$race','$class','$sex','150','".$skills["fight"]."','".$skills["defence"]."','".$skills["weaponless"]."','".$skills["lockpick"]."','".$skills["traps"]."')";
 $req = mysql_query($query);
 if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;} 
-?>
-<script type="text/javascript">
-<!--
-javascript:parent.side_bar.location.reload();
-//-->
-</script>
-<?php
+
 $char_created = "yes";
 }
 }
 }
+
+
+include "header.php";
+
 ?>
+
+<script type="text/javascript">
+function verify()
+{
+	if(document.form.name.value == "")
+	{
+		window.alert("<?php echo $lang_crt["u_must"]; ?>");
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+
+	function LoadAppearance(sPreviewID)
+	{
+		var oAppearance = window.document.getElementById("image_path");
+		var sAppearanceImg = oAppearance.options[oAppearance.selectedIndex].value;
+
+		window.document.getElementById(sPreviewID).src = sAppearanceImg;
+	}
+
+</script>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
 <tr>

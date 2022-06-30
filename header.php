@@ -1,7 +1,4 @@
 <?php
-session_start();
-include "aup.php";
-include_once "class_character.php";
 require("Sajax.php");
 
 function add_chat_line($text) {

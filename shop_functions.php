@@ -46,5 +46,3 @@ function insert_shop_refill($shop_id, $item_type, $item_value_min, $item_value_g
     $req = mysql_query($query);
     if (!$req) { showError(__FILE__,__LINE__,__FUNCTION__,$query); exit;}
 }
-
-?>

@@ -72,6 +72,8 @@ if (!get_magic_quotes_gpc()) {
 unset($PHP_PHAOS_CHARID);
 unset($PHP_PHAOS_CHAR);
 
+session_start();
+
 $auth = false;
 if(@$PHP_PHAOS_USER && ((@$PHP_PHAOS_MD5PW)||(@$PHP_PHAOS_PW)) ) {
 	if(@$PHP_PHAOS_MD5PW){

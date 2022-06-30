@@ -109,6 +109,3 @@ do_buy($character,$shop_basics);
 if($sorrys) {
    	$sorry = $lang_shop["sorry"];
 }
-?>
-
-
