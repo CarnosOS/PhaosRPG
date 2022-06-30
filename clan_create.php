@@ -1,6 +1,19 @@
 <?php
 include 'header.php';
 
+
+$character = new character($PHP_PHAOS_CHARID);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+
+$clanmemberid = $character->id;
+$clanmember = $character->name;
+$clanlocation = $character->location;
+
 echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
 	<tr>
 	<td width='100%' height='100%' align='center'>
@@ -11,11 +24,8 @@ echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: 
 	<td align='center' valign='top' height='63'>";
 
 // --------------------------------------------------------------------------------------------------------------------
-$result_0 = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result_0)) {
-	$level = $row["level"];
-}
-if($level <= 9) {
+
+if($character->level <= 9) {
 	echo "<table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1'>
 		<tr>
 		<td width='100%'>
@@ -25,13 +35,6 @@ if($level <= 9) {
 		</tr>
 		</table>";
 	$totalerror = "yes";
-}
-
-$result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result)) {
-        $clanmemberid = $row['id'];
-        $clanmember = $row['name'];
-	$clanlocation = $row["location"];
 }
 
 $result_1 = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmember = '$clanmember'");
@@ -48,11 +51,9 @@ if ($totalerror !== "yes" && $row = mysql_fetch_array($result_1)) {
 }
 
 if($totalerror == "") {
-	$result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-	if ($row = mysql_fetch_array($result)) {
-                $clanleaderid = $row["id"];
-                $clanleader = $row['name'];
-		$clanlocation = $row["location"];}
+                $clanleaderid = $character->id;
+                $clanleader = $character->name;
+		$clanlocation = $character->location;
 		$clanrank_1 = $lang_clan["rank_1"];
 		$clanrank_2 = $lang_clan["rank_2"];
 		$clanrank_3 = $lang_clan["rank_3"];
@@ -181,4 +182,3 @@ if($totalerror == "") {
 }
 echo "</table>";
 include "footer.php";
-?>

@@ -644,7 +644,7 @@ class character {
               }
               break;
             case 'armor':
-              mysql_query ("SELECT * FROM phaos_armor WHERE id = '".$id."'");
+              $result = mysql_query ("SELECT * FROM phaos_armor WHERE id = '".$id."'");
               if (($row = mysql_fetch_array($result))) {
                 $armor_class = intval($row["armor_class"]);
                 return $armor_class <= ($this->defence * 3) + 10;

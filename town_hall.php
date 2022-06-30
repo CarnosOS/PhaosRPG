@@ -1,4 +1,13 @@
-<?php include "header.php"; ?>
+<?php include "header.php";
+
+$character = new character($PHP_PHAOS_CHARID);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+?>
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="103">
   <tr>

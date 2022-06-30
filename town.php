@@ -61,7 +61,7 @@ if($char_loc == "") {
         //--------------------
         print "<tr>
 						<td align='center'>
-							<a href='$row[type]?shop_id=$row[shop_id]'>$lang_added[$insname]</a>
+							<a href='$row[type]'>$lang_added[$insname]</a>
 						</td>
 						</tr>";
 			}

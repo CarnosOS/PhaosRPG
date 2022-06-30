@@ -7,7 +7,7 @@ $refresh = 0; //determine if the SideBar has to be refreshed
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location
-if (!shop_valid($character->location, $shop_id, 'shop.php')){
+if (!($shop_id = shop_valid($character->location, 'shop.php'))) {
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -134,13 +134,11 @@ if ($result=mysql_query ("SELECT * FROM phaos_shop_inventory WHERE shop_id='$sho
 			$inv_row[quantity] $lang_shop[stock]<br>
 			$inv_row[sell] $lang_shop[gp] $lang_shop[each]<br>
 			<form action='shop.php' method='post'>
-				<input type='hidden' name='shop_id' value='$inv_row[shop_id]'>
 				<input type='hidden' name='item_id' value='$inv_row[item_id]'>
 				<input type='hidden' name='number' value='1'>
 				<input type='submit' value='$lang_shop[purc]'>
 			</form>
 			<form action='shop.php' method='post'>
-				<input type='hidden' name='shop_id' value='$inv_row[shop_id]'>
 				<input type='hidden' name='item_id' value='$inv_row[item_id]'>
 				<input type='hidden' name='number' value='$inv_row[quantity]'>
 				<input type='submit' value='$lang_shop[purcall]'>

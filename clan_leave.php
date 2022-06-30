@@ -1,14 +1,19 @@
 <?php
 include "header.php";
 
-$clanmemberid = 0;
+
+$character = new character($PHP_PHAOS_CHARID);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+
+$clanmemberid = $character->id;
+$clanmember = $character->name;
 $clanrank = 0;
 $clanname = '';
-$result_b = mysql_query("SELECT id, name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result_b)) {
-        $clanmemberid = $row['id'];
-	$clanmember = $row["name"];
-}
 
 $result = mysql_query ("SELECT clanname, clanrank FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'");
 if (($row = mysql_fetch_array($result))) {

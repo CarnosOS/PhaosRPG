@@ -222,15 +222,15 @@ function whos_here($locationids,$characterrole='phaos_npc') {
 
 
 // check to see if this map location has a specific shop
-function shop_valid($location, $shop_id, $shop_type) {  // was $type
+function shop_valid($location, $shop_type) {  // was $type
     $location= intval($location);
     $shop_id= intval($shop_id);
-	$result = mysql_query ("SELECT * FROM phaos_buildings WHERE location = '$location' AND shop_id='$shop_id' AND type = '$shop_type' ");  // was $type.php
+	$result = mysql_query ("SELECT shop_id FROM phaos_buildings WHERE location = '$location' AND type = '$shop_type' ");  // was $type.php
 	// if (mysql_num_rows($result) == 0) {exit;}
-	if(! list($shop_id,$shop_location,$shop_name,$shop_type,$shop_ownerid,$shop_capacity) = mysql_fetch_array($result)) {
-		return false;
+	if(($row = mysql_fetch_array($result))) {
+		return intval($row['shop_id']);
 	}
-    return true;
+    return false;
 }
 
 // speed up selecting random rows by preselecting a subset for select by rand()

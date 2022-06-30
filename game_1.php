@@ -6,7 +6,7 @@ include_once "class_character.php";
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure the requested shop is where the player is
-if (!shop_valid($character->location, $shop_id, 'inn.php')){
+if (!($shop_id = shop_valid($character->location, 'inn.php'))) {
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -26,7 +26,7 @@ if($gold_o <= "0"){
         <td width='100%'>
         <p align='center'><b><font color='#FF0000'>".$lang_game1["not_en__go"].".</font></b></p>
         <p align='center'><font color='#FF0000'><b>
-        <a href='inn.php?shop_id=$shop_id'>".$lang_clan["back"]."</a></b></font></td>
+        <a href='inn.php'>".$lang_clan["back"]."</a></b></font></td>
       </tr>
     </table><br><br>";exit;}
 if($stamina_o <= "0"){
@@ -36,7 +36,7 @@ if($stamina_o <= "0"){
         <td width='100%'>
         <p align='center'><b><font color='#FF0000'>".$lang_game1["2_tired"].".</font></b></p>
         <p align='center'><font color='#FF0000'><b>
-        <a href='inn.php?shop_id=$shop_id'>".$lang_clan["back"]."</a></b></font></td>
+        <a href='inn.php'>".$lang_clan["back"]."</a></b></font></td>
       </tr>
     </table><br><br>";exit;}
 
@@ -229,7 +229,6 @@ echo "<form method='post' action='game_1.php'>
   echo "</table>
     </center>
   </div>
-  <input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">
   <p align='center'><input type='submit' value='".$lang_game1["rollll"]."' name='roll'></p>
 </form>";
 
@@ -237,7 +236,6 @@ echo "</td>
   </tr>
 </table>";
 
-echo "<br><div align=center><a href='inn.php?shop_id=$shop_id'> ".$lang_clan["back"]." </a></td></div>";
+echo "<br><div align=center><a href='inn.php'> ".$lang_clan["back"]." </a></td></div>";
 
 include "footer.php";
-?>

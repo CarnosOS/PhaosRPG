@@ -1,5 +1,6 @@
 <?php
 include "header.php";
+
 /*OPTIMIZE TABLE 'phaos_characters'*/
 
 function get_member_rank($clanname, $clanmember) {
@@ -21,19 +22,25 @@ echo"<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: c
 	<tr>
 	<td align='center' valign='top' height='63'>";
 
+
+$character = new character($PHP_PHAOS_CHARID);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+	echo $lang_markt["no_sell"].'</table></body></html>' ;
+	exit;
+}
+
 $date_h = date('m.d.Y - H:i:s');
 $messages = array();
 $back = 'clan_home.php';
 $error = false;
 
-$result_1a = mysql_query("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result_1a)) {
-        $clanmember_id = $row['id'];
-	$clanmember = $row["name"];
-        $gold = $row['gold'];
-}
-
+$clanmember_id = $character->id;
+$clanmember = $character->name;
+$gold = $character->gold;
 $clanname = '';
+
 $result_1 = mysql_query("SELECT * FROM phaos_clan_in WHERE clanmember = '$clanmember'");
 if ($row = mysql_fetch_array($result_1)) {
         $clanname = $row["clanname"];
@@ -565,7 +572,7 @@ if($error === false && $clan_user_edit === "yes" && $newnames == "Update") {
 			$clanrank = intval($row["clanrank"]);
 
 		if($clanrank >= 1 && $clanrank <= 10):
-			$n_clanrank = $guildrank_n[1];
+			$n_clanrank = $guildrank_n[$clanrank];
 		elseif($clanrank === 98):
 			$n_clanrank = "Guild Assistant";
 		elseif($clanrank === 99):

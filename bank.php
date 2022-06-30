@@ -5,7 +5,7 @@ $result = mysql_query ("SELECT * FROM phaos_characters WHERE id = '$PHP_PHAOS_CH
 if ($row = mysql_fetch_array($result)) { $char_loc = $row["location"]; }
 
 // make sure this requested shop is at the players location
-if (!shop_valid($char_loc, $shop_id, 'bank.php')){
+if (!($shop_id = shop_valid($char_loc, 'bank.php'))) {
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -62,7 +62,6 @@ echo '<div align=center><form method="POST" action="bank.php">
 	<p align="center">Gold in Bank: '.number_format($row['bankgold']).'</td></tr><tr><td width="50%"><p align="center">
 	<input type="radio" value="deposit" checked name="R1">Deposit</td><td width="50%"><p align="center">
 	<input type="radio" value="withdraw" name="R1">Withdraw</td></tr><tr><td width="100%" colspan="2">
-        <input type="hidden" name="shop_id" value="'.$shop_id.'">
 	<p align="center"><input type="text" name="amount" size="20"></td></tr><tr><td width="100%" colspan="2">
 	<p align="center"><input type="submit" value="Submit" name="submit"></td></tr></table></center></form>
 	</div>';

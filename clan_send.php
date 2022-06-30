@@ -1,6 +1,17 @@
 <?php
 include "header.php";
 
+$character = new character($PHP_PHAOS_CHARID);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
+
+$characterid = $character->id;
+$chname = $character->name;
+
 if($begin == "") {
 	/*echo $clanname_ask;*/
 	$clan_name = $clanname_ask;
@@ -30,12 +41,6 @@ if($Text1 > "" and $questionsend == $lang_guild4["send_me"]) {
 		<td width='100%'>
 		<center><font color='#FF0000'>".$lang_guild4["plz_send"].".</font></center><br>
 		<!-- <p align='center'><a href='town_hall.php'>to Town Hall</a> -->";
-
-	$result_1 = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-	if ($row = mysql_fetch_array($result_1)) {
-                $characterid = $row['id'];
-		$chname = $row["name"];
-	}
 
         // check if application is not pending
 	$result_2 = mysql_query ("SELECT * FROM phaos_clan_search WHERE clanmemberid = '$characterid' AND clanname = '$nclanname'");
@@ -75,12 +80,6 @@ if(isset($clanname_cancel) && $clanname_cancel !== "") {
 		<center><font color='#FF0000'>".$lang_guild4["plz_send"].".</font></center><br>
 		<!-- <p align='center'><a href='town_hall.php'>to Town Hall</a> -->";
 
-	$result_1 = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-	if ($row = mysql_fetch_array($result_1)) {
-                $characterid = $row['id'];
-		$chname = $row["name"];
-	}
-
         $nclanname = $clanname_cancel;
 	mysql_query ("DELETE FROM phaos_clan_search WHERE clanmemberid = '$characterid' AND clanname = '$nclanname'");
         print ("<center><font color='#FF0000'>".$lang_guild4["has_sent"]."...</font><p><br><a href='town_hall.php'>".$lang_clan["town_ret"]."</a></center>");
@@ -106,10 +105,6 @@ if($error == "") {
 		<form method='post' action='clan_send.php'>
 		The Guild's Name : <input type='text' name='nclanname' size='30' maxlength='30' value='$clanname_ask'><br>";
 
-	$result_c = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-	if ($row = mysql_fetch_array($result_c)) {
-		$chname = $row["name"];
-	}
 	echo $lang_guild4["ur_messss"]." : <input type='text' name='Text1' size='40' maxlength='100' value='".$lang_guild4["ur_txxxx"]."'><br>
 		<font color='#FF0000'><sup>*</sup></font><font style='font-size: 9pt'>".$lang_guild4["cn_ent_mes"].".</font>
 		<br><br>

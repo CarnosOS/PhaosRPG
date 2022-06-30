@@ -4,6 +4,8 @@ i correct "if" errors in this file
 */
 include "config.php";
 include_once 'include_lang.php';
+include_once "class_character.php"; # add include
+
 echo "<html><head>
 	<link href='styles/phaos.css' rel='stylesheet' type='text/css'>
 	</head><body class='bodym'>
@@ -14,24 +16,29 @@ echo "<html><head>
 	</td>
 	</tr>";
 
-$clanmemberid = 0;
+
+$character = new character($PHP_PHAOS_CHARID);
+
+$clanmemberid = $character->id;
+$clanmember = $character->name;
+
 $clanrank = 0;
 $clanname = '';
-$result_b = mysql_query("SELECT id, name FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result_b)) {
-        $clanmemberid = $row['id'];
-	$clanmember = $row["name"];
-}
-
 $result = mysql_query ("SELECT clanname, clanrank FROM phaos_clan_in WHERE clanmemberid = '$clanmemberid'");
 if (($row = mysql_fetch_array($result))) {
     $clanname = $row["clanname"];
     $clanrank = intval($row["clanrank"]);
 }
 
-if($clanname === '' || $clanrank !== 99) {
-  echo "<p align='center'><font color='#FF0000'><b>
-          <a href=\"town_hall.php\">".$lang_guild3["not_in"]."</a></b></font></td>
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
+  echo "<tr><td><p align='center'><font color='#FF0000'><b>
+          <a href=\"town_hall.php\">".$lang_markt["no_sell"]."</a></b></font></p></td>
+          </tr>
+          </table><br><br>";
+} else if($clanname === '' || $clanrank !== 99) {
+  echo "<tr><td><p align='center'><font color='#FF0000'><b>
+          <a href=\"town_hall.php\">".$lang_guild3["not_in"]."</a></b></font></p></td>
           </tr>
           </table><br><br>";
 }

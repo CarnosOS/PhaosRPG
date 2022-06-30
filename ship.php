@@ -10,7 +10,7 @@ include_once "class_character.php";
 $character=new character($PHP_PHAOS_CHARID);
 
 // make sure requested shop is at same location as character
-if (!shop_valid($character->location, $shop_id, 'ship.php')){
+if (!($shop_id = shop_valid($character->location, 'ship.php'))) {
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
@@ -74,7 +74,6 @@ while ($row1 = mysql_fetch_array($self1)) {
 		if ($id != $character->location) {
 			echo "<tr><td><form action=\"ship.php\" method=\"post\">
 				<input type=\"hidden\" name=\"travel\" value=\"$id\">
-                                <input type=\"hidden\" name=\"shop_id\" value=\"$shop_id\">
 				<input type=\"submit\" style=\"border:none;text-align:left;\" value=\"".$name."\">
 				</form></td><td>&nbsp;&nbsp;</td><td>";
 			// to do: different prices
