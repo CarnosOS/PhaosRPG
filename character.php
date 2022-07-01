@@ -407,8 +407,7 @@ if(isItemType($item_type)){
 //!PS: be careful with this code, it took some time to write
 
 $items= array();
-//$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$_COOKIE[PHP_PHAOS_USER]' $wheretype ORDER BY item_id ASC");
-$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$_COOKIE[PHP_PHAOS_USER]' $wheretype ORDER BY type ASC, item_id ASC");
+$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$PHP_PHAOS_USER' $wheretype ORDER BY type ASC, item_id ASC");
 
 if($list_inventory) {
 	while ($row = mysql_fetch_assoc($list_inventory)) {

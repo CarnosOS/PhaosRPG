@@ -25,7 +25,8 @@ function add_chat_line($text) {
 //------------------------
 
 function refresh() {
-	$result = mysql_query ('SELECT * FROM phaos_characters WHERE username = \'' . $_COOKIE[PHP_PHAOS_USER] . '\'');
+        global $PHP_PHAOS_USER;
+	$result = mysql_query ('SELECT * FROM phaos_characters WHERE username = \'' . $PHP_PHAOS_USER . '\'');
 	if ($row = mysql_fetch_array($result)) {
 		$char_location = $row["location"];
 		$char_name = $row['name'];

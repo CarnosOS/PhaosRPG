@@ -30,7 +30,7 @@ if ( !$auth ) {
 	<table cellspacing=0 cellpadding=0 border=0>
 	<tr>
 	<td align=right><font color="black"><strong><?php echo $lang_aup["user"]; ?>: &nbsp</strong></font></td>
-	<td><input name="PHP_PHAOS_USER" type="text" value="<?php echo $_COOKIE[PHP_PHAOS_USER]; ?>"></td>
+	<td><input name="PHP_PHAOS_USER" type="text" value="<?php echo $_COOKIE['PHP_PHAOS_USER']; ?>"></td>
 	</tr>
 	<tr>
 	<td align=right><strong class="phaos-pass-cell"><?php echo $lang_aup["pass"]; ?>: &nbsp</strong></td>

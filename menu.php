@@ -18,7 +18,7 @@
 	?>
 </td>
 <td align=center width="15%">
-	<a href="logout.php"><?php echo $lang_menu["logo"].'<br>('.$_COOKIE[PHP_PHAOS_USER].')'; ?></a>
+	<a href="logout.php"><?php echo $lang_menu["logo"].'<br>('.$PHP_PHAOS_USER.')'; ?></a>
 </td>
 </tr>
 </table>
