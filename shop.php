@@ -76,8 +76,8 @@ include "header.php";
 <?php
 echo "<table align=center>
 	<tr><td> <b>$lang_shop[inv]:</b></br>
-	<tr><td align='center'> $lang_shop[cap]" .$character->max_inventory ." ".$lang_shop[items]."</td></tr>
-	<tr><td align='center'> $lang_shop[item]".$character->invent_count()." ".$lang_shop[items]."</td></tr>
+	<tr><td align='center'> $lang_shop[cap]" .$character->max_inventory ." ".$lang_shop['items']."</td></tr>
+	<tr><td align='center'> $lang_shop[item]".$character->invent_count()." ".$lang_shop['items']."</td></tr>
 	</table></td></tr>";
 
 if(@$sorry) {

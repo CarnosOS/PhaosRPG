@@ -265,6 +265,23 @@ $lang_inn["return"] = "Zurück zu Stadt";
 $lang_inn['acceptq'] = "Accept";
 $lang_inn['completeq'] = "Claim";
 
+// Quests
+$lang_quest['quests'] = "Quests";
+$lang_quest['reward'] = "Reward";
+$lang_quest['good_luck'] = "Good luck, hero";
+$lang_quest['completed'] = "Quest completed";
+$lang_quest['your_quests'] = "Your Quests";
+$lang_quest['quest'] = "Quest";
+$lang_quest['from'] = "Giver";
+$lang_quest['time_left'] = "Time left";
+$lang_quest['status'] = "Status";
+$lang_quest['abandon'] = "Abandon";
+$lang_quest['no_quests'] = "No quests pending";
+$lang_quest['done'] = "done";
+$lang_quest['in_progress'] = "started";
+$lang_quest['hours_left'] = "hours";
+$lang_quest['minutes_left'] = "minutes";
+
 //Combat
 $lang_comb["_attt"] =		"Angriff";
 $lang_comb["_conti"] =		"Weiter";
@@ -436,6 +453,7 @@ $lang_menu["trav"] = "Reisen";
 $lang_menu["logo"] = "Logout";
 $lang_menu["msg_"] = "Nachrichten";
 $lang_menu["prefs"] = "Einstellungen";
+$lang_menu["quests"] = "Quests";
 
 //Market
 $lang_markt["not_en_goo"] = "Du hast nicht genug Gold für dieses Item.";

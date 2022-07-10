@@ -13,12 +13,14 @@
 <td align=center width="15%">
 	<a href="message.php"><?php echo $lang_menu["msg_"]; ?></a>
 	<br>
+	<a href="quests.php"><?php echo $lang_menu["quests"]; ?></a>
+</td>
+<td align=center width="15%">
 	<?php
 	echo "<a href='prefs.php?username=$PHP_PHAOS_USER'>Prefs</a>";
 	?>
-</td>
-<td align=center width="15%">
-	<a href="logout.php"><?php echo $lang_menu["logo"].'<br>('.$PHP_PHAOS_USER.')'; ?></a>
+	<br>
+	<a href="logout.php"><?php echo $lang_menu["logo"]; ?></a>
 </td>
 </tr>
 </table>

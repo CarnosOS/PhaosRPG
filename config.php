@@ -59,6 +59,12 @@ $PHP_ADMIN_USER = @$_COOKIE["PHP_ADMIN_USER"];
 $PHP_ADMIN_PW = @$_COOKIE["PHP_ADMIN_PW"];// for compatibility with old accounts
 $PHP_ADMIN_MD5PW = @$_COOKIE["PHP_ADMIN_MD5PW"];
 
+if (!function_exists('get_magic_quotes_gpc')) {
+  function get_magic_quotes_gpc() {
+    return false;
+  }
+}
+
 if (!get_magic_quotes_gpc()) {
   foreach (array('_GET', '_POST') as $array_name) {
     foreach (${$array_name} as $key => $value) {
@@ -105,14 +111,14 @@ if(@$PHP_PHAOS_USER && ((@$PHP_PHAOS_MD5PW)||(@$PHP_PHAOS_PW)) ) {
 			setcookie("PHP_PHAOS_MD5PW",$PHP_PHAOS_MD5PW,time()+172800); // ( REMEMBERS USER PASSWORD FOR 2 DAYS )
 			setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
 			setcookie("PHP_PHAOS_PW",0,time()-3600); // remove cookie used in version 0.88
-			if($_GET[play_music] == "YES") {
-			        $play_music = $_GET[play_music];
+			if(@$_GET['play_music'] == "YES") {
+			        $play_music = $_GET['play_music'];
 			        setcookie("play_music",$play_music,time()+17280000);
-			} elseif($_GET[play_music] == "NO") {
-			        $play_music = $_GET[play_music];
+			} elseif(@$_GET['play_music'] == "NO") {
+			        $play_music = $_GET['play_music'];
 			        setcookie("play_music",$play_music,time()+17280000);
-			} elseif($_GET[play_music] == "") {
-			        $play_music = $_COOKIE[play_music];
+			} elseif(@$_GET['play_music'] == "") {
+			        $play_music = @$_COOKIE['play_music'];
 		        	setcookie("play_music",$play_music,time()+17280000);
 			}
 		}

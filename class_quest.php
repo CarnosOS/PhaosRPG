@@ -220,9 +220,15 @@ class quest {
             . "VALUES ('".$character->id."', '".$this->questid."', '".$now."')");
   }
 
-  public function complete(character $character) {
+  public function complete($character) {
     mysql_query("UPDATE phaos_questhunters SET complete=1 "
             . "WHERE charid='".$character->id."' AND questid='".$this->questid."'");
+
+    if ($this->haveitemid) {
+      $item_id = $this->haveitemid;
+      $item_type = $this->haveitemtype;
+      $character->remove_item($item_id, $item_type);
+    }
 
     $set = array();
     if ($this->rewardgold > 0) {

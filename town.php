@@ -1,9 +1,13 @@
 <?php
 include "aup.php";
+include_once "class_quest_generator.php";
 
 $character = new character($PHP_PHAOS_CHARID);
 
 $char_loc= $character->location;
+
+$quest_generator = new quest_generator();
+$quest_generator->visit_location($character, $char_loc);
 
 $location_name =  fetch_value ("SELECT name FROM phaos_locations WHERE id = '$char_loc'");
 
@@ -39,7 +43,7 @@ if($char_loc == "") {
 		while ($row = mysql_fetch_assoc($result))
 			{
         //Added by dragzone---
-        $name = $row[name];
+        $name = $row['name'];
         if ($name == "Arena") { $insname = "ad_arena"; }
         if ($name == "Blacksmith") { $insname = "ad_blacksmith"; }
         if ($name == "Magic Shop") { $insname = "ad_magic_sh"; }

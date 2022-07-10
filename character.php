@@ -132,7 +132,7 @@ if(@$sell_id == "Y") {
 
 // DRINK POTION
 if($_GET['drink_potion'] == "Y") {
-        $id = intval($_GET[id]);
+        $id = intval($_GET['id']);
 	$result = mysql_query ("SELECT type FROM phaos_char_inventory WHERE id = '$id'");
 	if ($row = mysql_fetch_array($result)) {
 		if ($row["type"] == "potion") {

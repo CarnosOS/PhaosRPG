@@ -8,11 +8,26 @@ if (@$_REQUEST['saved']) {
   $pw2 = checkHtmlEntities($pw2);
 
   if($pw != "") {
-  if ($pw != $pw2) { echo "<meta http-equiv=\"refresh\" content=\"3; URL=index.php\"><p>&nbsp;</p><p>&nbsp;</p><p align=\"center\"><b>Your password doesn't match!</b></p>"; exit;}
-  $vpw=md5($pw);
-  mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status', password='$vpw' WHERE username='$username'") or die("nope");
+    if ($pw != $pw2) {
+      include "header.php";
+      echo "<br><br>
+        <table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
+          <tr>
+            <td width='100%'>
+              <p align='center'><b><font color='#FF0000'>Your password doesn't match!.</font></b></p>
+              <p align='center'><font color='#FF0000'><b>
+                <a href='prefs.php'>".$lang_clan["back"]."</a></b></font>
+              </p>
+              </td>
+          </tr>
+        </table><br><br>";
+      exit;
+    }
+    $vpw=md5($pw);
+    mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status', password='$vpw' WHERE username='$username'") or die("nope");
   } else {
-  mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status' WHERE username='$username'") or die("nope"); }
+    mysql_query("UPDATE phaos_users SET lang='$language', grid_size='$map_grid_size', grid_status='$map_grid_status' WHERE username='$username'") or die("nope");
+  }
 //--------------------
 }
 

@@ -7,12 +7,17 @@ include "aup.php";
 include_once "functions.php";
 include_once "class_character.php";
 include_once "class_npc_generator.php";
+include_once "class_quest_generator.php";
 
 beginTiming();
 
 ## Variables
 $params = array();
 $DEBUG	= 0;	// 0 means turn off debugging;   1 means turn on debugging
+
+// generate quests
+$quest_generator = new quest_generator();                  $quest_generator->delete_finished_quests();
+$quest_generator->generate();
 
 // population control
 $where= "username='phaos_npc' and race <> 'Dwarf'";

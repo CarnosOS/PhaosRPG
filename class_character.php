@@ -133,6 +133,9 @@ class character {
 	}
 
 	function fight_reduction() {
+		if ($this->max_stamina <= 0) {
+			return 1;
+		}
 		$factor= $this->stamina_points/$this->max_stamina;
 		if($factor> 0.66) {
 			return 1;
@@ -563,7 +566,7 @@ class character {
 	* @return returns character Level
 	*/
 	function level(){
-		return $this->level;
+		return (int)$this->level;
 	}
 
 	/**
@@ -700,7 +703,7 @@ class character {
 		}
 
 		$this->{$item_type} = '';
-		$query = ("UPDATE phaos_characters SET $item_type = '' WHERE id = '".$this->id."'");
+		$query = ("UPDATE phaos_characters SET $item_type = '0' WHERE id = '".$this->id."'");
 		$req = mysql_query($query);
 		if (!$req)  {showError(__FILE__,__LINE__,__FUNCTION__); return 0; exit;}
 		return 1;

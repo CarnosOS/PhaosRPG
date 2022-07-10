@@ -5,8 +5,8 @@ include "config.php";
 $imgsizew = 52;
 $imgsizeh = 52;
 $border = 0;
-$begin_id = $_POST[begin_id];
-$end_id = $_POST[end_id];
+$begin_id = $_POST['begin_id'];
+$end_id = $_POST['end_id'];
 
 
 echo "<html><head>

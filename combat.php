@@ -1,6 +1,7 @@
 <?php
 include "aup.php";
 include_once "class_npc_generator.php";
+include_once "class_quest_generator.php";
 
 function endfight(){
 	$disp_msg= $_SESSION['disp_msg'];
@@ -412,6 +413,9 @@ if($skip_actions) {
 
             			$ret = $defender->kill_characterid();
                    		if(DEBUG>=1) {$_SESSION['disp_msg'][] = "**DEBUG: killing oppponent";}
+
+        				$quest_generator = new quest_generator();
+        				$quest_generator->collect_monster($character, $defender);
 
         				// add monsters to replace dead one
                                         $npc_generator = new npc_generator();

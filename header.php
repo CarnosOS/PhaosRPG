@@ -14,6 +14,7 @@ function add_chat_line($text) {
 }
 
 // Added by dragzone---
+    $stamina_points = 0;
     $sql_stamina = "SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'";
       $sql_rs_stamina = mysql_query($sql_stamina);
       if ($row = mysql_fetch_array($sql_rs_stamina)) {
@@ -151,7 +152,7 @@ function add_chat_line() {
 			$num++;
 			?>
 			var num = "<?php print $num; ?>";
-			ssmItems[num]=["<?php print $row[title]; ?>", "help.php?id=<?php print $row[id]; ?>", "_new"]
+			ssmItems[num]=["<?php print $row['title']; ?>", "help.php?id=<?php print $row['id']; ?>", "_new"]
 			<?php
 		} while($row = mysql_fetch_array($result));
 		?>

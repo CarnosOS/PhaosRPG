@@ -7,17 +7,9 @@ include_once 'class_quest_generator.php';
 $character=new character($PHP_PHAOS_CHARID);
 
 // generate quests
-
 $quest_generator = new quest_generator();
 $quest_generator->delete_finished_quests();
-$target_quest_count = 100;
-$quest_count = $quest_generator->get_active_quests_count();
-
-if ($quest_count < $target_quest_count) {
-  // echo "quest_generator->generate()\n";
-  // $quest_generator->generate(); // generate one quest and insert into db
-}
-
+$quest_generator->generate();
 
 // make sure the requested shop is where the player is
 if (!($shop_id = shop_valid($character->location, 'inn.php'))) {
