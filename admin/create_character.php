@@ -1,6 +1,11 @@
 <?php
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'create_char', 'username', 'name', 'age', 'sex', 'race', 'class', 'image_path',
+));
+
 ?>
 <html>
 <head>

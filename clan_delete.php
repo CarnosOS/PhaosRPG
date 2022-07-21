@@ -6,6 +6,8 @@ include "config.php";
 include_once 'include_lang.php';
 include_once "class_character.php"; # add include
 
+apply_input_params(array('delclan'));
+
 echo "<html><head>
 	<link href='styles/phaos.css' rel='stylesheet' type='text/css'>
 	</head><body class='bodym'>

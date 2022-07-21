@@ -1,6 +1,8 @@
 <?php
 include "aup.php";
 
+apply_input_params(array('item_id'));
+
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location

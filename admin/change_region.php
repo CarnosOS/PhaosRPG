@@ -2,6 +2,11 @@
 include("../config.php");
 include("aup.php");
 
+apply_input_params(array(
+  'region', 'id', 'changeme', 'addme', 'deleteme', 'name', 'location', 'map_width', 'map_height', 'home_page', 'space'
+));
+
+
 function get_space_value($location, $width, $height) {
   $start = intval($location);
   $end = intval($location + $width * $height);

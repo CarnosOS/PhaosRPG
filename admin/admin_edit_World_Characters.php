@@ -1,6 +1,11 @@
 <?php
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'sort'
+));
+
 if($sort == "") {$sort = "name";}
 ?>
 <html>

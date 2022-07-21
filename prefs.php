@@ -1,6 +1,12 @@
 <?php
 include "aup.php";
 
+$username = $PHP_PHAOS_USER;
+
+apply_input_params(array(
+  'saved', 'pw', 'pw2', 'language', 'map_grid_size', 'map_grid_status', 
+));
+
 if (@$_REQUEST['saved']) {
   setcookie('lang',$lang,time()+17280000); // ( REMEMBERS LANGUAGE FOR 200 DAYS )
 //Added by dragzone---
@@ -84,7 +90,7 @@ if (@$_REQUEST['saved']) {
 		$map_grid_status = $row['grid_status'];
 	}
 	?>
-	<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?saved=yes&username=<?php echo $username ?>">
+	<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?saved=yes">
 	<table cellspacing=0 cellpadding=0 border=1>
 	<tr><td colspan=2 align=center><font color=#FFFFFF><strong><u><?php echo $lang_added["ad_pref_panel"]; ?></u></strong></font></td></tr>
 	<tr>

@@ -1,5 +1,10 @@
 <?php
 include "aup.php";
+
+apply_input_params(array(
+  'create_char', 'name', 'age', 'race', 'class', 'sex', 'image_path',
+));
+
 $DEBUG = 0; // show debugging messages: 0=off, 1=on
 
 

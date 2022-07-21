@@ -4,6 +4,11 @@
 <?php
 include "config.php";
 include_once 'include_lang.php';
+
+apply_input_params(array(
+  'first_name', 'last_name', 'username', 'email_address', 'password_1'
+));
+
 ?>
 
 <link href="styles/phaos.css" rel="stylesheet" type="text/css">

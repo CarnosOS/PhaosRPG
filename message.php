@@ -59,8 +59,9 @@ function insertText(elname, what) {
 </script>
 <?php
 include_once "class_character.php";
-// added by dragzone---
-if (!$to) { $to = $HTTP_GET_VARS['to']; }
+
+apply_input_params(array('action', 'subject', 'to', 'message', 'mail_id', 'SentDate', 'id'));
+
 //---------------------
 $character=new character($PHP_PHAOS_CHARID);
 //bbcode & smily functions could be moved to a seperate page such as global.php

@@ -5,4 +5,3 @@ $mysql_user = "root";
 $mysql_password = "";
 $mysql_database = "phaos";
 $SITETITLE = "Phaos";
-?>

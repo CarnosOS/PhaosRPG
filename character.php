@@ -3,6 +3,11 @@
 include "aup.php";
 include_once "items.php";
 
+apply_input_params(array(
+  'item_id', 'item_type', 'id', 'equip_id', 'sell_id',
+  'market_item', 'char_inv_id', 'sell_to', 'asking_price'
+));
+
 $character=new character($PHP_PHAOS_CHARID);
 
 include_once "location_actions.php";

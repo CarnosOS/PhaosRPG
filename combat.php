@@ -3,6 +3,8 @@ include "aup.php";
 include_once "class_npc_generator.php";
 include_once "class_quest_generator.php";
 
+apply_input_params(array('comb_act', 'opp_type', 'fleefail', 'npcfirstatt', 'healed', 'spellid'));
+
 function endfight(){
 	$disp_msg= $_SESSION['disp_msg'];
 	$charfrom= @$_SESSION['charfrom'];

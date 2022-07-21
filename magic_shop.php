@@ -2,6 +2,8 @@
 include "aup.php";
 include_once "class_character.php";
 
+apply_input_params(array('number_purchased', 'spell_items'));
+
 $refresh=0; //determine if the SideBar has to be refreshed
 
 $character=new character($PHP_PHAOS_CHARID);

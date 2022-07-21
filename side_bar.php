@@ -280,7 +280,7 @@ else {
 </td>
 </tr>
 <td align=center valign=middle colspan=2 style="padding:4px;">
-<form method=post action="<?php print $PHP_SELFl; ?>" style="margin:0px;">
+<form method=post action="<?php print $PHP_SELF; ?>" style="margin:0px;">
 	<input type="hidden" name="drink_potion" value="Y">
 	<!-- <button style="border:none;" type=submit><?php echo $lang_heal; ?></button> -->
 	<button type=submit><?php echo $lang_added["ad_drink-first-potion"]; ?></button>

@@ -3,6 +3,10 @@
 include "../config.php";
 include "aup.php";
 
+apply_input_params(array(
+  'new_pic', 'begin_id', 'end_id', 'location_id',
+));
+
 $imgsizew = 52;
 $imgsizeh = 52;
 $border = 0;
@@ -15,7 +19,7 @@ echo "<html><head>
 <link href='../styles/phaos.css' rel='stylesheet' type='text/css'>
 </head><body text='#FFFF00' bgcolor='#000000'>";
 
-if($_POST[new_pic] != '') {
+if($_POST['new_pic'] != '') {
 $new_image_path = "images/land/".$new_pic.".png";
 mysql_query("UPDATE phaos_locations SET image_path = '$new_image_path' WHERE id = '$_POST[location_id]'");
 }
@@ -87,4 +91,3 @@ echo "<table border='1' cellspacing='1' bordercolorlight='#000000' bordercolorda
 
 echo "</body></html>";
 
-?>

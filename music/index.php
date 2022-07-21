@@ -1,5 +1,10 @@
 <?php
 include "../aup.php";
+
+apply_input_params(array(
+  'play_music', 'old_song',
+));
+
 ?>
 <html>
 <head>

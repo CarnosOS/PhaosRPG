@@ -1,6 +1,12 @@
 <?php
 include "aup.php";
 
+apply_input_params(array(
+  'goldtomember', 'goldto_n', 'newrank', 'gonewrank', 'newlogo', 'newguildhelp',
+  'adjustment', 'charname_n', 'toaccept', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6',
+  'T7', 'T8', 'T9', 'T10', 'newnames', 'givegold_n', 'n_gold',
+));
+
 /*OPTIMIZE TABLE 'phaos_characters'*/
 
 function get_member_rank($clanname, $clanmember) {
@@ -173,7 +179,7 @@ if($error === false && $n_gold == "Deposit Gold" && $givegold_n != "0") {
     $givegold_n = intval($givegold_n);
     /*echo "$gibgold <> $gold <> $name <> $clanname <> $clankasse";*/
     if ($givegold_n <= 0 || $givegold_n > $gold) {
-      $message[] = $lang_guild3["not_hav"];
+      $messages[] = $lang_guild3["not_hav"];
       $error = true;
     } else {
       $clancashbox = $clancashbox + $givegold_n;
@@ -184,7 +190,7 @@ if($error === false && $n_gold == "Deposit Gold" && $givegold_n != "0") {
       mysql_query("UPDATE phaos_clan_admin SET clancashbox='$clancashbox' WHERE clanname='$clanname'");
       mysql_query("UPDATE phaos_characters SET gold='$gold' WHERE name='$clanmember'");
       mysql_query("UPDATE phaos_clan_in SET givegold='$givegold' WHERE clanmember='$clanmember'");
-      $message[] = $clanmember .$lang_guild3["plz_wait"]." $givegold_n ".$lang_guild3["gold_tr"];
+      $messages[] = $clanmember .$lang_guild3["plz_wait"]." $givegold_n ".$lang_guild3["gold_tr"];
     }
 }
 
@@ -195,7 +201,7 @@ if($error === false && $clan_user_edit === "yes" && $newnames == "Update") {
         $ranks = array(1 => $T1, $T2, $T3, $T4, $T5, $T6, $T7, $T8, $T9, $T10);
         for ($i = 1; $i <= 10; $i++) {
           if ($ranks[$i] === '') {
-            $message[] = $lang_guild3["em_$i"];
+            $messages[] = $lang_guild3["em_$i"];
             $error = true;
           }
         }
@@ -213,14 +219,12 @@ if($error === false && $clan_user_edit === "yes" && $newnames == "Update") {
                   . "clanrank_9='$T9',"
                   . "clanrank_10='$T10'"
                   . " WHERE clanname='$clanname'");
-          $message[] = $lang_guild3["plz_new"];
+          $messages[] = $lang_guild3["plz_new"];
         }
 }
 
 	// ------------------------------------------------------------------------------------------------------------------->
 	if($error === false && $charname_n != "" and $toaccept == "yes") { # add new char to clan
-		echo "<b><font color='#FF0000'> > $charname_n < ".$lang_guild3["acc_new"]."...</font></b><br>";
-
                 $res = mysql_query("SELECT * FROM phaos_characters WHERE name = '$charname_n'");
                 $row = mysql_fetch_array($res);
                 if ($row === false) {
@@ -238,14 +242,14 @@ if($error === false && $clan_user_edit === "yes" && $newnames == "Update") {
 
                       $result = mysql_query("DELETE FROM phaos_clan_search WHERE clanmember = '$charname_n'");
 
-                      $message[] = $charname_n.$lang_guild3["acc_2"];
+                      $messages[] = $charname_n . ' ' . $lang_guild3["acc_2"];
                   }
                 }
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------->
 	if($charname_n != "" and $toaccept == "no") { # no accept new char
-                $message[] = $lang_guild3["user_rej"];
+                $messages[] = $lang_guild3["user_rej"];
 		mysql_query("DELETE FROM phaos_clan_search WHERE clanmember = '$charname_n'");
 	}
         
@@ -633,7 +637,7 @@ echo"<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: c
 	if($clanrank === 99):
 		echo "<td width='20%' bgcolor='#141414'><p align='center'> &nbsp </td>";
 	else:
-		echo "<td width='20%' bgcolor='#141414'><p align='center'><a href='clan_leave.php?clanname=$clanname&clan_user_name=$clan_user_name'>&gt; ".$lang_guild3["liv"]." &lt;</a></td>";
+		echo "<td width='20%' bgcolor='#141414'><p align='center'><a href='clan_leave.php?clan_user_name=$clan_user_name'>&gt; ".$lang_guild3["liv"]." &lt;</a></td>";
 	endif;
 
 	echo "</tr>
@@ -656,4 +660,3 @@ echo"<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: c
 		</table>";
 }
 include "footer.php";
-?>

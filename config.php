@@ -34,6 +34,17 @@ function smartQuotes($value) {
   }
 }
 
+function apply_input_params($params) {
+  global $_GET, $_POST;
+  foreach ($params as $param) {
+    if (isset($_POST[$param])) {
+      $GLOBALS[$param] = $_POST[$param];
+    } elseif (isset($_GET[$param])) {
+      $GLOBALS[$param] = $_GET[$param];
+    }
+  }
+}
+
 //Sanity check
 $query = "SELECT 1 FROM phaos_characters LIMIT 1";
 $result = mysql_query($query);
@@ -69,10 +80,11 @@ if (!get_magic_quotes_gpc()) {
   foreach (array('_GET', '_POST') as $array_name) {
     foreach (${$array_name} as $key => $value) {
       ${$array_name}[$key] = smartQuotes($value);
-      $$key = ${$array_name}[$key];
     }
   }
 }
+
+apply_input_params(array('PHP_PHAOS_USER', 'PHP_PHAOS_PW', 'PHP_PHAOS_MD5PW', 'PHP_ADMIN_USER', 'PHP_ADMIN_PW', 'PHP_ADMIN_MD5PW'));
 
 // Additional Security Check
 unset($PHP_PHAOS_CHARID);

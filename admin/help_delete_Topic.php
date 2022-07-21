@@ -1,6 +1,9 @@
 <?php
 include "aup.php";
-if(isset($topic)){$_SESSION['topic'] = $topic;} 
+
+apply_input_params(array('topic'));
+
+if(isset($topic)){$_SESSION['topic'] = $topic;}
 ?>
 <html>
 
@@ -12,8 +15,6 @@ if(isset($topic)){$_SESSION['topic'] = $topic;}
 
 <body bgcolor="#000000" link="#FFFFFF" alink="#FFFFFF" vlink="#FFFFFF" text="#FFFFFF">
 <?php
-$connection = mysql_connect("$mysql_server","$mysql_user","$mysql_password") or die ("Unable to connect to MySQL server.");
-$db = mysql_select_db("$mysql_database") or die ("Unable to select requested database.");
 
 $query = "DELETE FROM phaos_help WHERE id = '$topic'";
 $result = mysql_query($query) or die ("Error in query: $query. " .

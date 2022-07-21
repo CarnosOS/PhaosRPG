@@ -2,6 +2,10 @@
 include 'aup.php';
 include 'header.php';
 
+apply_input_params(array(
+  'createguild', 'clanname', 'clanleader','assistent', 'clanbanner', 'clansig', 'clanslogan'
+));
+
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location
@@ -13,6 +17,7 @@ if (!($shop_id = shop_valid($character->location, 'town_hall.php'))) {
 $clanmemberid = $character->id;
 $clanmember = $character->name;
 $clanlocation = $character->location;
+$totalerror = '';
 
 echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber1' height='103'>
 	<tr>
@@ -141,7 +146,7 @@ if($totalerror == "") {
 			}
 		}
 
-		if($creategilde == ""):
+		if($createguild == ""):
 			echo "<table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='100%' id='AutoNumber2'>
 				<tr>
 				<td width='100%' bgcolor='#003300' align='center'>

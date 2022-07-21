@@ -3,6 +3,10 @@
 include "../config.php";
 include "aup.php";
 
+apply_input_params(array(
+  'new_pic', 'begin_id', 'end_id', 'location_id',
+));
+
 $imgsizew = 52;
 $imgsizeh = 52;
 $border = 0;

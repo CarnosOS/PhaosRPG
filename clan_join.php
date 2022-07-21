@@ -109,4 +109,3 @@ echo "</table><br>
 	</tr>
 	</table>";
 include "footer.php";
-?>

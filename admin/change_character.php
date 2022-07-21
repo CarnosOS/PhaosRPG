@@ -2,6 +2,15 @@
 include("../config.php");
 include("aup.php");
 
+apply_input_params(array(
+  'character', 'id', 'location', 'username', 'name', 'age', 'sex', 'strength',
+  'dexterity', 'wisdom', 'constitution', 'weapon', 'hit_points', 'race',
+  'class', 'xp', 'level', 'gold', 'armor', 'image_path', 'stat_points', 'boots',
+  'gloves', 'helm', 'shield', 'regen_time', 'dungeon_location', 'stamina',
+  'stamina_time', 'fight', 'defence', 'weaponless', 'lockpick', 'traps',
+  'rep_time', 'rep_points', 'rep_helpfull', 'rep_generious', 'rep_combat'
+));
+
 	function GetAppearanceList($folder, $current)
 	{
 		$sList = "";

@@ -2,6 +2,10 @@
 include "aup.php";
 include "header.php";
 
+apply_input_params(array(
+  'clanname_ask', 'clanname_cancel', 'nclanname', 'Text1', 'questionsend'
+));
+
 $character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location
@@ -128,4 +132,3 @@ if($error == "") {
 }
 
 include "footer.php";
-?>

@@ -16,9 +16,7 @@
 	<a href="quests.php"><?php echo $lang_menu["quests"]; ?></a>
 </td>
 <td align=center width="15%">
-	<?php
-	echo "<a href='prefs.php?username=$PHP_PHAOS_USER'>Prefs</a>";
-	?>
+        <a href="prefs.php">Prefs</a>
 	<br>
 	<a href="logout.php"><?php echo $lang_menu["logo"]; ?></a>
 </td>

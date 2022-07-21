@@ -2,6 +2,8 @@
 include "config.php";
 include "class_character.php"; # add include
 include_once 'include_lang.php';
+
+apply_input_params(array('player_name', 'char_name', 'rep_update', 'rate_helpfull', 'rate_generious', 'rate_combat'));
 ?>
 
 <html>

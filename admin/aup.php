@@ -72,4 +72,3 @@ Copyright 2004-".date("Y",time())."
 </html>";
 exit;
 }
-?>
