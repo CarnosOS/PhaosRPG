@@ -1,4 +1,7 @@
-<?php include "header.php"; ?>
+<?php
+include "aup.php";
+include "header.php";
+?>
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">
 	<tr>
 		<td align=center valign=top>

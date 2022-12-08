@@ -1,11 +1,19 @@
 <?php
-include "header.php";
+include "aup.php";
 include_once "class_character.php";
+
+apply_input_params(array('number_purchased', 'spell_items'));
 
 $refresh=0; //determine if the SideBar has to be refreshed
 
 $character=new character($PHP_PHAOS_CHARID);
-shop_valid($character->location, $shop_id);  // make sure requested shop is at same location as character
+
+// make sure requested shop is at same location as character
+if (!($shop_id = shop_valid($character->location, 'magic_shop.php'))) {
+        include "header.php";
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 $current_time = time();
 
@@ -35,20 +43,13 @@ if(@$_REQUEST['spell_items']) {
       } else {
             $sorry = $lang_shop["sorry"];
       }
-      $refresh=1;
    } else {$sorry = $lang_shop["sorry"];}
    $refresh=1;
 
 }
 
-if ($refresh){
-   echo " <script language=\"JavaScript\">
-               <!--
-               javascript:parent.side_bar.location.reload();
-               //-->
-               </script>";
-}
-$refresh=0; //be sure to reset refresh-Status
+
+include "header.php";
 
 ?>
 

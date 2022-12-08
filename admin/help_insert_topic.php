@@ -1,6 +1,10 @@
 <?php
 include "aup.php";
-session_start();
+
+apply_input_params(array(
+  'title', 'file', 'body'
+));
+
 ?>
 <html>
 
@@ -12,8 +16,6 @@ session_start();
 
 <body bgcolor="#000000" link="#FFFFFF" alink="#FFFFFF" vlink="#FFFFFF" text="#FFFFFF">
 <?php
-$connection = mysql_connect("$mysql_server","$mysql_user","$mysql_password") or die ("Unable to connect to MySQL server.");
-$db = mysql_select_db("$mysql_database") or die ("Unable to select requested database.");
 
 $title = addslashes($title);
 $file = addslashes($file);

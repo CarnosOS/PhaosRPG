@@ -1,27 +1,22 @@
 <?php
+include "aup.php";
 include "header.php";
-include_once "class_character.php"; # add include
 
-$char_loc = 0;
-$result = mysql_query ("SELECT * FROM phaos_characters WHERE id = '$PHP_PHAOS_CHARID'");
-if ($row = mysql_fetch_array($result)) { $char_loc = $row["location"]; }
-$shop_id = 0;
-$result = mysql_query ("SELECT * FROM phaos_buildings WHERE location = '$char_loc'");
-if ($row = mysql_fetch_array($result)) { $shop_id = $row["shop_id"]; }
+// we use the character to determine opponent level
+$character = new character($PHP_PHAOS_CHARID);
 
 // make sure this requested shop is at the players location
-if (!shop_valid($char_loc, $shop_id)){
+if (!($shop_id = shop_valid($character->location, 'arena.php'))){
 	echo $lang_markt["no_sell"].'</body></html>' ;
 	exit;
 }
 
-// we use the character to determine opponent level
-$character = new character($PHP_PHAOS_CHARID);
 
 if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 	echo $lang_comb["stam_noo"].'</body></html>' ;
 	exit;
 }
+
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">
@@ -55,7 +50,7 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 	
 	//FIXME: arena locations should be cleane from npcs: 
 	//update phaos_characters set username='phaos_npc_arena' where username='phaos_merchant'
-	$where = "location = '$char_loc' AND username LIKE 'phaos_npc_arena' AND xp <> 0";
+	$where = "location = '".$character->location."' AND username LIKE 'phaos_npc_arena' AND xp <> 0";
 	
 	$query = "SELECT count(*) FROM phaos_characters WHERE $where";
 	$result = mysql_query ($query);
@@ -70,8 +65,8 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 	
 	$message = "";
 	
-	while( $missing>0 && $char_loc){
-		$query = "SELECT * FROM phaos_opponents WHERE location='".$char_loc."' ORDER BY RAND() LIMIT 1";
+	while( $missing>0 && $character->location){
+		$query = "SELECT * FROM phaos_opponents WHERE location='".$character->location."' ORDER BY RAND() LIMIT 1";
 		$result = mysql_query ($query);
 		$blueprint = mysql_fetch_array($result);
 		if(!$blueprint){
@@ -84,7 +79,7 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 			$maxlevel = 1+(int)((rand(1,5)*rand(1,5)+4)/9)+rand(0,$character->level);
 			$level = rand(1,$maxlevel);
 			$npc = new np_character_from_blueprint($blueprint,$level,'phaos_npc_arena');
-			$npc->place($char_loc);
+			$npc->place($character->location);
 			--$missing;
 		} else {
 			$message= "No opponents found.";
@@ -106,7 +101,7 @@ if ($character->stamina_points <= 0 || $character->hit_points <= 0) {
 		
 			//FIXME: leader_level should not be part of the GET request
 			print ("<tr style=\"background:$rbgc;\"><td align=left>");
-			/* ### getclan_sig ### */ getclan_sig($leader_name);
+			/* ### getclan_sig ### */print get_clan_sig($leader_name);
 			print ("<a href=\"player_info.php?player_name=$player_name\" target=\"_blank\"><font color=#FFFFFF><b>$leader_name</b></font></a>
 				</td>
 				<td align=center>

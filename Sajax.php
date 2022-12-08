@@ -47,15 +47,15 @@ if (!isset($SAJAX_INCLUDED)) {
 			header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 			header ("Pragma: no-cache");                          // HTTP/1.0
 			$func_name = $_GET["rs"];
-			if (! empty($_GET["rsargs"])) 
-				$args = $_GET["rsargs"];
+			if (! empty($_REQUEST["rsargs"]))
+				$args = $_REQUEST["rsargs"];
 			else
 				$args = array();
 		}
 		else {
 			$func_name = $_POST["rs"];
-			if (! empty($_POST["rsargs"])) 
-				$args = $_POST["rsargs"];
+			if (! empty($_REQUEST["rsargs"]))
+				$args = $_REQUEST["rsargs"];
 			else
 				$args = array();
 		}

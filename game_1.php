@@ -1,9 +1,15 @@
 <?php
-include "header.php";
+include "aup.php";
 
 include_once "class_character.php";
 
 $character = new character($PHP_PHAOS_CHARID);
+
+// make sure the requested shop is where the player is
+if (!($shop_id = shop_valid($character->location, 'inn.php'))) {
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 $gold_o = $character->gold;
 $stamina_o = $character->stamina_points;
@@ -14,6 +20,7 @@ if(!isset($jackpot)){
 }
 
 if($gold_o <= "0"){
+    include "header.php";
     echo "<br><br>
     <table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
       <tr>
@@ -24,6 +31,7 @@ if($gold_o <= "0"){
       </tr>
     </table><br><br>";exit;}
 if($stamina_o <= "0"){
+    include "header.php";
     echo "<br><br>
     <table class='utktable' border='1' cellpadding='0' cellspacing='0' style='border-collapse: collapse' bordercolor='#111111' width='98%'>
       <tr>
@@ -72,9 +80,19 @@ if( (@$_REQUEST['roll']) && $jackpot > 0) {
     $dice_user_4 = xrand(1,6,$character->traps);//we use this skill here, since 0.90 doesn't use this skill anywhere else
     $dice_user_5 = rand(1,6);
     $dice_user_all = $dice_user_1+$dice_user_2+$dice_user_3+$dice_user_4+$dice_user_5;
-    	// $stamina_reduce = $stamina_o-10;
-    	$stamina_reduce = $stamina_o-1;
-    	mysql_query("UPDATE phaos_characters SET stamina = '$stamina_reduce' WHERE username = '$PHP_PHAOS_USER'");
+    // $stamina_reduce = $stamina_o-10;
+    $stamina_reduce = $stamina_o-1;
+
+    // win
+    if( $dice_user_all > $dice_opp_all) {
+        $gold_o = $gold_o + $jackpot;
+    //lose
+    } if( $dice_user_all < $dice_opp_all) {
+        $gold_o = $gold_o - $jackpot;
+    }
+
+    mysql_query("UPDATE phaos_characters SET stamina = '$stamina_reduce', gold = '$gold_o' WHERE username = '$PHP_PHAOS_USER'");
+
 }else{
     $rollgo = "no";
     $dice_user_1 = 1; $dice_user_2 = 1; $dice_user_3 = 1; $dice_user_4 = 1; $dice_user_5 = 1;
@@ -82,6 +100,8 @@ if( (@$_REQUEST['roll']) && $jackpot > 0) {
     $dice_opp_1 = 1; $dice_opp_2 = 1; $dice_opp_3 = 1; $dice_opp_4 = 1; $dice_opp_5 = 1;
     $dice_opp_all= 6;
 }
+
+include "header.php";
 
 echo "<div align='center'>
     <center>
@@ -161,21 +181,6 @@ echo "<form method='post' action='game_1.php'>
       if($rollgo=='yes' ){
             if( $dice_user_all > $dice_opp_all) {
                 //win
-              $wingold = $jackpot;
-
-              $result_1 = mysql_query("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-                            if ($row = mysql_fetch_array($result_1)) {
-                            $gold_o = $row["gold"];}
-
-                            $gold_o = $gold_o + $wingold;
-
-                        mysql_query("UPDATE phaos_characters SET gold = '$gold_o' WHERE username = '$PHP_PHAOS_USER'");
-
-                        echo " <script language=\"JavaScript\">
-                                                <!--
-                                                javascript:parent.side_bar.location.reload();
-                                                //-->
-                                                </script>";
               echo "<tr>
                  <td width='100%' bgcolor='#00a000' colspan='6' align='center'>
                     <font color='#000000' size='4'><b>".$lang_game1["u_won"]."!!</b></font>
@@ -183,19 +188,6 @@ echo "<form method='post' action='game_1.php'>
               </tr>";
           } if( $dice_user_all < $dice_opp_all) {
                 //lose
-                $result_1 = mysql_query("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-                        if ($row = mysql_fetch_array($result_1)) {
-                        $gold_o = $row["gold"];}
-
-                        $gold_o = $gold_o - $jackpot;
-
-                    mysql_query("UPDATE phaos_characters SET gold = '$gold_o' WHERE username = '$PHP_PHAOS_USER'");
-
-                    echo " <script language=\"JavaScript\">
-                                            <!--
-                                            javascript:parent.side_bar.location.reload();
-                                            //-->
-                                            </script>";
                 echo "<tr>
                       <td width='100%' bgcolor='#a00000' colspan='6' align='center'>
                        <font color='#000000' size='4'><b>".$lang_game1["u_lost"].".</b></fot>
@@ -233,4 +225,3 @@ echo "</td>
 echo "<br><div align=center><a href='inn.php'> ".$lang_clan["back"]." </a></td></div>";
 
 include "footer.php";
-?>

@@ -25,7 +25,7 @@ function printit( $element ){
 }
 
 function buildit( $section ){
-	$title = eregi_replace("_"," ",$section);
+	$title = str_replace("_"," ",$section);
 	$title = strtoupper($title);
 	echo "<tr style=background:#006600;>
     		<td align='center'><b>$title</b></td>
@@ -37,12 +37,12 @@ function buildit( $section ){
 	$dir=opendir(".");
 	$i=0;
 	while ($entry=readdir($dir)) {
-    if (eregi("admin_".$section."_.*",$entry)){
+    if (preg_match("/admin_".$section."_.*/i",$entry)){
 			//take out admin_<section>_ and .php from sring
-			$picture_name=eregi_replace(".php",".gif",$entry);
-			$display_name=eregi_replace("admin_".$section."_","",$entry);
-			$display_name=eregi_replace(".php","",$display_name);
-			$display_name=eregi_replace("_"," ",$display_name);
+			$picture_name=str_replace(".php",".gif",$entry);
+			$display_name=preg_replace("/admin_".$section."_/i","",$entry);
+			$display_name=str_replace(".php","",$display_name);
+			$display_name=str_replace("_"," ",$display_name);
 			$output[$i]='<td align="center"><a href="'.$entry.'"><img src="images/'.$picture_name.'" width="32" height="32" alt="'.$display_name.'"><br>'.$display_name.'</a></td>';
 			$i++;
 		}

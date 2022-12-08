@@ -118,10 +118,12 @@ $lang_guild3["acc"] = "Accept";
 $lang_guild3["rej"] = "Reject";
 $lang_guild3["logo_chg"] = "Your Guild Logo has now changed to";
 $lang_guild3["new_ass"] = "New Guild assistant is now";
+$lang_guild3["invalid_member"] = "Invalid clan member";
 $lang_guild3["the_new"] = "The New Guild assistant is now";
 $lang_guild3["none"] = "None";
 $lang_guild3["new_name"] = "Your New Guild Name is";
 $lang_guild3["ass_new"] = "You have been assigned the rank";
+$lang_guild3["rank_new"] = "A clan member assigned to the rank";
 $lang_guild3["giv_gold"] = "Gold has been given to";
 $lang_guild3["not_en_go"] = "The Guild cash does not have";
 $lang_guild3["dep_gold"] = "Deposit Gold";
@@ -260,6 +262,25 @@ $lang_inn["u2weak"] = "You are too weak for my quest.";
 $lang_inn["wai_2solv"] = "I am still waiting somebody to solve my quest.";
 $lang_inn["2many_war"] = "Too many hunters are sent for my quest";
 $lang_inn["return"] = "Return to Town";
+$lang_inn['acceptq'] = "Accept";
+$lang_inn['completeq'] = "Claim";
+
+// Quests
+$lang_quest['quests'] = "Quests";
+$lang_quest['reward'] = "Reward";
+$lang_quest['good_luck'] = "Good luck, hero";
+$lang_quest['completed'] = "Quest completed";
+$lang_quest['your_quests'] = "Your Quests";
+$lang_quest['quest'] = "Quest";
+$lang_quest['from'] = "Giver";
+$lang_quest['time_left'] = "Time left";
+$lang_quest['status'] = "Status";
+$lang_quest['abandon'] = "Abandon";
+$lang_quest['no_quests'] = "No quests pending";
+$lang_quest['done'] = "done";
+$lang_quest['in_progress'] = "started";
+$lang_quest['hours_left'] = "hours";
+$lang_quest['minutes_left'] = "minutes";
 
 //Combat
 $lang_comb["_attt"] =		"Attack";
@@ -403,7 +424,7 @@ $lang_post["submit"] = "Post Message";
 //Register
 $lang_reg["thx"] = "Thank you for registering.  You may now login.";
 $lang_reg["not"] = "Registration NOT completed.";
-$lang_reg["not2"] = "You already have a user name or you did not fill out the whole registration form.";
+$lang_reg["not2"] = "You already have a user name or you did not fill out the whole registration form or fields contain restricted characters.";
 $lang_reg["try"] = "Try Again";
 $lang_reg["msg1"] = "You are required to complete the following fields:";
 $lang_reg["fsnm"] = "First Name";
@@ -432,6 +453,7 @@ $lang_menu["trav"] = "Travel";
 $lang_menu["logo"] = "Logout";
 $lang_menu["msg_"] = "Messages";
 $lang_menu["prefs"] = "Preferences";
+$lang_menu["quests"] = "Quests";
 
 //Market
 $lang_markt["not_en_goo"] = "You do not have enough gold for this item.";
@@ -562,4 +584,3 @@ $lang_added["ad_pref_panel"] = "Settings";
 $lang_added["ad_pref_new-pw"] = "New Password:";
 $lang_added["ad_pref_conf-pw"] = "Confirm Password:";
 $lang_added["ad_pref_safe"] = "Save Changes";
-?>

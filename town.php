@@ -1,30 +1,24 @@
 <?php
-include "header.php";
-include_once "class_character.php";
-
-$refsidebar= false;
+include "aup.php";
+include_once "class_quest_generator.php";
 
 $character = new character($PHP_PHAOS_CHARID);
 
 $char_loc= $character->location;
 
+$quest_generator = new quest_generator();
+$quest_generator->visit_location($character, $char_loc);
+
 $location_name =  fetch_value ("SELECT name FROM phaos_locations WHERE id = '$char_loc'");
 
 include_once "location_actions.php";
-$pickedup= pickup_actions($character);
+$pickedup = pickup_actions($character);
 
-if($pickedup>0){
-    $refsidebar= true;
-    ?><div align="center"><?php
-    echo $pickedup." ".$lang_char['itemspickedup'];
-    ?></div><?php
+include "header.php";
+
+if($pickedup > 0){
+    echo "<div align=\"center\">$pickedup".$lang_char['itemspickedup']."</div>";
 }
-
-if($refsidebar){
-    refsidebar();
-    $refsidebar= false;
-}
-
 ?>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -49,7 +43,7 @@ if($char_loc == "") {
 		while ($row = mysql_fetch_assoc($result))
 			{
         //Added by dragzone---
-        $name = $row[name];
+        $name = $row['name'];
         if ($name == "Arena") { $insname = "ad_arena"; }
         if ($name == "Blacksmith") { $insname = "ad_blacksmith"; }
         if ($name == "Magic Shop") { $insname = "ad_magic_sh"; }
@@ -61,7 +55,7 @@ if($char_loc == "") {
         //--------------------
         print "<tr>
 						<td align='center'>
-							<a href='$row[type]?shop_id=$row[shop_id]'>$lang_added[$insname]</a>
+							<a href='$row[type]'>$lang_added[$insname]</a>
 						</td>
 						</tr>";
 			}

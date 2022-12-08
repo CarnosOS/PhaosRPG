@@ -1,18 +1,23 @@
 <?php
-session_start();
 if(@$_SESSION['opponent_id']) {
 	header ('Location: combat.php?opp_type=npc');
 	exit;
 }
-include "header.php";
+include "aup.php";
 include_once "functions.php";
 include_once "class_character.php";
+include_once "class_npc_generator.php";
+include_once "class_quest_generator.php";
 
 beginTiming();
 
 ## Variables
 $params = array();
 $DEBUG	= 0;	// 0 means turn off debugging;   1 means turn on debugging
+
+// generate quests
+$quest_generator = new quest_generator();                  $quest_generator->delete_finished_quests();
+$quest_generator->generate();
 
 // population control
 $where= "username='phaos_npc' and race <> 'Dwarf'";
@@ -33,12 +38,12 @@ if ($count > $upperlimit ) {
 }
 
 //@$_COOKIE['_speed'] is just a HACK to speed up testing on my PC, which is very slow
-
+$npc_generator = new npc_generator();
 if ($count < $lowerlimit ) {
-	$n = ceil(sqrt($lowerlimit-$count)*0.20*(@$_COOKIE['_speed']?0.5:1.0));
-	$n>6 and $n= 6;
-	for($i=0;$i<$n;++$i) {
-		npcgen();
+	$n = ceil(sqrt($lowerlimit-$count) * 0.20);
+	$n > 6 and $n = 6;
+	for ($i = 0; $i < $n;  ++$i) {
+        	$npc_generator->generate();
 	}
 }
 
@@ -88,21 +93,45 @@ if($destination != "")
       if ($degrade<0) {$degrade=1;}
       //end stamina reduction update table:
 
+      // validate Rune Gate travel
+      if (isset($_POST['rune_gate']) && $_POST['rune_gate'] == 'yes') {
+        $res = mysql_query("SELECT COUNT(*) FROM phaos_locations WHERE (id='".$character->location."' OR id = '".$destination."') AND name LIKE 'Rune Gate%'");
+        list($count) = mysql_fetch_array($res);
+        if ($count != 2) {
+          $_POST['rune_gate'] = 'no';
+        }
+      }
+
+      // validate explore
+      if (isset($_POST['explorable']) && $_POST['explorable'] == 'yes') {
+        $res = mysql_query("SELECT COUNT(*) FROM phaos_locations WHERE id='".$character->location."' AND explore='$destination'");
+        list($count) = mysql_fetch_array($res);
+        if ($count != 1) {
+          $_POST['explorable'] = 'no';
+        }
+      }
+
       $character->reduce_stamina($degrade);
       $result = mysql_query('SELECT `above_left`, `above`, `above_right`, `leftside`, `rightside`, `below_left`, `below`, `below_right` FROM  phaos_locations WHERE id = \'' . $character->location . '\'');
       $row = mysql_fetch_assoc($result);
+      $direction = 8;
       foreach ($row as $item)
          {
             //FIXME: uses untrusted input by the user
             if ($item == $destination OR @$_POST['rune_gate'] == "yes" OR @$_POST['explorable'] == "yes")
                {
-                  $query = ("UPDATE phaos_characters SET location = '$destination', stamina=".$character->stamina_points." WHERE id = '$PHP_PHAOS_CHARID'");
+                  $flee_location = $direction;
+                  if (@$_POST['rune_gate'] == "yes" OR @$_POST['explorable'] == "yes") {
+                    $flee_location = 0;
+                  }
+                  $query = ("UPDATE phaos_characters SET location = '$destination', stamina=".$character->stamina_points.", flee_location='".$flee_location."' WHERE id = '$PHP_PHAOS_CHARID'");
                   $req = mysql_query($query);
                   if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
                   $result = mysql_query ("SELECT * FROM phaos_locations WHERE id = '$destination'");
                   $character->location=$destination;
                   if ($row = mysql_fetch_array($result)) {$location_name = $row["name"];}
                }
+            $direction--;
           }
    }
 
@@ -110,8 +139,11 @@ if($destination != "")
 $info_eol= "\r";
 $js_info_eol= "\\r";
 
-if($character->name == "") {
+include "header.php";
+
+if(!$character->id) {
      $message =  ("<font size=4><b>".$lang_area["must_create_a_char"]."</b></font><p>".$lang_area["create_a_char"]);
+     print($message);
 } else {
     $message= '';
 

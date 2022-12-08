@@ -4,7 +4,7 @@
 </style>
 
 
-<?
+<?php
 function do_image_list($folder) {
 
      $handle=opendir("./".$folder."/");

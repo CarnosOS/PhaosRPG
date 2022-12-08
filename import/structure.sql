@@ -62,6 +62,7 @@ CREATE TABLE `phaos_buildings` (
   `type` varchar(255) NOT NULL default '',
   `owner_id` int(11) NOT NULL default '1000',
   `capacity` int(11) NOT NULL default '10',
+  PRIMARY KEY `shop_id` (`shop_id`),
   KEY `shop_id` (`shop_id`),
   KEY `location` (`location`),
   KEY `name` (`name`),
@@ -139,14 +140,21 @@ CREATE TABLE `phaos_characters` (
   `rep_generious` int(11) NOT NULL default '0',
   `rep_combat` int(11) NOT NULL default '0',
   `bankgold` int(11) unsigned NOT NULL default '0',
+  `flee_location` int(11) NOT NULL default '0',
+  `region` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `location` (`location`),
   KEY `username` (`username`),
   KEY `name` (`name`),
   KEY `stamina` (`stamina`),
   KEY `stamina_time` (`stamina_time`),
-  KEY `regen_time` (`regen_time`)
+  KEY `regen_time` (`regen_time`),
+  KEY `flee_location` (`flee_location`),
+  KEY `region` (`region`)
 )  ;
+
+
+CREATE INDEX phaos_characters_region_index ON phaos_characters (`region`) USING BTREE;
 
 -- --------------------------------------------------------
 
@@ -155,16 +163,14 @@ CREATE TABLE `phaos_characters` (
 --
 
 CREATE TABLE `phaos_clan_admin` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
   `clanleader` varchar(30) NOT NULL default '',
-  `clanleader_1` varchar(30) NOT NULL default '',
+  `clanleaderid` int(11),
   `clanbanner` varchar(100) NOT NULL default '',
   `clansig` varchar(6) NOT NULL default '',
   `clanlocation` varchar(11) NOT NULL default '',
   `clanslogan` varchar(100) NOT NULL default '',
   `clancashbox` int(11) NOT NULL default '0',
-  `clanmembers` int(10) NOT NULL default '0',
   `clancreatedate` varchar(11) NOT NULL default '',
   `clanrank_1` varchar(20) NOT NULL default '',
   `clanrank_2` varchar(20) NOT NULL default '',
@@ -176,9 +182,8 @@ CREATE TABLE `phaos_clan_admin` (
   `clanrank_8` varchar(20) NOT NULL default '',
   `clanrank_9` varchar(20) NOT NULL default '',
   `clanrank_10` varchar(20) NOT NULL default '',
-  `clan_sig` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`)
+  PRIMARY KEY  (`clanname`),
+  FOREIGN KEY(`clanleaderid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------
@@ -188,14 +193,15 @@ CREATE TABLE `phaos_clan_admin` (
 --
 
 CREATE TABLE `phaos_clan_in` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
   `clanmember` varchar(30) NOT NULL default '',
+  `clanmemberid` int(11) NOT NULL,
   `clanindate` varchar(30) NOT NULL default '',
   `givegold` varchar(30) NOT NULL default '',
   `clanrank` int(3) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`)
+  PRIMARY KEY  (`clanname`, `clanmemberid`),
+  FOREIGN KEY(`clanname`) REFERENCES phaos_clan_admin(`clanname`) ON DELETE CASCADE,
+  FOREIGN KEY(`clanmemberid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------
@@ -205,13 +211,13 @@ CREATE TABLE `phaos_clan_in` (
 --
 
 CREATE TABLE `phaos_clan_search` (
-  `id` int(11) NOT NULL auto_increment,
   `clanname` varchar(30) NOT NULL default '',
-  `charname` varchar(30) NOT NULL default '',
+  `clanmember` varchar(30) NOT NULL default '',
+  `clanmemberid` int(11) NOT NULL,
   `description` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `clanname` (`clanname`),
-  KEY `charname` (`charname`)
+  PRIMARY KEY  (`clanname`, `clanmemberid`),
+  FOREIGN KEY(`clanname`) REFERENCES phaos_clan_admin(`clanname`) ON DELETE CASCADE,
+  FOREIGN KEY(`clanmemberid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE
 ) ;
 
 -- --------------------------------------------------------
@@ -417,27 +423,6 @@ CREATE TABLE `phaos_mail` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phaos_npcs`
---
-
-CREATE TABLE `phaos_npcs` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(30) NOT NULL default '',
-  `race` varchar(20) NOT NULL default '',
-  `image_path` longtext NOT NULL,
-  `location` int(11) NOT NULL default '0',
-  `rumors` longtext NOT NULL,
-  `quest` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `name` (`name`),
-  KEY `race` (`race`),
-  KEY `location` (`location`),
-  KEY `quest` (`quest`)
-)  ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `phaos_opponents`
 --
 
@@ -499,6 +484,34 @@ CREATE TABLE `phaos_potions` (
   KEY `sell_price` (`sell_price`)
 )  ;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_quests`
+--
+
+CREATE TABLE `phaos_quests` (
+  `questid` int(11) NOT NULL auto_increment,
+  `reqexp` int(11) NOT NULL default '0',
+  `title` text NOT NULL,
+  `narrate` text NOT NULL,
+  `tracemsg` text NOT NULL,
+  `completemsg` text NOT NULL,
+  `rewarditemid` int(11) NOT NULL default '0',
+  `rewarditemtype` varchar(100) NOT NULL default 'potion',
+  `rewardgold` int(11) NOT NULL default '0',
+  `rewardexp` int(11) NOT NULL default '0',
+  `monstercollectid` int(11) NOT NULL default '0',
+  `monstercollectq` int(11) NOT NULL default '0',
+  `haveitemtype` varchar(100) NOT NULL default 'potion',
+  `haveitemid` int(11) NOT NULL default '0',
+  `visitlocationid` int(11) NOT NULL default '0',
+  `maxtime` bigint(20) NOT NULL default '0',
+  `endtime` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`questid`)
+)  ;
+
 -- --------------------------------------------------------
 
 --
@@ -509,51 +522,30 @@ CREATE TABLE `phaos_questhunters` (
   `charid` int(11) NOT NULL default '0',
   `questid` int(11) NOT NULL default '0',
   `starttime` bigint(20) NOT NULL default '0',
-  `startexp` int(11) NOT NULL default '0',
-  `startgold` int(11) NOT NULL default '0',
   `monstkill` int(11) NOT NULL default '0',
-  `battles` int(11) NOT NULL default '0',
-  `expearned` int(11) NOT NULL default '0',
-  `goldearned` int(11) NOT NULL default '0',
-  `complete` int(11) NOT NULL default '0'
+  `visitdone` tinyint(4) NOT NULL default '0',
+  `complete` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`charid`, `questid`),
+  FOREIGN KEY(`charid`) REFERENCES phaos_characters(`id`) ON DELETE CASCADE,
+  FOREIGN KEY(`questid`) REFERENCES phaos_quests(`questid`) ON DELETE CASCADE
 ) ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phaos_quests`
+-- Table structure for table `phaos_npcs`
 --
 
-CREATE TABLE `phaos_quests` (
-  `questid` int(11) NOT NULL auto_increment,
-  `npc` int(11) NOT NULL default '0',
-  `reqexp` int(11) NOT NULL default '0',
-  `narrate` text NOT NULL,
-  `tracemsg` text NOT NULL,
-  `waitmsg` text NOT NULL,
-  `completemsg` text NOT NULL,
-  `rewarditemid` int(11) NOT NULL default '0',
-  `rewarditemtype` int(11) NOT NULL default '0',
-  `rewardgold` int(11) NOT NULL default '0',
-  `rewardwexp` int(11) NOT NULL default '0',
-  `monsterkillid` int(11) NOT NULL default '0',
-  `monstercollectid` int(11) NOT NULL default '0',
-  `monstercollectq` int(11) NOT NULL default '0',
-  `battles` int(11) NOT NULL default '0',
-  `tr_ar` int(11) NOT NULL default '0',
-  `haveitemtype` int(11) NOT NULL default '0',
-  `haveitemid` int(11) NOT NULL default '0',
-  `paygold` int(11) NOT NULL default '0',
-  `havegold` int(11) NOT NULL default '0',
-  `earngold` int(11) NOT NULL default '0',
-  `payexp` int(11) NOT NULL default '0',
-  `haveexp` int(11) NOT NULL default '0',
-  `earnexp` int(11) NOT NULL default '0',
-  `complete` tinyint(4) NOT NULL default '0',
-  `hunters` int(11) NOT NULL default '0',
-  `maxtime` bigint(20) NOT NULL default '0',
-  `restnum` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`questid`)
+CREATE TABLE `phaos_npcs` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(30) NOT NULL default '',
+  `race` varchar(20) NOT NULL default '',
+  `image_path` longtext NOT NULL,
+  `location` int(11) NOT NULL default '0',
+  `rumors` longtext NOT NULL,
+  `quest` int(11),
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY(`quest`) REFERENCES phaos_quests(`questid`) ON DELETE CASCADE
 )  ;
 
 -- --------------------------------------------------------
@@ -647,6 +639,7 @@ CREATE TABLE `phaos_shop_inventory` (
   `sell` int(11) NOT NULL default '2000000000',
   `quantity` int(6) NOT NULL default '1',
   `max` int(6) NOT NULL default '5',
+  PRIMARY KEY (`shop_id`,`item_id`),
   KEY `shop_id` (`shop_id`),
   KEY `type` (`type`),
   KEY `item_id` (`item_id`),
@@ -822,3 +815,41 @@ CREATE TABLE `phaos_weapons` (
   KEY `buy_price` (`buy_price`),
   KEY `sell_price` (`sell_price`)
 )  ;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_regions`
+--
+
+CREATE TABLE `phaos_regions` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `location` int(11) NOT NULL default '0',
+  `map_width` int(11) NOT NULL default '0',
+  `map_height` int(11) NOT NULL default '0',
+  `home_page` tinyint(1) NOT NULL default '0',
+  `space` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `location` (`location`)
+);
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phaos_region_opponents`
+--
+
+CREATE TABLE `phaos_region_opponents` (
+  `region` int(11) NOT NULL default '0',
+  `opponent` int(11) NOT NULL default '0',
+  `probability` decimal(9,2) NOT NULL default '0.50',
+  `min_level` int(11) NOT NULL default '0',
+  `max_level` int(11) NOT NULL default '0',
+  PRIMARY KEY (`region`, `opponent`),
+  KEY `region` (`region`),
+  KEY `opponent` (`opponent`)
+);

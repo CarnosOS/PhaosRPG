@@ -56,13 +56,16 @@ function who_is_online($location = '') {
 	
 	$active_min = $current_time-300;
 	$active_max = $current_time+300;
-	
-	$result = mysql_query("SELECT * FROM phaos_characters WHERE $loc regen_time >= '$active_min' AND regen_time <= '$active_max' AND username != 'phaos_npc' AND username != 'phaos_npc_arena' ORDER by name ASC");
-	
+
+	$result = mysql_query("SELECT c.username, c.name, ca.clansig FROM phaos_characters c"
+                . " LEFT OUTER JOIN phaos_clan_in ci ON ci.clanmemberid = c.id"
+                . " LEFT OUTER JOIN phaos_clan_admin ca ON ca.clanname = ci.clanname"
+                . " WHERE $loc regen_time >= '$active_min' AND regen_time <= '$active_max' AND username != 'phaos_npc' AND username != 'phaos_npc_arena' ORDER by name ASC");
+
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . $row['name'] .  '</a>';
+			$html .=  '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank">' . $row['clansig'] . $row['name'] .  '</a>';
 		}
 	} else {
 		$html = "<font color=#009900>|</font>".$lang_glo["n_else"];
@@ -78,13 +81,16 @@ function who_is_offline($location = '') {
 	$active_min = $current_time-300;
 	$active_max = $current_time+300;
 	
-	$result = mysql_query("SELECT * FROM phaos_characters WHERE $loc regen_time < '$active_min' AND username != 'phaos_npc%' AND username != 'phaos_npc_arena' ORDER by name ASC");
+	$result = mysql_query("SELECT c.username, c.name, ca.clansig FROM phaos_characters c"
+                . " LEFT OUTER JOIN phaos_clan_in ci ON ci.clanmemberid = c.id"
+                . " LEFT OUTER JOIN phaos_clan_admin ca ON ca.clanname = ci.clanname"
+                . " WHERE $loc regen_time < '$active_min' AND username != 'phaos_npc%' AND username != 'phaos_npc_arena' ORDER by name ASC");
 	echo mysql_error();
 	
 	$html='';
 	if (mysql_num_rows($result) != 0) {
 		while ($row = mysql_fetch_assoc($result)) {
-			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . $row['name'] .  '</a>';
+			$html = '<font color="#009900">|</font><a href="player_info.php?player_name='. $row['username'] . '" target="_blank" style="color=#FFFFFF">' . $row['clansig'] . $row['name'] .  '</a>';
 		}
 	}
 	return $html . '<font color="#009900">|</font>';
@@ -216,15 +222,15 @@ function whos_here($locationids,$characterrole='phaos_npc') {
 
 
 // check to see if this map location has a specific shop
-function shop_valid($location, $shop_id) {  // was $type
+function shop_valid($location, $shop_type) {  // was $type
     $location= intval($location);
     $shop_id= intval($shop_id);
-	$result = mysql_query ("SELECT * FROM phaos_buildings WHERE location = '$location' AND shop_id='$shop_id' ");  // was $type.php
+	$result = mysql_query ("SELECT shop_id FROM phaos_buildings WHERE location = '$location' AND type = '$shop_type' ");  // was $type.php
 	// if (mysql_num_rows($result) == 0) {exit;}
-	if(! list($shop_id,$shop_location,$shop_name,$shop_type,$shop_ownerid,$shop_capacity) = mysql_fetch_array($result)) {
-		return false;
+	if(($row = mysql_fetch_array($result))) {
+		return intval($row['shop_id']);
 	}
-    return true;
+    return false;
 }
 
 // speed up selecting random rows by preselecting a subset for select by rand()
@@ -463,4 +469,3 @@ function makeImg($image_path){
     }
 }
 
-?>

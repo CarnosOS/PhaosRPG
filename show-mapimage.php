@@ -5,8 +5,8 @@ include "config.php";
 $imgsizew = 52;
 $imgsizeh = 52;
 $border = 0;
-$begin_id = $_POST[begin_id];
-$end_id = $_POST[end_id];
+$begin_id = $_POST['begin_id'];
+$end_id = $_POST['end_id'];
 
 $result = mysql_query ("SELECT * FROM phaos_locations WHERE above_left = '0' AND above = '0' AND leftside = '0' AND id >= '$begin_id' AND id < '$end_id'");
 if ($row = mysql_fetch_array($result)) {

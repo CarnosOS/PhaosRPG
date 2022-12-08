@@ -1,5 +1,5 @@
 <?php
-include "header.php";
+include "aup.php";
 include_once 'items.php';
 include_once 'class_character.php';
 
@@ -45,14 +45,6 @@ if($_POST['inventory_id'] != "" AND $_POST['owner_name'] != "".$PHP_PHAOS_USER."
 			$query = ("UPDATE phaos_characters SET gold = ".$new_buyer_gold." WHERE username = '".$PHP_PHAOS_USER."'");
 			$req = mysql_query($query);
 			if (!$req) { echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
-
-			?>
-			<script language="JavaScript">
-			<!--
-			javascript:parent.side_bar.location.reload();
-			//-->
-			</script>
-			<?php
 		} else {
 			$trade_result = $lang_markt["not_en_goo"];
 		}
@@ -62,6 +54,8 @@ if($_POST['inventory_id'] != "" AND $_POST['owner_name'] != "".$PHP_PHAOS_USER."
 		$trade_result = $lang_markt["tr_not"];
 	}
 } else $trade_result = "";
+
+include "header.php";
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">

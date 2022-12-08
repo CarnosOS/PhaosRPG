@@ -4,6 +4,11 @@
 <?php
 include "config.php";
 include_once 'include_lang.php';
+
+apply_input_params(array(
+  'first_name', 'last_name', 'username', 'email_address', 'password_1'
+));
+
 ?>
 
 <link href="styles/phaos.css" rel="stylesheet" type="text/css">
@@ -25,13 +30,16 @@ include_once 'include_lang.php';
 <td align=center>
 <?php
 
-$full_name = $first_name." ".$last_name;
+$full_name = checkHtmlEntities($first_name." ".$last_name);
+$username = checkHtmlEntities($username);
+$email_address = checkHtmlEntities($email_address);
+$password_1 = checkHtmlEntities($password_1);
 $password = md5($password_1);
 
-$result = mysql_query ("SELECT * FROM phaos_users WHERE email_address = '$email_address'");
+$result = mysql_query ("SELECT * FROM phaos_users WHERE username = '$username'");
 $duplicate = mysql_fetch_array($result);
 
-if(!@$duplicate AND $username != "" AND $password != "" AND $email_address != "" AND $full_name != "") {
+if(!@$duplicate AND $username != "" AND $password_1 != "" AND $email_address != "" AND $full_name != "") {
 $query = "INSERT INTO phaos_users
 (username,password,email_address,full_name)
 VALUES

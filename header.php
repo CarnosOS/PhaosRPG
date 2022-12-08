@@ -1,22 +1,20 @@
-<!DOCTYPE HTML>
 <?php
-session_start();
-include "aup.php";
-include_once "class_character.php";
 require("Sajax.php");
 
 function add_chat_line($text) {
 	global $PHP_PHAOS_USER;
-	$text = strip_tags($text);
+	$text = htmlentities($text);
 	$bb_replace =      array('[b]', '[B]', '[/b]', '[/B]', '[i]', '[I]', '[/i]', '[/I]', '[u]', '[U]', '[/u]', '[/U]');
 	$bb_replacements = array('<strong>', '<strong>', '</em>', '</em>', '<i>', '<i>', '</i>', '</i>', '<u>', '<u>', '</u>', '</u>');
 	$text = str_replace($bb_replace,$bb_replacements,$text);
 	$result = mysql_query('SELECT location, name FROM phaos_characters WHERE username = \''.$PHP_PHAOS_USER.'\'');
 	$row = mysql_fetch_assoc($result);
+        $text = mysql_real_escape_string($text);
 	mysql_query ('INSERT INTO phaos_shout (location, postname, postdate, posttext) 	VALUES (\''.$row['location'].'\', \''.$row['name'] . '\', \''.mktime().'\',\'' . $text . '\')');
 }
 
 // Added by dragzone---
+    $stamina_points = 0;
     $sql_stamina = "SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'";
       $sql_rs_stamina = mysql_query($sql_stamina);
       if ($row = mysql_fetch_array($sql_rs_stamina)) {
@@ -28,7 +26,8 @@ function add_chat_line($text) {
 //------------------------
 
 function refresh() {
-	$result = mysql_query ('SELECT * FROM phaos_characters WHERE username = \'' . $_COOKIE[PHP_PHAOS_USER] . '\'');
+        global $PHP_PHAOS_USER;
+	$result = mysql_query ('SELECT * FROM phaos_characters WHERE username = \'' . $PHP_PHAOS_USER . '\'');
 	if ($row = mysql_fetch_array($result)) {
 		$char_location = $row["location"];
 		$char_name = $row['name'];
@@ -63,6 +62,7 @@ sajax_init();
 sajax_export("add_chat_line", "refresh");
 sajax_handle_client_request();
 ?>
+<!DOCTYPE HTML>
 <html>
 <head>
 
@@ -87,16 +87,6 @@ function add_chat_line() {
 	document.chat_form.chat_text.value="";
 }
 </script>
-
-<style type="text/css">
-<!--
-body {
-background-image: url(images/iso_table01.jpg);
-background-repeat: no-repeat;
-background-position: 50px 50px;
-}
-//-->
-</style>
 
 <meta name="author" content="Zeke Walker">
 <title><?php echo "$SITETITLE"; ?></title>
@@ -162,7 +152,7 @@ background-position: 50px 50px;
 			$num++;
 			?>
 			var num = "<?php print $num; ?>";
-			ssmItems[num]=["<?php print $row[title]; ?>", "help.php?id=<?php print $row[id]; ?>", "_new"]
+			ssmItems[num]=["<?php print $row['title']; ?>", "help.php?id=<?php print $row['id']; ?>", "_new"]
 			<?php
 		} while($row = mysql_fetch_array($result));
 		?>

@@ -1,5 +1,10 @@
 <?php
-include "header.php";
+include "aup.php";
+
+apply_input_params(array(
+  'create_char', 'name', 'age', 'race', 'class', 'sex', 'image_path',
+));
+
 $DEBUG = 0; // show debugging messages: 0=off, 1=on
 
 
@@ -19,6 +24,80 @@ $DEBUG = 0; // show debugging messages: 0=off, 1=on
 		return $sList;
 	}
 
+
+$result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
+if ($row = mysql_fetch_array($result)) {
+$duplicate = "yes";
+}
+
+$result = mysql_query ("SELECT * FROM phaos_characters WHERE name = '$name'");
+if ($row = mysql_fetch_array($result)) {
+$duplicate = "yes";
+}
+
+if($create_char == "yes") {
+if($duplicate != "yes") {
+
+$races_lookup = mysql_query("SELECT * FROM phaos_races WHERE name = '$race'");
+if ($row = mysql_fetch_array($races_lookup)) {
+$race_name = $row["name"];
+$strength = $row["str"];
+$dexterity = $row["dex"];
+$wisdom = $row["wis"];
+$constitution = $row["con"];
+}
+// skill adjustments:
+//echo "Class:".$class;
+$skillquery=mysql_query("select * from phaos_classes where name='$class'");
+//echo "query:".$skillquery;
+$skills=mysql_fetch_array($skillquery);
+$DEBUG and print("SKILLS:$skills:");
+$DEBUG and print("$lang_crt[skll_vars]: $skills[fight], $skills[defence], $skills[weaponless], $skills[lockpick], $skills[traps]");
+// end Skill Adjustments!
+$attribute_check = $strength+$dexterity+$wisdom+$constitution;
+
+$name = checkHtmlEntities($name);
+$sex = checkHtmlEntities($sex);
+
+if($attribute_check == "24" AND $name != "") {
+
+$hit_points = $constitution*6;
+
+// set homeland - start location
+// if     ($race == "Lizardfolk")	{$startloc = rand(3001,3225);}
+// elseif ($race == "Gnome")	{$startloc = rand(5001,5225);}
+// elseif ($race == "Orc")		{$startloc = rand(1001,1225);}
+// elseif ($race == "Vampire")	{$startloc = rand(2001,2225);}
+// elseif ($race == "Dwarf")	{$startloc = rand(7001,7225);}
+// elseif ($race == "Undead")	{$startloc = rand(4001,4225);}
+// elseif ($race == "Human")	{$startloc = rand(8001,8225);}
+// elseif ($race == "Elf")		{$startloc = rand(6001,6225);}
+// else				{$startloc = rand(1,225);}
+$startloc = rand(1,225);	// incase no race is given??  How does that happen?
+// These specific locations are the best starting cities for each race
+$race == "Orc"		AND $startloc = 94; // City of Nising
+$race == "Vampire"	AND $startloc = 382; // City of Malom
+$race == "Lizardfolk"	AND $startloc = 88; // Town of Solan
+$race == "Undead"	AND $startloc = 726; // City of Gornath
+$race == "Gnome"	AND $startloc =	757; // Town of Kjal
+$race == "Elf"		AND $startloc = 1354; // City of Allysian
+$race == "Dwarf"	AND $startloc = 1455; // City of Pah-Loran
+$race == "Human"	AND $startloc = 1704; // City of Doonmoor
+
+$query = "INSERT INTO phaos_characters
+(location,image_path,username,name,age,strength,dexterity,wisdom,constitution,hit_points,race,class,sex,gold,fight,defence,weaponless,lockpick,traps) 
+VALUES
+('$startloc','$image_path','$PHP_PHAOS_USER','$name','$age','$strength','$dexterity','$wisdom','$constitution','$hit_points','$race','$class','$sex','150','".$skills["fight"]."','".$skills["defence"]."','".$skills["weaponless"]."','".$skills["lockpick"]."','".$skills["traps"]."')";
+$req = mysql_query($query);
+if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;} 
+
+$char_created = "yes";
+}
+}
+}
+
+
+include "header.php";
 
 ?>
 
@@ -45,77 +124,6 @@ function verify()
 	}
 
 </script>
-
-<?php
-$result = mysql_query ("SELECT * FROM phaos_characters WHERE username = '$PHP_PHAOS_USER'");
-if ($row = mysql_fetch_array($result)) {
-$duplicate = "yes";
-}
-
-if($create_char == "yes") {
-if($duplicate != "yes") {
-
-$races_lookup = mysql_query("SELECT * FROM phaos_races WHERE name = '$race'");
-if ($row = mysql_fetch_array($races_lookup)) {
-$race_name = $row["name"];
-$strength = $row["str"];
-$dexterity = $row["dex"];
-$wisdom = $row["wis"];
-$constitution = $row["con"];
-}
-// skill adjustments:
-//echo "Class:".$class;
-$skillquery=mysql_query("select * from phaos_classes where name='$class'");
-//echo "query:".$skillquery;
-$skills=mysql_fetch_array($skillquery);
-$DEBUG and print("SKILLS:$skills:");
-$DEBUG and print("$lang_crt[skll_vars]: $skills[fight], $skills[defence], $skills[weaponless], $skills[lockpick], $skills[traps]");
-// end Skill Adjustments!
-$attribute_check = $strength+$dexterity+$wisdom+$constitution;
-
-if($attribute_check == "24" AND $name != "") {
-
-$hit_points = $constitution*6;
-
-// set homeland - start location
-// if     ($race == "Lizardfolk")	{$startloc = rand(3001,3225);}
-// elseif ($race == "Gnome")	{$startloc = rand(5001,5225);}
-// elseif ($race == "Orc")		{$startloc = rand(1001,1225);}
-// elseif ($race == "Vampire")	{$startloc = rand(2001,2225);}
-// elseif ($race == "Dwarf")	{$startloc = rand(7001,7225);}
-// elseif ($race == "Undead")	{$startloc = rand(4001,4225);}
-// elseif ($race == "Human")	{$startloc = rand(8001,8225);}
-// elseif ($race == "Elf")		{$startloc = rand(6001,6225);}
-// else				{$startloc = rand(1,225);}
-$startloc = rand(1,225);	// incase no race is given??  How does that happen?
-// These specific locations are the best starting cities for each race
-$race == "Orc"		AND $startloc = 1037;
-$race == "Vampire"	AND $startloc = 2067;
-$race == "Lizardfolk"	AND $startloc = 3001;
-$race == "Undead"	AND $startloc = 4072;
-$race == "Gnome"	AND $startloc =	5170;
-$race == "Elf"		AND $startloc = 6173;
-$race == "Dwarf"	AND $startloc = 7179;
-$race == "Human"	AND $startloc = 8052;
-
-$query = "INSERT INTO phaos_characters
-(location,image_path,username,name,age,strength,dexterity,wisdom,constitution,hit_points,race,class,sex,gold,fight,defence,weaponless,lockpick,traps) 
-VALUES
-('$startloc','$image_path','$PHP_PHAOS_USER','$name','$age','$strength','$dexterity','$wisdom','$constitution','$hit_points','$race','$class','$sex','150','".$skills["fight"]."','".$skills["defence"]."','".$skills["weaponless"]."','".$skills["lockpick"]."','".$skills["traps"]."')";
-$req = mysql_query($query);
-if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;} 
-?>
-<script type="text/javascript">
-<!--
-javascript:parent.side_bar.location.reload();
-//-->
-</script>
-<?php
-$char_created = "yes";
-}
-}
-}
-?>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
 <tr>

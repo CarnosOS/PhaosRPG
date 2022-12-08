@@ -7,16 +7,23 @@
  * this blacksmith can sell other stuff too
  */
 
-include "header.php";
+include "aup.php";
 include_once "items.php";
 include_once "shop_functions.php";
-include_once "class_character.php";
 
-$refresh = 0; //determine if the SideBar has to be refreshed
+apply_input_params(array(
+  'item_type', 'id', 'equip_id', 'sell_id',
+  'market_item', 'char_inv_id', 'sell_to', 'asking_price'
+));
 
 $character = new character($PHP_PHAOS_CHARID);
-// shop_valid($character->location, 'blacksmith');
-shop_valid($character->location, $shop_id);
+
+// make sure this requested shop is at the players location
+if (!($shop_id = shop_valid($character->location, 'darksmith.php'))) {
+        include 'header.php';
+	echo $lang_markt["no_sell"].'</body></html>' ;
+	exit;
+}
 
 // auto-generate refills if the shop does not exist yet
 $refills = fetch_value("SELECT count(*) FROM phaos_shop_refill WHERE shop_id='$shop_id'",__FILE__,__LINE__);
@@ -35,6 +42,7 @@ if ( !$refills ){
 //generic processing for a shop
 include_once "shop_include.php";
 
+include "header.php";
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">
@@ -212,4 +220,3 @@ include "trailer.php";
 mysql_close();
 
 include "footer.php";
-?>

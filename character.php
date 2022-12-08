@@ -1,10 +1,12 @@
 <?php
 //Line 390 - 397 changed by dragzone
-include "header.php";
-include_once "class_character.php";
+include "aup.php";
 include_once "items.php";
 
-$refsidebar= false;
+apply_input_params(array(
+  'item_id', 'item_type', 'id', 'equip_id', 'sell_id',
+  'market_item', 'char_inv_id', 'sell_to', 'asking_price'
+));
 
 $character=new character($PHP_PHAOS_CHARID);
 
@@ -12,17 +14,20 @@ include_once "location_actions.php";
 $dropped= drop_actions($character);
 
 // if you've clicked to put something up for market sale
-if(@$_POST['market_item'] == "yes") {
-	$res=mysql_query("SELECT * FROM phaos_char_inventory WHERE id = '$_POST[char_inv_id]' AND username = '$_COOKIE[PHP_PHAOS_USER]'");
+if($market_item == "yes") {
+        $char_inv_id = intval($char_inv_id);
+        $asking_price = intval($asking_price);
+
+	$res=mysql_query("SELECT * FROM phaos_char_inventory WHERE id = '$char_inv_id' AND username = '$PHP_PHAOS_USER'");
 	if ($row = mysql_fetch_array($res)) {
 		if(empty($sell_to)){$sell_to ="all";}
 		if($_POST['asking_price']<=0){
 			$sell_to= '';//stop selling
 		}
 
-		$sql=("UPDATE phaos_char_inventory SET asking_price = '$_POST[asking_price]',
+		$sql=("UPDATE phaos_char_inventory SET asking_price = '$asking_price',
 								   sell_to = '$sell_to'
-							     WHERE id = '$_POST[char_inv_id]'");
+							     WHERE id = '$char_inv_id'");
 		mysql_query($sql) or die("<B>Error ".mysql_errno()." :</B> ".mysql_error()."");
 	}
 }
@@ -59,7 +64,7 @@ setShopForItemtype( array( "spell_items"), $magicshop_yn);
 // did you click to delete your character?
 if(@$_POST['delete'] == "yes") {
 	$character->kill_character();
-	$refsidebar= true;
+        $character = new character(0); // clear character data
 }
 
 // SELL AN ITEM
@@ -69,6 +74,7 @@ if(@$sell_id == "Y") {
 		$ite_type = $row["type"];
 	}
 
+        $item_id = intval($item_id);
 	if($ite_type == "potion") {
 		if($item_yn) {
 			$priceresult = mysql_query("SELECT * FROM phaos_potion WHERE id = '$item_id'");
@@ -113,7 +119,7 @@ if(@$sell_id == "Y") {
 
 	if($sell_price>0) {
 		$sell_gold = $sell_price+$character->gold;
-		$query = "UPDATE phaos_characters SET gold = '$sell_gold' WHERE username = '$_COOKIE[PHP_PHAOS_USER]'";
+		$query = "UPDATE phaos_characters SET gold = '$sell_gold' WHERE username = '$PHP_PHAOS_USER'";
 		$req = mysql_query($query);
 		if (!$req) {echo "<B>Error ".mysql_errno()." :</B> ".mysql_error().""; exit;}
 
@@ -126,26 +132,26 @@ if(@$sell_id == "Y") {
 	} else {
 		$sell_msg= $lang_char['noshop'];
 	}
-	$refsidebar= true;
 }
 
 
 // DRINK POTION
-if($_GET[drink_potion] == "Y") {
-	$result = mysql_query ("SELECT type FROM phaos_char_inventory WHERE id = '$_GET[id]'");
+if($_GET['drink_potion'] == "Y") {
+        $id = intval($_GET['id']);
+	$result = mysql_query ("SELECT type FROM phaos_char_inventory WHERE id = '$id'");
 	if ($row = mysql_fetch_array($result)) {
 		if ($row["type"] == "potion") {
-			$character->drink_potion2($_GET[id]);
+			$character->drink_potion2($id);
 		}
 	}
-	$refsidebar= true;
 }
 
 // EQUIP AN ITEM
 if(@$equip_id){
+        $item_id = intval($item_id);
 	if($equip_id == "Y") {
-		if ($character->equipt($item_type,$item_id)){
-			$refsidebar= true;
+		if ($character->can_equipt($item_type, $item_id)) {
+                        $character->equipt($item_type,$item_id);
 			//echo "equipping successfull";
 		} else {
 			//echo "not equipped";
@@ -155,7 +161,6 @@ if(@$equip_id){
 	// UNEQUIP AN ITEM
 	if($equip_id == "N") {
 		if ($character->unequipt($item_type,$item_id)){
-			$refsidebar = true;
 			//echo "unequipping successfull";
 		} else {
 			//echo "not unequipped";
@@ -163,17 +168,15 @@ if(@$equip_id){
 	}
 }
 
+
+include "header.php";
+
 if($dropped>0) {
-	$refsidebar= true;
 	?><div align=center><?php
 	echo $dropped." ".$lang_char['itemsdropped'];
 	?></div><?php
 }
 
-if($refsidebar){
-	refsidebar();
-	$refsidebar= false;
-}
 ?>
 
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
@@ -215,7 +218,7 @@ if($character->name != "" AND $character->image != "") {
 	<b><?php echo $lang_name; ?>: &nbsp</b>
 	</td>
 	<td>
-	<?php /* ### getclan_sig ### */ getclan_sig($character->name); ?> <b><?php print $character->name; ?> &nbsp</b>
+	<b><?php /* ### getclan_sig ### */ echo get_clan_sig($character->name) . $character->name; ?> &nbsp</b>
 	</td>
 	</tr>
 	<tr>
@@ -409,8 +412,7 @@ if(isItemType($item_type)){
 //!PS: be careful with this code, it took some time to write
 
 $items= array();
-//$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$_COOKIE[PHP_PHAOS_USER]' $wheretype ORDER BY item_id ASC");
-$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$_COOKIE[PHP_PHAOS_USER]' $wheretype ORDER BY type ASC, item_id ASC");
+$list_inventory = mysql_query("SELECT * FROM phaos_char_inventory WHERE username = '$PHP_PHAOS_USER' $wheretype ORDER BY type ASC, item_id ASC");
 
 if($list_inventory) {
 	while ($row = mysql_fetch_assoc($list_inventory)) {
@@ -497,7 +499,7 @@ foreach($items as $row) {
 			print "<td valign=top>&nbsp;</td>";
 		} else {
 			print "<td align=center valign=top>&nbsp;";
-			if(!$character->equipped($item_type,$item_id)){
+			if(!$character->equipped($item_type,$item_id) && $character->can_equipt($item_type, $item_id)) {
 				print ("<input type='button' onClick=\"parent.location='character.php?item_id=$item_id&item_type=$item_type&id=$id&equip_id=Y'\" value='$lang_char[eq]'>");
 			}
 			if($character->equipped($item_type,$item_id)) {

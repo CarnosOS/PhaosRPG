@@ -105,7 +105,7 @@ else {
 <tr>
 <td align=center valign=middle colspan=2>
 <?php echo $lang_name; ?>:
-<?php /* ### getclan_sig ### */ getclan_sig($character->name);?> <big><b><?php echo $character->name; ?></b></big>
+<big><b><?php /* ### getclan_sig ### */ echo get_clan_sig($character->name) . $character->name; ?></b></big>
 	<p>
 	<big><b><?php echo $lang_side["stats"]; ?></b></big>
 	<br>
@@ -280,7 +280,7 @@ else {
 </td>
 </tr>
 <td align=center valign=middle colspan=2 style="padding:4px;">
-<form method=post action="<?php print $PHP_SELFl; ?>" style="margin:0px;">
+<form method=post action="<?php print $PHP_SELF; ?>" style="margin:0px;">
 	<input type="hidden" name="drink_potion" value="Y">
 	<!-- <button style="border:none;" type=submit><?php echo $lang_heal; ?></button> -->
 	<button type=submit><?php echo $lang_added["ad_drink-first-potion"]; ?></button>

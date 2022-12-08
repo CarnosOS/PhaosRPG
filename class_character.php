@@ -13,6 +13,8 @@ class character {
 	var $sex;
 	var $location;
 	var $location_data;
+        var $flee_location;
+        var $region;
 	//attribute vars
 	var $strength;
 	var $dexterity;
@@ -131,6 +133,9 @@ class character {
 	}
 
 	function fight_reduction() {
+		if ($this->max_stamina <= 0) {
+			return 1;
+		}
 		$factor= $this->stamina_points/$this->max_stamina;
 		if($factor> 0.66) {
 			return 1;
@@ -243,6 +248,8 @@ class character {
 			$this->image=$row["image_path"];
 			$this->age=$row["age"];
 			$this->location=$row["location"];
+                        $this->flee_location=(int)$row["flee_location"];
+                        $this->region=$row["region"];
 			//define attribute vars
 			$this->strength = $row["strength"];
 			$this->dexterity = $row["dexterity"];
@@ -480,7 +487,7 @@ class character {
 			$inv_id = $row["id"];
 			$result = mysql_query ("SELECT * FROM phaos_potion WHERE id = '$potion_id'");
 			if ($row = mysql_fetch_array($result)) {	// if it's a valid potion
-				list($effect,$details) = split(' ',$row["effect"]);	// determine potion effect
+				list($effect,$details) = explode(' ',$row["effect"]);	// determine potion effect
 				if ($effect == "heal") {
 					$heal_amount=$details;
 					$new_hp_amount = $this->hit_points + $heal_amount;
@@ -510,7 +517,7 @@ class character {
 			$inv_id = $pot["id"];
 			$result = mysql_query ("SELECT * FROM phaos_potion WHERE id = '$potion_id'");
 			if ($row = mysql_fetch_array($result)) {
-				list($effect,$details) = split(' ',$row["effect"]);     // determine potion effect
+				list($effect,$details) = explode(' ',$row["effect"]);     // determine potion effect
 				if ($effect == "heal" or $effect == "stamina") {
 					$current =& $this->hit_points;		// pointer to hit_points value
 					$max=$this->max_hp;
@@ -559,7 +566,7 @@ class character {
 	* @return returns character Level
 	*/
 	function level(){
-		return $this->level;
+		return (int)$this->level;
 	}
 
 	/**
@@ -615,6 +622,51 @@ class character {
 		return false;
 	}
 
+	function can_equipt($item_type, $item_id) {
+          // check if the item is in the inventory
+          if ($this->checkequipped($item_type, $item_id)) {
+            return false;
+          }
+
+          $id = intval($item_id);
+          $item_type_to_table = array(
+              'boots' => 'phaos_boots',
+              'gloves' => 'phaos_gloves',
+              'shield' => 'phaos_shields',
+              'helm' => 'phaos_helmets'
+          );
+
+          switch ($item_type) {
+            case 'weapon':
+              $result = mysql_query ("SELECT * FROM phaos_weapons WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $weapon_min = intval($row["min_damage"]);
+                $weapon_max = intval($row["max_damage"]);
+                $wstr = $weapon_min + $weapon_max;
+                return $wstr <= ($this->fight * 3) + 10;
+              }
+              break;
+            case 'armor':
+              $result = mysql_query ("SELECT * FROM phaos_armor WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $armor_class = intval($row["armor_class"]);
+                return $armor_class <= ($this->defence * 3) + 10;
+              }
+              break;
+            case 'boots':
+            case 'gloves':
+            case 'shield':
+            case 'helm':
+              $table_name = $item_type_to_table[$item_type];
+              $result = mysql_query ("SELECT * FROM `$table_name` WHERE id = '".$id."'");
+              if (($row = mysql_fetch_array($result))) {
+                $armor_class = intval($row["armor_class"]);
+                return $armor_class <= $this->defence;
+              }
+          }
+          return false;
+	}
+
 	/**
     * equip an item
 	* @param (string)$item_type - choose the item type as string
@@ -639,31 +691,19 @@ class character {
 	* @param (string)$item_type - choose the item type as string
 	* @return Returns 0 on failure and 1 on all done successfully. (mainly SQL-errors!!)
 	*/
-	function unequipt($item_type){
-		switch($item_type){
-            case "armor":
-                $this->armor='';
-                break;
-            case "weapon":
-                $this->weapon='';
-                break;
-            case "gloves":
-                $this->gloves='';
-                break;
-            case "helm":
-                $this->helm='';
-                break;
-            case "shield":
-                $this->shield='';
-                break;
-            case "boots":
-                $this->boots='';
-                break;
-            default:
-                return 0;
-        }
+	function unequipt($item_type, $item_id = 0){
+		// Invalid item type
+		if (!in_array($item_type, array("armor", "weapon", "gloves", "helm", "shield", "boots"))) {
+			return 0;
+		}
 
-		$query = ("UPDATE phaos_characters SET $item_type = '' WHERE id = '".$this->id."'");
+		// Character is not wearing this item id
+		if ($item_id != 0 && $this->{$item_type} != $item_id) {
+			return 0;
+		}
+
+		$this->{$item_type} = '';
+		$query = ("UPDATE phaos_characters SET $item_type = '0' WHERE id = '".$this->id."'");
 		$req = mysql_query($query);
 		if (!$req)  {showError(__FILE__,__LINE__,__FUNCTION__); return 0; exit;}
 		return 1;
@@ -683,9 +723,9 @@ class character {
 		if ($row = mysql_fetch_array($res)) {
 			return 0;
 		} else {
-            $this->unequipt($item_type);
 			return 1;
 		}
+                return 0;
 	}
 
 	/**
@@ -693,13 +733,14 @@ class character {
 	* Purpose: Usercalled function to check the equipped items
 	*/
 	function checkequipment(){
-		$c1=$this->checkequipped("armor",$this->armor);
-		$c1+=$this->checkequipped("weapon",$this->weapon);
-
-		$c1+=$this->checkequipped("boots",$this->boots);
-		$c1+=$this->checkequipped("shield",$this->shield);
-		$c1+=$this->checkequipped("helm",$this->helm);
-		$c1+=$this->checkequipped("gloves",$this->gloves);
+                $c1 = 0;
+                $item_types = array("armor", "weapon", "gloves", "helm", "shield", "boots");
+                foreach($item_types as $item_type) {
+                  if ($this->checkequipped($item_type, $this->{$item_type})) {
+                    $c1 += 1;
+                    $this->unequipt($item_type);
+                  }
+                }
 		return $c1;
 	}
 
@@ -934,12 +975,14 @@ class character {
         $query = "REPLACE INTO phaos_characters
         (  $idkey location,image_path,username,name,age,strength,dexterity,wisdom,constitution,hit_points,race,class,sex,gold,fight,defence,weaponless,lockpick,traps
          , weapon,xp,level,armor,stat_points,boots,gloves,helm,shield,regen_time,stamina,stamina_time,rep_time,rep_points,rep_helpfull,rep_generious,rep_combat
+         , region,flee_location
         )
         VALUES
         (
            $idvalue '$this->location','$this->image','$this->user','$this->name','$this->age','$this->strength','$this->dexterity','$this->wisdom','$this->constitution','$this->hit_points','$this->race','$this->cclass','$this->sex',$this->gold
          , $this->fight,$this->defence,$this->weaponless,$this->lockpick,$this->traps
          , $this->weapon,$this->xp,$this->level,$this->armor,$this->stat_points,$this->boots,$this->gloves,$this->helm,$this->shield,$this->regen_time,$this->stamina_points,$this->stamina_time,$this->rep_time,$this->rep_points,$this->rep_helpfull,$this->rep_generious,$this->rep_combat
+         , $this->region,$this->flee_location
         )";
 
         $req = mysql_query($query);
@@ -1072,7 +1115,9 @@ class np_character_from_blueprint extends character {
 		$this->sex= rand(0,1)?'Female':'Male';
 		$this->image=$blueprint["image_path"];
 		$this->age=$this->level*$this->level;
-		$this->location= 0;
+		$this->location = 0;
+                $this->flee_location = 0;
+                $this->region = 0;
 		//define attribute vars
 		$this->strength = (int)($blueprint["min_damage"]+3*($this->level-1));
     	$this->dexterity = (int)($blueprint["max_damage"]-$blueprint["min_damage"]+2*$this->level+2);
@@ -1178,68 +1223,6 @@ class np_character_from_blueprint extends character {
 
 }
 
-/**
-* @param: none
-* return: none
-* purpose: generate new NPC/monster and add to database
-*/
-function npcgen() {
-	$res = mysql_query ("SELECT * FROM phaos_opponents WHERE location='0' ORDER BY RAND() LIMIT 1") or die(mysql_error());
-	if($blueprint = mysql_fetch_array($res)) {
-        //create 50% level 1 characters, and not more than 37,5% characters with level>3
-        $level= 1+(int)(rand(0,1)*(pow(1+rand(0,10)*rand(0,10)*0.01,4)+rand(0,99)*0.01));
-        $npc= new np_character_from_blueprint($blueprint, $level);
-
-        $condition_passable= $npc->real_sql_may_pass();
-
-        //TODO: add generator regions/locations feature to phaos
-
-        $tries= 10;
-        while($tries-->0){
-            $res= null;
-            //FIXME: this actually should depend on the area covered by dungeons
-            //20050717
-            //Wilderness    14277
-            //Woodlands 	1891
-            //Dungeon       675
-    		if( !@$res && rand(0,99)<4 ) {
-                $location= 'Rune Gate%';
-                $sql = "SELECT id FROM phaos_locations WHERE (name LIKE 'Rune Gate%' OR name LIKE 'Dungeon') AND $condition_passable ORDER BY RAND() LIMIT 1";                  
-                //defined('DEBUG') and DEBUG and $GLOBALS['debugmsgs'][]= __FUNCTION__.": sql: $sql";
-                $res = mysql_query ($sql) or die(mysql_error());
-            }
-            if( !@$res) {
-                $location= 'Wilderness';
-                $sql = "SELECT id FROM phaos_locations WHERE (name LIKE 'Wilderness' OR name LIKE 'Woodlands' OR name LIKE 'Rune Gate%' OR name LIKE 'Dungeon') AND $condition_passable ORDER BY RAND() LIMIT 1";
-                //defined('DEBUG') and DEBUG and $GLOBALS['debugmsgs'][]= __FUNCTION__.": sql: $sql";
-                $res = mysql_query ($sql) or die(mysql_error());
-            }
-    		list($locationid) = mysql_fetch_array($res);
-
-            //check whether location is crowded
-            $res = mysql_query ("SELECT count(*) FROM phaos_characters WHERE location='$locationid' AND username='phaos_npc'") or die(mysql_error());
-            list($count)= mysql_fetch_array($res);
-            if($count>$level+1) {
-                defined('DEBUG') and DEBUG and $GLOBALS['debugmsgs'][]= " location $locationid is <b>crowded</b>, not placing here ($count npcs)";
-                //trying to fix
-                $res = mysql_query ("SELECT id FROM phaos_characters WHERE location='$locationid' AND username='phaos_npc'") or die(mysql_error());
-                while(list($id)= mysql_fetch_array($res)){
-                    $crowd= new character($id);
-                    $crowd->relocate( (int)rand(1,8) );
-                }
-            }else{
-                break;//stop while loop
-            }
-        }
-
-	} else {
-		die("cant find valid mob in DB: ".mysql_error());
-	}
-    $npc->place($locationid);
-	DEBUG and  $_SESSION['disp_msg'][] = "**DEBUG: $npc->name($npc->level) generated at location $location $locationid";
-	return 1;
-}
-
 function refsidebar() {
 	//REFRESH SIDEBAR INFO
 	?>
@@ -1263,22 +1246,14 @@ function fairInt($f){
     return (int)($f+rand(0,99)*0.01);
 }
 
-function getclan_sig($plname){
-    $result = mysql_query ("SELECT * FROM phaos_clan_in WHERE clanmember = '$plname'");
+function get_clan_sig($plname){
+    $result = mysql_query ("SELECT clansig FROM phaos_clan_admin ca "
+            ."INNER JOIN phaos_clan_in ci ON ca.clanname = ci.clanname "
+            ."WHERE ci.clanmember = '$plname'");
     if ($row = mysql_fetch_array($result)) {
-    	$mem_clan = $row["clanname"];
-    } else {return false;}
-
-    $result = mysql_query ("SELECT * FROM phaos_clan_admin WHERE clanname = '$mem_clan'");
-    if ($row = mysql_fetch_array($result)) {
-    	$clan_name = $row["clanname"];
-    	$clan_sig = $row["clan_sig"];
+    	return $row['clansig'];
     }
-    if ($clan_sig !== "no" or $clan_sig !== ""){
-    ?>
-    <img src="images/guild_sign/<?php echo $clan_sig; ?>" alt="<?php echo $clan_name; ?>">
-    <?php
-    }
+    return '';
 }// end function getclan_sig
 
 ?>

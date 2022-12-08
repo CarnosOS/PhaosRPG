@@ -1,3 +1,22 @@
+VERSION 0.9.90 (06-JUNE-2022)
+==============================
+Maps update, Quests & bug fixes
+------------------------------
+o All maps redesigned and filled with meaningful content (villages, towns, cities)
+o Finished the implementation of the quests feature.
+o Corrected multiple problems in the town hall and clans.
+o Added shim for mysql calls, so the script will work with php up to 7.4
+o Fixed many security holes that allowed cheating and even worse.
+
+Please note:
+- The source code in this repository is written in the very old fashion way.
+  Although the game seems stable, there are problably many problems not solved.
+
+config.php
+-> Minor corrections to make game work with newer PHP versions
+
+
+
 VERSION 0.9.82-UPDATED-6 (01-NOVEMBER-2012)
 ==============================
 Security Patch

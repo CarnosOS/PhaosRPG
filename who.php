@@ -1,4 +1,7 @@
-<?php include "header.php"; ?>
+<?php
+include "aup.php";
+include "header.php";
+?>
 <table border="0" align="center">
 <tr>
 <td align="center" bgcolor="#000000">

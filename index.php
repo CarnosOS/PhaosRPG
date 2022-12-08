@@ -1,4 +1,7 @@
-<?php include "header.php"; ?>
+<?php 
+include "aup.php";
+include "header.php";
+?>
 <table border=0 cellspacing=0 cellpadding=0 width="100%" height="100%">
 <tr>
 <td align=center valign=top>
@@ -82,14 +85,14 @@ if($char_loc == "") {
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="0">
-<input type="hidden" name="end_id" value="10000">
+<input type="hidden" name="end_id" value="4000">
 <input type="submit" value="<?php print $lang_home['map_of_1']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="10000">
-<input type="hidden" name="end_id" value="20000">
+<input type="hidden" name="end_id" value="14000">
 <input type="submit" value="<?php print $lang_home['map_of_2']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
@@ -98,14 +101,14 @@ if($char_loc == "") {
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="20000">
-<input type="hidden" name="end_id" value="30000">
+<input type="hidden" name="end_id" value="24000">
 <input type="submit" value="<?php print $lang_home['map_of_3']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="30000">
-<input type="hidden" name="end_id" value="40000">
+<input type="hidden" name="end_id" value="34000">
 <input type="submit" value="<?php print $lang_home['map_of_4']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
@@ -114,14 +117,14 @@ if($char_loc == "") {
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="40000">
-<input type="hidden" name="end_id" value="50000">
+<input type="hidden" name="end_id" value="44000">
 <input type="submit" value="<?php print $lang_home['map_of_5']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="50000">
-<input type="hidden" name="end_id" value="60000">
+<input type="hidden" name="end_id" value="54000">
 <input type="submit" value="<?php print $lang_home['map_of_6']; ?>" style="background:#000000;border:none;">
 </td>
 </form>
@@ -129,15 +132,15 @@ if($char_loc == "") {
 <tr>
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
-<input type="hidden" name="begin_id" value="60001">
-<input type="hidden" name="end_id" value="61681">
+<input type="hidden" name="begin_id" value="60000">
+<input type="hidden" name="end_id" value="64000">
 <input type="submit" value="<?php print $lang_home['map_of_7']; ?>" style="background:#000000;border:none;">
 </form>
 </td>
 <form method="post" action="map_to_image.php" target="_blank">
 <td align=center>
 <input type="hidden" name="begin_id" value="70000">
-<input type="hidden" name="end_id" value="80000">
+<input type="hidden" name="end_id" value="74000">
 <input type="submit" value="<?php print $lang_home['map_of_8']; ?>" style="background:#000000;border:none;">
 </td>
 </form>

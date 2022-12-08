@@ -1,4 +1,7 @@
-<?php include "header.php"; ?>
+<?php
+include "aup.php";
+include "header.php";
+?>
 <html>
 <head>
 
@@ -56,8 +59,9 @@ function insertText(elname, what) {
 </script>
 <?php
 include_once "class_character.php";
-// added by dragzone---
-if (!$to) { $to = $HTTP_GET_VARS['to']; }
+
+apply_input_params(array('action', 'subject', 'to', 'message', 'mail_id', 'SentDate', 'id'));
+
 //---------------------
 $character=new character($PHP_PHAOS_CHARID);
 //bbcode & smily functions could be moved to a seperate page such as global.php
@@ -155,15 +159,15 @@ function parseubb($message)
 $result1=mysql_query("select * from phaos_users WHERE username='$PHP_PHAOS_USER'") or die (" ".$lang_mssg["cnat_touch_this"]);
 $row100 = mysql_fetch_array($result1);
 ?>
-<p align="center"><?php echo $lang_mssg["m_cent"]; ?> <?php echo $PHP_PHAOS_USER; ?> | <a href="<?php echo $_SERVER[PHP_SELF]; ?>?action=compose"><?php echo $lang_mssg["comp"]; ?></a> | <a href="<?php echo $_SERVER[PHP_SELF]; ?>?action=inbox"><?php echo $lang_mssg["inbox"]; ?></a> | </p>
+<p align="center"><?php echo $lang_mssg["m_cent"]; ?> <?php echo $PHP_PHAOS_USER; ?> | <a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=compose"><?php echo $lang_mssg["comp"]; ?></a> | <a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=inbox"><?php echo $lang_mssg["inbox"]; ?></a> | </p>
 <table cellpadding="1" cellspacing="1" height="300" width="450" align="center">
 <tr><td align="center" valign=top>
 <?php
 
 // Line 173 translation-var added by dragzone
-   if($action==compose)
+   if($action=='compose')
    {
-   echo '<form name="inputform" action="'.$_SERVER[PHP_SELF].'?action=compose2" method="post">
+   echo '<form name="inputform" action="'.$_SERVER['PHP_SELF'].'?action=compose2" method="post">
       <table>
       <tr>
       <td>'.$lang_mssg["subj"].':</td>
@@ -232,12 +236,12 @@ Colour Select :<select name='bbcolor' onChange=\"addText('message', '[color=' + 
    }
 
    
-if($action==compose2)
+if($action=='compose2')
    {
       $subject or die($lang_mssg["_blank1"]);
       $message or die($lang_mssg["_blank2"]);
       $to or die($lang_mssg["_blank3"]);
-      $date = date(YmdHis);
+      $date = date('YmdHis');
      if ($to == $PHP_PHAOS_USER)
      {
      // Changed by dragzone---
@@ -254,7 +258,7 @@ if($action==compose2)
    
    }
 
-if($action==inbox)
+if($action=='inbox')
 {
 $result=mysql_query("select * from phaos_mail where UserTo='$PHP_PHAOS_USER' ORDER BY SentDate DESC") or die (" ".$lang_mssg["cnat_touch_this"]);
 if (mysql_num_rows($result) > 0){
@@ -263,9 +267,9 @@ echo '<table cellpadding="2" cellspacing="1" width="100%" valign="top">';
    {
       // Error status-image-not-found on line 266 ($row[status]) solved by dragzone
       echo '<tr>
-      <td width="30"><img src="images/'.$row[STATUS].'.gif" border="0">'.$lang_mssg["ma_il"].':</td>
-      <td><a href="'.$_SERVER[PHP_SELF].'?action=veiw&mail_id='.$row[mail_id].'">'.$row[Subject].'</a></td>
-     <td width=50><a href="'.$_SERVER[PHP_SELF].'?action=delete&SentDate='.$row[SentDate].'&id='.$row[mail_id].'"><center>'.$lang_mssg["delt"].'</a>'.'</td>
+      <td width="30"><img src="images/'.$row['STATUS'].'.gif" border="0">'.$lang_mssg["ma_il"].':</td>
+      <td><a href="'.$_SERVER['PHP_SELF'].'?action=veiw&mail_id='.$row['mail_id'].'">'.$row['Subject'].'</a></td>
+     <td width=50><a href="'.$_SERVER['PHP_SELF'].'?action=delete&SentDate='.$row['SentDate'].'&id='.$row['mail_id'].'"><center>'.$lang_mssg["delt"].'</a>'.'</td>
       </tr>';
       //-------------------------------------------------
    }
@@ -278,7 +282,7 @@ else {
 
 //in the view i have removed viewing in the textbox to allow correct output of the codes now in use. This should have no effect on the overall standard display abilitys since i have also made use of nl2br to get the returns etc. (at least i think it will work :)
 
-   if($action==veiw)
+   if($action=='veiw')
    {
    $result=mysql_query("select * from phaos_mail where UserTo='$PHP_PHAOS_USER' and mail_id=$mail_id") or die (" ".$lang_mssg["cnat_touch_this"]);
    $row=mysql_fetch_array($result);
@@ -316,7 +320,7 @@ else {
     <td width=\"325\" height=\"19\">&nbsp;</td>
   </tr>
   <tr>
-    <td width=\"204\" height=\"19\" align=\"center\"><a href=\"".$_SERVER[PHP_SELF]."?action=compose&to=".$row[UserFrom]."&subject=RE:".$row[Subject]."\">".$lang_mssg["repply"]."</a> &nbsp; - &nbsp; <a href=\"".$_SERVER[PHP_SELF]."?action=delete&SentDate=".$row["SentDate"]."&id=".$row[mail_id]."\">".$lang_mssg["delt"]."</a></td>
+    <td width=\"204\" height=\"19\" align=\"center\"><a href=\"".$_SERVER['PHP_SELF']."?action=compose&to=".$row['UserFrom']."&subject=RE:".$row['Subject']."\">".$lang_mssg["repply"]."</a> &nbsp; - &nbsp; <a href=\"".$_SERVER['PHP_SELF']."?action=delete&SentDate=".$row["SentDate"]."&id=".$row['mail_id']."\">".$lang_mssg["delt"]."</a></td>
   </tr>
 </table>";
    $rs = mysql_query("UPDATE phaos_mail SET status='read' WHERE mail_id='$mail_id'");
@@ -324,7 +328,7 @@ else {
 
 
 
-   if($action==delete)
+   if($action=='delete')
    {
    $query = mysql_query("DELETE FROM phaos_mail WHERE mail_id='$id' AND SentDate='$SentDate' LIMIT 1");
       if($query)

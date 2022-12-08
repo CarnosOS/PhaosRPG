@@ -1,5 +1,14 @@
 <?php
 include "aup.php";
+
+apply_input_params(array(
+  'hlpfield', 'hlpvalue', 'number'
+));
+
+if (isset($hlpfield) && $hlpfield !== 'title' && $hlpfield !== 'file') {
+  $hlpfield = 'title';
+}
+
 ?>
 <html>
 <head>
@@ -16,8 +25,6 @@ include "aup.php";
 <a href="index.php">[Back to Admin Panel]</a>
 <hr>
 <?php
-$connection = mysql_connect("$mysql_server","$mysql_user","$mysql_password") or die ("Unable to connect to MySQL server.");
-$db = mysql_select_db("$mysql_database") or die ("Unable to select requested database.");
 
 print  "<table border=0 cellspacing=0 cellpadding=0 class=default>
 	<tr class=trhead>
@@ -26,7 +33,7 @@ print  "<table border=0 cellspacing=0 cellpadding=0 class=default>
 	<td>File Name:&nbsp;</td>
 	</tr>";
 
-if($number == "") {$number = 0;}
+$number = intval($number);
 
 $result = mysql_query ("SELECT id FROM phaos_help WHERE $hlpfield LIKE '$hlpvalue%'");
 $count_rows = mysql_num_rows($result);
@@ -34,7 +41,7 @@ $count_rows = mysql_num_rows($result);
 $result = mysql_query ("SELECT title,file,id FROM phaos_help WHERE $hlpfield LIKE '$hlpvalue%' ORDER BY title ASC limit $number,30");
 if ($row = mysql_fetch_array($result)) {
 	do {
-		print "<form action=\"admin_help_modify_topic.php\">";
+		print "<form action=\"admin_help_Modify_Topic.php\">";
 		print "<tr><td><b>";
 		print "<input type=\"hidden\" name=\"topic\" value=\"$row[id]\"><input type=submit class=lookup_button value=\"&nbsp $row[id] &nbsp\">";
 		print "</b>&nbsp;</td><td><b>";
@@ -51,7 +58,7 @@ $number_next = $number+30;
 ?> 
 <p>
 <?php
-if($number != '0') {
+if($number != 0) {
 	?>
 	<a href="<?php print $PHP_SELF; ?>?number=<?php print $number_prev; ?>&hlpfield=<?php print $hlpfield; ?>&value=<?php print $hlpvalue; ?>">Previous</a>
 	&nbsp;

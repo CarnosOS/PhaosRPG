@@ -1,5 +1,9 @@
 <?php
-include "header.php";
+include "aup.php";
+include_once "class_npc_generator.php";
+include_once "class_quest_generator.php";
+
+apply_input_params(array('comb_act', 'opp_type', 'fleefail', 'npcfirstatt', 'healed', 'spellid'));
 
 function endfight(){
 	$disp_msg= $_SESSION['disp_msg'];
@@ -25,14 +29,6 @@ function sayOpponents(){
 	return "$oppcharacter->name Level $oppcharacter->level $more";
 }
 
-
-/* part Copyright 2005 peter.schaefer@gmail.com */
-
-session_start();
-
-// INITIAL SETUP
-
-include_once "class_character.php";
 
 /*
  * return the root of the damage
@@ -71,6 +67,8 @@ $_SESSION['disp_msg'] = array();
 if (isset($_GET['charfrom'])) {
 	$_SESSION['charfrom'] = $_GET['charfrom'];
 }
+
+$_GET['bonus'] = 1; // Disable fight bonuses
 
 //FIXME: way to easy to hack
 $_SESSION['fightbonus']= isset($_GET['bonus'])? $_GET['bonus']: 1;
@@ -218,10 +216,6 @@ DEBUG AND $_SESSION['disp_msg'][] = "DEBUG: There are ".count($list)." opponents
 
 $oppcharacter= null;
 if (!count($list)) {
-	$comb_act = 'endfight';
-	DEBUG and print_msgs($_SESSION['disp_msg'],'','<br>');
-	$link= endfight();
-	jsChangeLocation($link);
 	$skip_actions = true;
 } else {
 	$skip_actions = false;
@@ -273,7 +267,6 @@ if($skip_actions) {
 			$_SESSION['disp_msg'][] = $lang_comb["not_heal_this"];
 		} else {
 			$_SESSION['disp_msg'][] = $lang_comb["drink"].$_SESSION['heal_points']."";
-			refsidebar();
 		}
 		unset($healed);
 	}
@@ -292,12 +285,18 @@ if($skip_actions) {
 
     // <10 changed to <50 by dragzone
     if($char_flee_roll > $opp_flee_roll  OR  rand(1,100)<50 ) {
-			//move character to random adjacent location
-			for($i=0;$i<24;++$i) {
-				if($character->relocate(rand(1,8))) {
-					break;
-				}
-			}
+                        // move to the direction where we came from
+                        $flee_location = $character->flee_location;
+                        if ($flee_location === 0 or $character->relocate($flee_location) == false) {
+                            // move failed, try random adjacent location
+                            $directions = range(1, 8);
+                            shuffle($directions);
+                            foreach($directions as $i) {
+                                    if($character->relocate($i)) {
+                                            break;
+                                    }
+                            }
+                        }
 			//Character Flees
 			$link= endfight();
 			jsChangeLocation($link);
@@ -319,15 +318,20 @@ if($skip_actions) {
     			if($comb_act == 'magic_attack'){
     				$res=mysql_query("SELECT name,min_damage,max_damage,damage_mess,req_skill FROM phaos_spells_items WHERE id = $spellid");
     				list($name,$min_damage,$max_damage,$damage_mess,$req_skill) = mysql_fetch_array($res);
-	
-    				// Remove scroll from inventory
-    				$sql = "DELETE FROM phaos_char_inventory WHERE id = '$invid'";
-    				mysql_query($sql) or die ("Error in query: $query. " . mysql_error());
 
-				if($character->wisdom + rand(1,$character->wisdom) < $req_skill) {
+    				// Remove scroll from inventory
+                                $sql = "SELECT id FROM phaos_char_inventory WHERE username='".$character->user."' AND type='spell_items' AND item_id='$spellid'";
+                                $res = mysql_query($sql);
+                                $row = mysql_fetch_array($res);
+                                list($invid) = $row !== false ? $row : array(0);
+
+				if(!$invid || $character->wisdom + rand(1,$character->wisdom) < $req_skill) {
 					$defenders = array();
 					$_SESSION['disp_msg'][] = $lang_magic["spell_fumble"];
 				} else {
+                                        $sql = "DELETE FROM phaos_char_inventory WHERE id = '$invid'";
+                                        mysql_query($sql) or die ("Error in query: $query. " . mysql_error());
+
 					// set area effect
 					$numdefenders=  $damage_mess* (1+(int)($character->wisdom/9+rand(0,99)*0.01));
 					if($numdefenders>0) {
@@ -412,9 +416,13 @@ if($skip_actions) {
             			$ret = $defender->kill_characterid();
                    		if(DEBUG>=1) {$_SESSION['disp_msg'][] = "**DEBUG: killing oppponent";}
 
+        				$quest_generator = new quest_generator();
+        				$quest_generator->collect_monster($character, $defender);
+
         				// add monsters to replace dead one
+                                        $npc_generator = new npc_generator();
         				for($i = 1; $i <= 2; $i++) {	//FIXME: 2 monsters for now, but this WILL over populate!
-        					npcgen()  and  DEBUG and $_SESSION['disp_msg'][] = "**DEBUG: npcgen is success";
+        					$npc_generator->generate() and DEBUG and $_SESSION['disp_msg'][] = "**DEBUG: npcgen is success";
         				}
 
         				//Receive Gold
@@ -438,8 +446,6 @@ if($skip_actions) {
                         if(!$res){ showError(__FILE__,__LINE__,__FUNCTION__); exit; };
 
                         $character->all_skillsup($comb_act,$lang_fun);
-
-        				refsidebar();
 
         				$list=whos_here($character->location);
 
@@ -548,7 +554,7 @@ if($skip_actions) {
                 unset($_SESSION['opponent_id']);
 
         		// when dead, go to Gornath (easy city of undead) to start over
-        		if (! mysql_query("UPDATE phaos_characters SET location = 4072 WHERE id = '$PHP_PHAOS_CHARID'") ) {  showError(__FILE__,__LINE__,__FUNCTION__); die; }
+        		if (! mysql_query("UPDATE phaos_characters SET location = 726 WHERE id = '$PHP_PHAOS_CHARID'") ) {  showError(__FILE__,__LINE__,__FUNCTION__); die; }
 
                 $break_loop= true;
             }
@@ -557,9 +563,6 @@ if($skip_actions) {
             $query = ("UPDATE phaos_characters SET hit_points = ".$character->hit_points." WHERE id = '$PHP_PHAOS_CHARID'");
             $req = mysql_query($query);
             if (!$req) { showError(__FILE__,__LINE__,__FUNCTION__); exit;}
-
-            //REFRESH SIDEBAR INFO
-            $refsidebar= true;
 
            $attackingcharacter->update_stamina();
 
@@ -573,15 +576,11 @@ if($skip_actions) {
    }
 
    $character->update_stamina();
-   if( $character->stamina_points<0.25*$character->stamina_points ){
-        $refsidebar= true;
-   }
 
    // DRINK POTIONS
    if($comb_act == 'drink_potion') {
          $_SESSION['heal_points'] = $character->drink_potion2($invid);
          $_SESSION['no_heal'] = 0;
-         $refsidebar= true;
 
        	// still in combat?
         if($_SESSION['endcombat'] == true) {	// "yes" means you drink and OPP attacks  --- set to true by dragzone
@@ -591,16 +590,23 @@ if($skip_actions) {
         }
    }
 
-    if(@$refsidebar){
-        refsidebar();
-    }
-
 
 }//skip actions
+
+
+include "header.php";
+
+if ($skip_actions) {
+  $comb_act = 'endfight';
+  DEBUG and print_msgs($_SESSION['disp_msg'],'','<br>');
+  $link= endfight();
+  jsChangeLocation($link);
+}
 
 ?>
 
 <table width=400 border=1 cellspacing=0 cellpadding=5 align=center>
+<?php if ($oppcharacter !== null) : ?>
 <tr style=background:#006600;>
 <td align=center><big><?php echo sayOpponents(); ?></big></td>
 </tr>
@@ -738,7 +744,6 @@ if($skip_actions) {
    </table>
 </td>
 </tr>
-
 <?php
 //
 // wandering mobs always check for new opponents, the arena does not.
@@ -750,6 +755,10 @@ if( defined('DEBUG') and DEBUG ){
     $GLOBALS['debugmsgs'][]= "\nend of combat detected=".@$_SESSION['endcombat'];
     $GLOBALS['debugmsgs'][]= "\n hp: me ".@$character->hit_points." vs opp ".@$oppcharacter->hit_points;
 }
+?>
+<?php endif; ?>
+<?php
+
 
 if($character->hit_points>0){
     if( !(@$_SESSION['opponent_id']&& !@$_SESSION['endcombat']) ){

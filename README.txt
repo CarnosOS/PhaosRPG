@@ -4,6 +4,8 @@ This release has a number of new files and some files that can be deleted as the
 are no longer needed. Check out the HISTORY.TXT if you are upgrading to see which
 files you can delete, it also shows which files have been updated.
 
+Live server with code from this repo:
+https://phaos.ryuu.eu
 
 ------------------------------------------------------------------------------
 

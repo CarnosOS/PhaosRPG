@@ -1,6 +1,11 @@
 <?php
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'changeme', 'admin_user', 'admin_pass', 'admin_pass_2'
+));
+
 ?>
 <html>
 <head>

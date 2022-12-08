@@ -19,5 +19,3 @@ function do_image_list($folder) {
      closedir($handle); 
 
 } 
-
-?>

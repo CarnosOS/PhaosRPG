@@ -1,6 +1,11 @@
 <?php
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'wrldchr', 'id', 'changeme', 'name', 'hit_points', 'race', 'class', 'xp', 'gold', 'image', 'location',
+));
+
 ?>
 <html>
 <head>

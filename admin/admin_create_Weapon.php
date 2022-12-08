@@ -1,6 +1,11 @@
 <?php 
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'addme', 'name','min_damage', 'max_damage', 'buy_price', 'sell_price', 'image_path'
+));
+
 ?>
 <html>
 <head>

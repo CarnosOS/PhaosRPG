@@ -39,12 +39,8 @@ function verify() {
 <br>
 <input type='button' onClick="parent.location='index.php'" value='Back to Admin Panel'>
 <hr>
-<?php
-$connection = mysql_connect("$mysql_server","$mysql_user","$mysql_password") or die ("Unable to connect to MySQL server.");
-$db = mysql_select_db("$mysql_database") or die ("Unable to select requested database.");
-?>
-<table border="0" cellspacing="0" cellpadding="0" class="default">
 <form name=form method=post action="help_insert_topic.php">
+<table border="0" cellspacing="0" cellpadding="0" class="default">
 <tr class=trhead>
 <td align=center colspan=4>
 <b>Topic Information</b> 

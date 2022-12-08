@@ -1,6 +1,11 @@
 <?php 
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'addme', 'name', 'hit_points', 'race', 'class', 'min_damage', 'max_damage', 'AC', 'xp_given', 'gold_given', 'image_path', 'location'
+));
+
 ?>
 <html>
 <head>
@@ -64,7 +69,6 @@ else
       <td width="50%"><b><font color="#FFFFFF">Class</font></b></td>
       <td width="50%"><b><font color="#FFFFFF">
          <input type="text" name="class">
-        </select>
         </font></b></td>
     </tr>
     <tr> 

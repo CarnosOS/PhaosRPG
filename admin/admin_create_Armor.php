@@ -1,6 +1,11 @@
 <?php 
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'addme', 'name', 'armor_class', 'buy_price', 'sell_price', 'image_path',
+));
+
 ?>
 <html>
 <head>
@@ -23,8 +28,8 @@ if($addme=="yes")
 		  </tr>
 		  <tr>
 		  <td colspan=\"2\" align=center>
-		  	<br><form><input type='button' onClick='parent.location='admin_create_Armor.php'' value='Create more Armor'>
-		  	<input type='button' onClick='parent.location='index.php'' value='Back to Admin Panel'></form>
+		  	<br><form><input type='button' onClick=\"parent.location='admin_create_Armor.php'\" value='Create more Armor'>
+		  	<input type='button' onClick=\"parent.location='index.php'\" value='Back to Admin Panel'></form>
 		  </td>
 		  </tr>
 		  </table>

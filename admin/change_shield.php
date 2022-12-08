@@ -1,6 +1,11 @@
 <?php
 include("../config.php");
 include("aup.php");
+
+apply_input_params(array(
+  'shield', 'id', 'changeme', 'name', 'armor_class', 'buy_price', 'sell_price', 'image_path',
+));
+
 ?>
 <html>
 <head>
